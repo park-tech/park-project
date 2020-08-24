@@ -3,10 +3,15 @@ from building import *
 
 cwd     = GetCurrentDir()
 CPPPATH = [cwd, str(Dir('#'))]
-src     = Split("""
-main.c
-""")
-
+src = Glob('*.c')
+src += Glob('absp/src/*.c')
+src += Glob('basic/src/*.c')
+src += Glob('fmod/src/*.c')
+src += Glob('thread/src/*.c')
+CPPPATH = [cwd + '/fmod/inc',
+           cwd + '/thread/inc',
+           cwd + '/basic/inc',
+           cwd + '/absp/inc']
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
 
 Return('group')

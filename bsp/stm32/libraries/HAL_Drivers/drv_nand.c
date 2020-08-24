@@ -343,7 +343,7 @@ void NAND_EraseChip(void)
 }
 
 
-static void DotFormat(uint64_t _ullVal, char *_sp) 
+ void DotFormat(uint64_t _ullVal, char *_sp) 
 {
 	/* 数值大于等于10^9 */
 	if (_ullVal >= (U64)1e9) 
@@ -610,7 +610,7 @@ static void Formatflash(void)
 	if(result != NULL){
 		/* 如果挂载失败，务必不要再调用FlashFS的其它API函数，防止进入硬件异常 */
 		NAND_DEBUG("Failed to mount file system (%s)\r\n", ReVal_Table[result]);
-		goto access_fail;
+		//goto access_fail;
 	}else{
 		// NAND_DEBUG("Mount success (%s)\r\n", ReVal_Table[result]);
 	}
@@ -936,7 +936,7 @@ access_fail:
 	NAND_DEBUG("------------------------------------------------------------------\r\n");
 }
 
-static void glz_nand(int argc, char **argv)
+static void glz_nand(int argc, char **argv) 
 {
     /* If the number of arguments less than 2 */
     if (argc < 2)

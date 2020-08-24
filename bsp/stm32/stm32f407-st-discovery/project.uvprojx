@@ -10,14 +10,15 @@
       <TargetName>rtthread</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F407ZGTx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F4xx_DFP.2.11.0</PackID>
-          <PackURL>http://www.keil.com/pack</PackURL>
-          <Cpu>IRAM(0x20000000,0x20000) IRAM2(0x10000000,0x10000) IROM(0x08000000,0x100000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
+          <PackID>Keil.STM32F4xx_DFP.2.14.0</PackID>
+          <PackURL>http://www.keil.com/pack/</PackURL>
+          <Cpu>IRAM(0x20000000,0x00020000) IRAM2(0x10000000,0x00010000) IROM(0x08000000,0x00100000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F4xx_1024 -FS08000000 -FL0100000 -FP0($$Device:STM32F407ZGTx$CMSIS\Flash\STM32F4xx_1024.FLM))</FlashDriverDll>
@@ -53,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\build\keil\List\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -183,6 +184,7 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>2</RvdsVP>
+            <RvdsMve>0</RvdsMve>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -323,6 +325,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
+            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -335,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER, STM32F407xx, RT_USING_ARM_LIBC</Define>
               <Undefine></Undefine>
-              <IncludePath>.;..\..\..\include;applications;.;board;board\CubeMX_Config\Inc;..\libraries\HAL_Drivers;..\libraries\HAL_Drivers\config;..\..\..\libcpu\arm\common;..\..\..\libcpu\arm\cortex-m4;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\spi;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\usb\usbdevice;..\..\..\components\finsh;..\..\..\components\libc\compilers\armlibc;..\..\..\components\libc\compilers\common;..\..\..\components\net\at\include;..\..\..\components\rl-arm\RL-RTX\inc;..\..\..\components\rl-arm\Config;..\..\..\components\rl-arm\RL-FlashFS;..\..\..\components\rl-arm\RL-FlashFS\inc;..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Inc;..\libraries\STM32F4xx_HAL\CMSIS\Device\ST\STM32F4xx\Include;..\libraries\STM32F4xx_HAL\CMSIS\Include</IncludePath>
+              <IncludePath>.;..\..\..\include;applications\fmod\inc;applications\thread\inc;applications\basic\inc;applications\absp\inc;board;board\CubeMX_Config\Inc;..\libraries\HAL_Drivers;..\libraries\HAL_Drivers\config;packages\cJSON-v1.0.2;..\..\..\libcpu\arm\common;..\..\..\libcpu\arm\cortex-m4;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\spi;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\usb\usbdevice;..\..\..\components\finsh;..\..\..\components\gui;..\..\..\components\libc\compilers\armlibc;..\..\..\components\libc\compilers\common;..\..\..\components\net\at\include;..\..\..\components\rl-arm\RL-RTX\inc;..\..\..\components\rl-arm\Config;..\..\..\components\rl-arm\RL-FlashFS;..\..\..\components\rl-arm\RL-FlashFS\inc;..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Inc;..\libraries\STM32F4xx_HAL\CMSIS\Device\ST\STM32F4xx\Include;..\libraries\STM32F4xx_HAL\CMSIS\Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -464,6 +467,151 @@
               <FileType>1</FileType>
               <FilePath>applications\main.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\absp\src\bsp_adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\absp\src\bsp_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_dac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\absp\src\bsp_dac.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\absp\src\bsp_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\absp\src\bsp_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>baisc_hwtimer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\basic\src\baisc_hwtimer.c</FilePath>
+            </File>
+            <File>
+              <FileName>basic_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\basic\src\basic_adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>basic_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\basic\src\basic_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>basic_dac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\basic\src\basic_dac.c</FilePath>
+            </File>
+            <File>
+              <FileName>basic_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\basic\src\basic_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>basic_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\basic\src\basic_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>basic_pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\basic\src\basic_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>basic_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\basic\src\basic_rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>basic_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\basic\src\basic_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>basic_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\basic\src\basic_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>fmod_com_rs485.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\fmod\src\fmod_com_rs485.c</FilePath>
+            </File>
+            <File>
+              <FileName>fmod_com_sbox.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\fmod\src\fmod_com_sbox.c</FilePath>
+            </File>
+            <File>
+              <FileName>fmod_data_process.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\fmod\src\fmod_data_process.c</FilePath>
+            </File>
+            <File>
+              <FileName>fmod_dtube_display.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\fmod\src\fmod_dtube_display.c</FilePath>
+            </File>
+            <File>
+              <FileName>fmod_fault_detect.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\fmod\src\fmod_fault_detect.c</FilePath>
+            </File>
+            <File>
+              <FileName>fmod_store_fault.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\fmod\src\fmod_store_fault.c</FilePath>
+            </File>
+            <File>
+              <FileName>fmod_store_histroy.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\fmod\src\fmod_store_histroy.c</FilePath>
+            </File>
+            <File>
+              <FileName>fmod_store_product_info.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\fmod\src\fmod_store_product_info.c</FilePath>
+            </File>
+            <File>
+              <FileName>fmod_work_status.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\fmod\src\fmod_work_status.c</FilePath>
+            </File>
+            <File>
+              <FileName>thread_int_gpio_exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\thread\src\thread_int_gpio_exti.c</FilePath>
+            </File>
+            <File>
+              <FileName>thread_int_hwtimer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\thread\src\thread_int_hwtimer.c</FilePath>
+            </File>
+            <File>
+              <FileName>thread_int_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\thread\src\thread_int_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>thread_tcp_client.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\thread\src\thread_tcp_client.c</FilePath>
+            </File>
+            <File>
+              <FileName>thread_uart_rs485.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\thread\src\thread_uart_rs485.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -495,6 +643,11 @@
               <FilePath>..\libraries\HAL_Drivers\drv_usart.c</FilePath>
             </File>
             <File>
+              <FileName>drv_hwtimer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\HAL_Drivers\drv_hwtimer.c</FilePath>
+            </File>
+            <File>
               <FileName>drv_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\libraries\HAL_Drivers\drv_spi.c</FilePath>
@@ -503,6 +656,21 @@
               <FileName>drv_eth.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\libraries\HAL_Drivers\drv_eth.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\HAL_Drivers\drv_adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\HAL_Drivers\drv_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\HAL_Drivers\drv_rtc.c</FilePath>
             </File>
             <File>
               <FileName>drv_usbd_fs.c</FileName>
@@ -515,14 +683,34 @@
               <FilePath>..\libraries\HAL_Drivers\drv_nand.c</FilePath>
             </File>
             <File>
-              <FileName>drv_tf_card.c</FileName>
+              <FileName>drv_dac.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\libraries\HAL_Drivers\drv_tf_card.c</FilePath>
+              <FilePath>..\libraries\HAL_Drivers\drv_dac.c</FilePath>
             </File>
             <File>
               <FileName>drv_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\libraries\HAL_Drivers\drv_common.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>cJSON</GroupName>
+          <Files>
+            <File>
+              <FileName>cJSON.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\cJSON-v1.0.2\cJSON.c</FilePath>
+            </File>
+            <File>
+              <FileName>cJSON_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\cJSON-v1.0.2\cJSON_port.c</FilePath>
+            </File>
+            <File>
+              <FileName>cJSON_util.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>packages\cJSON-v1.0.2\cJSON_util.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -591,6 +779,7 @@
                 <uThumb>2</uThumb>
                 <uSurpInc>2</uSurpInc>
                 <uC99>2</uC99>
+                <uGnu>2</uGnu>
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
@@ -628,14 +817,34 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\components\drivers\can\can.c</FilePath>
+            </File>
+            <File>
+              <FileName>hwtimer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\components\drivers\hwtimer\hwtimer.c</FilePath>
+            </File>
+            <File>
               <FileName>pin.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\components\drivers\misc\pin.c</FilePath>
             </File>
             <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\components\drivers\misc\adc.c</FilePath>
+            </File>
+            <File>
               <FileName>mtd_nand.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\components\drivers\mtd\mtd_nand.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\components\drivers\rtc\rtc.c</FilePath>
             </File>
             <File>
               <FileName>serial.c</FileName>
@@ -745,6 +954,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>gui</GroupName>
+          <Files>
+            <File>
+              <FileName>gui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\components\gui\gui.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>libc</GroupName>
           <Files>
             <File>
@@ -828,14 +1047,9 @@
               <FilePath>..\..\..\components\rl-arm\RL-FlashFS\src\FS_NAND_FlashPrg.c</FilePath>
             </File>
             <File>
-              <FileName>FS_MicroSD_Cardprg.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\components\rl-arm\RL-FlashFS\src\FS_MicroSD_Cardprg.c</FilePath>
-            </File>
-            <File>
-              <FileName>FSN_CM3.lib</FileName>
+              <FileName>FS_CM3.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\..\..\components\rl-arm\RL-FlashFS\lib\FSN_CM3.lib</FilePath>
+              <FilePath>..\..\..\components\rl-arm\RL-FlashFS\lib\FS_CM3.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -978,9 +1192,49 @@
               <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_usb.c</FilePath>
             </File>
             <File>
+              <FileName>stm32f4xx_hal_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_tim_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_lptim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_lptim.c</FilePath>
+            </File>
+            <File>
               <FileName>stm32f4xx_hal_eth.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_eth.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_adc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_rtc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc_ex.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hal_nand.c</FileName>
@@ -996,6 +1250,16 @@
               <FileName>stm32f4xx_ll_fsmc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_fsmc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_dac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dac.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_dac_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dac_ex.c</FilePath>
             </File>
           </Files>
         </Group>

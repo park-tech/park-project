@@ -51,7 +51,7 @@ struct rt_stm32_eth
 #define EVENT_TIMER (1 << 3)
 #define EVENT_MAIN (1 << 5)
 #define EVENT_ISR   (1 << 6)
-#define THREAD_PRIORITY      20
+#define THREAD_PRIORITY      30
 #define THREAD_TIMESLICE     20
 
 static struct rt_event event;
@@ -866,6 +866,8 @@ static int rt_hw_stm32_eth_init(void)
     {
         state = -RT_ERROR;
     }
+
+
 
     rt_thread_init(&main_TCPnet,
                    "thread_main_TCPnet",

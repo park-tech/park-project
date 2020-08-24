@@ -58,18 +58,85 @@ menu "On-chip Peripheral Drivers"
                 depends on BSP_USING_UART1 && RT_SERIAL_USING_DMA
                 default n
 			
-			config BSP_USING_UART2
+	    config BSP_USING_UART2
                 bool "Enable UART2"
                 default n
 			
-			config BSP_USING_UART3
+	    config BSP_USING_UART3
                 bool "Enable UART3"
                 default n
 			
-			config BSP_UART3_RX_USING_DMA
+	    config BSP_UART3_RX_USING_DMA
                 bool "Enable UART3 RX DMA"
                 depends on BSP_USING_UART3 && RT_SERIAL_USING_DMA
+	       default n
+            config BSP_USING_UART4
+                bool "Enable UART4"
                 default n
+
+            config BSP_USING_UART5
+                bool "Enable UART5"
+                default n
+		
+            config BSP_USING_UART6
+                bool "Enable UART6"
+                default n   	
+       endif
+   
+   menuconfig BSP_USING_CAN
+        bool "Enable CAN"
+        default n
+        select RT_USING_CAN
+        if BSP_USING_CAN
+            config BSP_USING_CAN1
+            bool "Enable CAN1"
+            default n
+            config BSP_USING_CAN2
+            bool "Enable CAN2"
+            default n
+        endif
+
+    menuconfig BSP_USING_TIM
+        bool "Enable timer"
+        default n
+        select RT_USING_HWTIMER
+        if BSP_USING_TIM
+        
+            config BSP_USING_TIM3
+                bool "Enable TIM3"
+                default n
+
+            config BSP_USING_TIM13
+                bool "Enable TIM13"
+                default n
+
+            config BSP_USING_TIM14
+                bool "Enable TIM14"
+                default n
+        endif
+
+   menuconfig BSP_USING_PWM
+        bool "Enable pwm"
+        default n
+        select RT_USING_PWM
+        if BSP_USING_PWM
+            menuconfig BSP_USING_PWM8
+                bool "Enable timer8 output pwm"
+                default n
+                if BSP_USING_PWM8
+                    config BSP_USING_PWM8_CH1
+                        bool "Enable PWM8 channel1"
+                        default n
+                    config BSP_USING_PWM8_CH2
+                        bool "Enable PWM8 channel2"
+                        default n
+                    config BSP_USING_PWM8_CH3
+                        bool "Enable PWM8 channel3"
+                        default n
+  		    config BSP_USING_PWM8_BKIN
+                        bool "Enable PWM8 BKIN"
+                        default n
+                endif
         endif
 
     menuconfig BSP_USING_SPI
@@ -105,8 +172,40 @@ menu "On-chip Peripheral Drivers"
                 bool "Enable SPI2 RX DMA"
                 depends on BSP_USING_SPI2
                 select BSP_SPI2_TX_USING_DMA
+		default n
+	endif
+	
+    menuconfig BSP_USING_ADC
+        bool "Enable ADC"
+        default n
+        select RT_USING_ADC
+        if BSP_USING_ADC
+            config BSP_USING_ADC1
+                bool "Enable ADC1"
+                default n
+
+            config BSP_USING_ADC2
+                bool "Enable ADC2"
+                default n
+
+            config BSP_USING_ADC3
+                bool "Enable ADC3"
                 default n
         endif
+
+    menuconfig BSP_USING_DAC
+        bool "Enable DAC"
+        default n
+        select RT_USING_DAC
+        if BSP_USING_DAC
+            config BSP_USING_DAC1
+                bool "Enable DAC1"
+                default n
+
+            config BSP_USING_DAC2
+                bool "Enable DAC2"
+                default n
+        endif		
 
     menuconfig BSP_USING_I2C1
         bool "Enable I2C1 BUS (software simulation)"
@@ -125,6 +224,23 @@ menu "On-chip Peripheral Drivers"
                 default 25
         endif
 		
+ 	menuconfig BSP_USING_ONCHIP_RTC
+        bool "Enable RTC"
+        select RT_USING_RTC
+        select RT_USING_LIBC
+        default n
+        if BSP_USING_ONCHIP_RTC
+            choice
+                prompt "Select clock source"
+                default BSP_RTC_USING_LSE
+
+                config BSP_RTC_USING_LSE
+                    bool "RTC USING LSE"
+
+                config BSP_RTC_USING_LSI
+                    bool "RTC USING LSI"
+            endchoice
+        endif	
 	menuconfig BSP_USING_USBD_FS
         bool "Enable USB"
         default n

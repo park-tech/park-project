@@ -38,7 +38,7 @@
 #define RT_USING_DEVICE
 #define RT_USING_CONSOLE
 #define RT_CONSOLEBUF_SIZE 128
-#define RT_CONSOLE_DEVICE_NAME "uart1"
+#define RT_CONSOLE_DEVICE_NAME "uart5"
 #define RT_VER_NUM 0x40002
 #define ARCH_ARM
 #define RT_USING_CPU_FFS
@@ -84,9 +84,14 @@
 #define RT_USING_SERIAL
 #define RT_SERIAL_USING_DMA
 #define RT_SERIAL_RB_BUFSZ 64
+#define RT_USING_CAN
+#define RT_CAN_USING_HDR
+#define RT_USING_HWTIMER
 #define RT_USING_PIN
+#define RT_USING_ADC
 #define RT_USING_MTD_NAND
 #define RT_MTD_NAND_DEBUG
+#define RT_USING_RTC
 #define RT_USING_SPI
 
 /* Using USB */
@@ -135,6 +140,7 @@
 
 /* GUI Features */
 
+#define RT_USING_NANOGUI
 
 /* ARM RL Components */
 
@@ -146,6 +152,8 @@
 
 /* IoT - internet of things */
 
+#define PKG_USING_CJSON
+#define PKG_USING_CJSON_V102
 
 /* Wi-Fi */
 
@@ -192,7 +200,6 @@
 
 #define PHY_USING_LAN8720A
 #define BSP_USING_ETH
-#define BSP_USING_TFCARD
 
 /* On-chip Peripheral Drivers */
 
@@ -200,10 +207,20 @@
 #define BSP_USING_UART
 #define BSP_USING_UART1
 #define BSP_USING_UART3
-#define BSP_USING_SPI
-#define BSP_USING_SPI2
-#define BSP_SPI2_TX_USING_DMA
-#define BSP_SPI2_RX_USING_DMA
+#define BSP_UART3_RX_USING_DMA
+#define BSP_USING_UART4
+#define BSP_USING_UART5
+#define BSP_USING_UART6
+#define BSP_USING_CAN
+#define BSP_USING_CAN1
+#define BSP_USING_CAN2
+#define BSP_USING_TIM
+#define BSP_USING_TIM3
+#define BSP_USING_ADC
+#define BSP_USING_ADC3
+#define BSP_USING_DAC
+#define BSP_USING_ONCHIP_RTC
+#define BSP_RTC_USING_LSE
 #define BSP_USING_USBD_FS
 #define BSP_USING_USBD_FS_DEVICE
 #define BSP_USING_FMC
