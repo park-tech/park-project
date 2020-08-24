@@ -41,7 +41,7 @@ void fmod_soc_soh_intiset(void)
 *******************************************************************************************/
 void fmod_open_volt_adj_soc(void)
 {        
-	st_bat_data.fl_bat_soc = 400 * (st_bat_data.fl_bat_volt /TEST_BAT_NUM) - 756;
+	st_bat_data.fl_bat_soc = 400 * (st_bat_data.fl_bat_volt /TEST_BAT_NUM) - 756;         //为什么呈这样的线性？每一个电池开路电压时，电压和容量之间都有一个特定的对应曲线，这个就是根据该曲线来的
 	st_bat_data.fl_bat_Qnow = st_bat_data.fl_bat_soc * 0.01f * st_bat_data.fl_bat_Qc_max ; //第一连接电池的当前容量
 }
 

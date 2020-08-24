@@ -617,9 +617,9 @@ static double fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt)
 {
 	double real_bt_Temp_Volt=bt_Temp_Volt/1000.000;
 	double R_NTC=(real_bt_Temp_Volt*20000)/(3.3-real_bt_Temp_Volt);
-	double temp=1/(log(R_NTC/10000)/3960+1/298.15)-273.15;
-	temp+=55;
-	return temp;
+	double temp= 1/(log(R_NTC/10000)/3960+1/298.15)-273.15;
+	double temp1=((temp+55)*10);
+	return temp1;
 }
 
 

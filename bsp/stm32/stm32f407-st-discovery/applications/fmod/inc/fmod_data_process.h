@@ -40,13 +40,20 @@
 #define LIP_Battery   0          //磷酸铁锂电池 
 
 //...................铅酸电池特性................................ 
-#define VRLA_BC_Chfull_V   2.28               //充满电压值        标称2V
-#define VRLA_BC_OVER_V     2.538              //单体电池过压值
-#define VRLA_BC_UNDER_V    1.75               //单体电池欠压值
-#define VRLA_BC_LOW_PREWARN_V    1.6          //单体电池低压预警值
-#define VRLA_BC_OVER_R       20               //单体电池内阻过高值2MR  单位mR的10倍               1=0.1mR
-#define VRLA_OVER_CHI      (0.2 * Bat_Qb )    //电池充电过流值
+#define VRLA_BC_Chfull_V   13.6               //充满电压值     
+#define VRLA_BC_OVER_V     14.7              //单体电池过压值 
+#define VRLA_BC_UNDER_V    10.5             //单体电池欠压值 
+#define VRLA_BC_LOW_PREWARN_V    10.8         //单体电池低压预警值
+#define VRLA_BC_OVER_R       20               //单体电池内阻过高值2MR  单位mR的10倍  //海泰蓄电池项目用不到             1=0.1mR
+#define VRLA_OVER_CHI      5.4               //电池充电过流值  充电器的电流最大2A，此处填写蓄电池的实际充电过流值
 
+////...................铅酸电池特性................................ 
+//#define VRLA_BC_Chfull_V   2.28               //充满电压值        标称2V
+//#define VRLA_BC_OVER_V     2.538              //单体电池过压值
+//#define VRLA_BC_UNDER_V    1.75               //单体电池欠压值
+//#define VRLA_BC_LOW_PREWARN_V    1.6          //单体电池低压预警值
+//#define VRLA_BC_OVER_R       20               //单体电池内阻过高值2MR  单位mR的10倍               1=0.1mR
+//#define VRLA_OVER_CHI      (0.2 * Bat_Qb )    //电池充电过流值
 
 //...................镍镉电池特性................................ 
 #define NC_BC_Chfull_V     1.4               //充满电压值         标称1.2V
@@ -94,12 +101,12 @@
 #endif
 
 //................................电池通用数据特征..................................
-#define Bat_Qb             220              // 标称容量220Ah
+#define Bat_Qb             18             // 标称容量18Ah
 #define OVER_TEMP          55               // 电池过温值
 #define UNDER_TEMP        -20               // 电池低温值
 #define Charge_full_V      (BC_Chfull_V * TEST_BAT_NUM ) //电池充满电压
-#define Charge_full_I      1                //电池充满电流
-#define OVER_DISCHI        (0.7 * Bat_Qb )  //电池放电过流值
+#define Charge_full_I      1                //电池充满电流       //这个参数含义？
+#define OVER_DISCHI        (0.7 * Bat_Qb )  //电池放电过流值 96A
 
 //............产品的所有信息，包括需要存储的和非存储的数据........................
 struct Product_info         

@@ -61,7 +61,7 @@ void fmod_variable_init(void)
 	
 	st_product_info.u16_product_num = 0x0001;    //产品编号
 	st_product_info.u8_car_num = 0x01;           //车号	
-	st_product_info.u8_bat_num = 0x08;           //电池检测数量  
+	st_product_info.u8_bat_num = 0x09;           //电池检测数量  
 
     un_bat_status.st_bit.bat_first_work = 1;     //初始化都当做首次启动
 
@@ -91,7 +91,7 @@ void fmod_parameter_update(void)
 		if( (now_sec - un_prodinfo_rdata.st_data.u32_time >= 4 * 60 *60) && 
 			(st_bat_data.fl_bat_chI + st_bat_data.fl_bat_dischI <= 1 ))
 		{
-			fmod_open_volt_adj_soc( );
+			fmod_open_volt_adj_soc( );//开路电压时，电压和容量之间都有一个特定的对应曲线还未知？
 		}
 	}
 	
@@ -159,9 +159,6 @@ void endian_swapl(void* data)
 *********************************************************************************************************///
 void fmod_relay_control()
 {
-	
-
-	
 	
 	int power_status=POWER_STATUS_VALUE;
 	

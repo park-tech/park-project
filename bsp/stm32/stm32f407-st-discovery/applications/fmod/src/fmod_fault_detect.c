@@ -69,7 +69,7 @@ void fmod_fault_detect(void)
 	fmod_fault_batcore_underV ();
 
 	//........................单体电池内阻过高................................
-	fmod_fault_batcore_overR ();
+	//fmod_fault_batcore_overR ();
 	
 	//........................单体电池短板故障................................
 	fmod_fault_bat_short_board ();
@@ -94,7 +94,7 @@ static void  fmod_fault_bat_overV (void)
 	static uint16_t  u16_err_count = 0;
 	
 
-	if(st_bat_data.fl_bat_volt >= (BC_OVER_V * TEST_BAT_NUM ))		 
+	if(st_bat_data.fl_bat_volt >= (BC_OVER_V * TEST_BAT_NUM ))		 //过压值为14.7V
 	{   
 		if(u16_err_count <= 10) //1秒
 		{
@@ -107,7 +107,7 @@ static void  fmod_fault_bat_overV (void)
 		}
 	}
 
-	if(st_bat_data.fl_bat_volt <= (BC_OVER_V - 0.08) * TEST_BAT_NUM)		 
+	if(st_bat_data.fl_bat_volt <= (BC_OVER_V - 0.08) * TEST_BAT_NUM)	//回差设置	 //过压值为14.7V
 	{   
 		
 		if(u16_err_count > 0 )
