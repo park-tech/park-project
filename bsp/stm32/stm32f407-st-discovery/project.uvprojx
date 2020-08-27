@@ -612,6 +612,11 @@
               <FileType>1</FileType>
               <FilePath>applications\thread\src\thread_uart_rs485.c</FilePath>
             </File>
+            <File>
+              <FileName>thread_can_sbox.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\thread\src\thread_can_sbox.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

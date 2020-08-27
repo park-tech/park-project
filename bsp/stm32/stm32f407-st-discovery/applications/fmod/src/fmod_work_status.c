@@ -180,7 +180,7 @@ void fmod_relay_control()
 	{
 		K1_START_PIN_OFF;
 	}
-	else if (un_bat_err.st_bit.bat_over_chI != 1)
+	else if (un_bat_err.st_bit.bat_over_chI == 0)
 	{	
 		K1_START_PIN_ON;
 	}
