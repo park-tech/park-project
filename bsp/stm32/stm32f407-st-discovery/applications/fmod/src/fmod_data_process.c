@@ -151,32 +151,3 @@ void endian_swapl(void* data)
 		bdata[4-i-1] = temp;
 	}
 }
-/*********************************************************************************************************
-** 函数名称：
-** 函数描述：继电器控制
-** 输入参数：
-** 返回值  ：无
-*********************************************************************************************************///
-void fmod_relay_control()
-{
-	
-	int power_status=POWER_STATUS_VALUE;
-	
-	if(power_status==1)
-	{
-		K7_START_PIN_ON;
-		K1_START_PIN_ON;
-		K3_START_PIN_OFF;
-		K2_START_PIN_OFF;  
-		
-	}
-	else
-	{
-		K7_START_PIN_ON;
-		K1_START_PIN_OFF;
-		K3_START_PIN_ON;
-		K2_START_PIN_ON;  
-	}
-
-
-}

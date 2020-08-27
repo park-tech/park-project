@@ -305,10 +305,13 @@ struct Contactor_status_bits
 {
 	uint8_t  KM1_work_sign:1;
 	uint8_t  KM2_work_sign:1;
+	uint8_t  KM3_work_sign:1;
+	uint8_t  KM7_work_sign:1;
 	uint8_t  KM1_fault_sign:1;
 	uint8_t  KM2_fault_sign:1;
-
-	uint8_t  bat_full:1;
+	uint8_t  KM3_fault_sign:1;
+	uint8_t  KM7_fault_sign:1;
+	uint8_t  bat_full;
 	
 };
 
@@ -469,7 +472,6 @@ extern  time_t  real_sec;                          //从70年1月1号开始的�
 extern void fmod_device_init(void);
 extern void fmod_variable_init(void);
 extern void fmod_parameter_update(void);
-extern void fmod_relay_control(void);
 
 
 void endian_swaps(void* data);

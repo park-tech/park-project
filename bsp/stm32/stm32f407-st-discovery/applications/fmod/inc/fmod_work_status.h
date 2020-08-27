@@ -12,6 +12,8 @@
 extern void fmod_soc_soh_intiset(void);
 extern void fmod_static_volt_adj_soc(void);
 extern void fmod_updata_soc(void);
+extern void fmod_relay_control(void);
+
 void fmod_updata_soh(void);
 void fmod_open_volt_adj_soc(void);
 

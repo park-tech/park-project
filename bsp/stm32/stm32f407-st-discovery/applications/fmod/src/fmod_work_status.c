@@ -147,3 +147,70 @@ void fmod_updata_soh(void)
 
 }
 
+
+/*********************************************************************************************************
+** 函数名称：
+** 函数描述：继电器控制
+** 输入参数：
+** 返回值  ：无
+*********************************************************************************************************///
+void fmod_relay_control()
+{
+//	st_KM_bit.KM1_fault_sign=1;
+//	st_KM_bit.KM2_fault_sign=1;
+//	st_KM_bit.KM3_fault_sign=1;
+//	st_KM_bit.KM7_fault_sign=1;
+//	un_bat_err.st_bit.bat_overV = 1;
+//	un_bat_err.st_bit.bat_underV = 1;
+//	un_bat_err.st_bit.bat_underV_warn = 1;
+//	un_bat_err.st_bit.bat_over_chI = 1;
+//	un_bat_err.st_bit.bat_overdischI = 1;
+//	un_bat_err.st_bit.bat_overT = 1;
+//	un_bat_err.st_bit.bat_underT = 1;
+//	un_bat_err.st_bit.bat_temp_fault = 1;
+//	un_bat_err.st_bit.batcore_overV = 1;
+//	un_bat_err.st_bit.batcore_underV = 1;
+	
+	//K1控制
+	//当BMS检测到蓄电池组充满（8个蓄电池单体中最高电压大于13.5V）时，弹开K1，停止充电；
+	//当检测到过充恢复时（8个蓄电池单体中最低电压低于13V），重新吸合K1，重新开始充电；
+	//当BMS检测到蓄电池组过温时（温度高于50℃），弹开K1；当检测到温度恢复时（温度低于45℃），重新吸合K1；
+	//当BMS检测到充电电流高于充电过流点时（10A），BMS弹开K1并锁定，等待外部重启操作才能吸合K1。从通讯报警。
+	if(un_bat_err.st_bit.batcore_overV == 1 ||  un_bat_err.st_bit.bat_overT == 1   ||un_bat_err.st_bit.bat_over_chI == 1 )              
+	{
+		K1_START_PIN_OFF;
+	}
+	else if (un_bat_err.st_bit.bat_over_chI != 1)
+	{	
+		K1_START_PIN_ON;
+	}
+	
+	//接触器K7控制
+	//断开K7分为2种情况：速度信号为0，无通讯信号，此时判定为车辆休眠，断开K7；
+	//为区别车辆休眠的工况，当速度信号为0，通讯中有允许断电的信号且电池电压不大于11V时，切除K7。
+	if((SPEED0_STATUS_VALUE==1 && un_bat_err.st_bit.rs485_com_err == 1)||//断开K7分为2种情况：速度信号为0，无通讯信号，此时判定为车辆休眠，断开K7；
+		(SPEED0_STATUS_VALUE==1 && un_bat_err.st_bit.batcore_underV == 1  ))//为区别车辆休眠的工况，当速度信号为0，通讯中有允许断电的信号且电池电压不大于11V时，切除K7。                     
+	{
+		K7_START_PIN_OFF;
+	}
+	else{	
+		K7_START_PIN_ON;
+	}
+
+	
+	//接触器K2控制
+	//当BMS检测当检测到车辆110V电源电压低于限值时，及CAN通讯信号丢失时，吸合放电接触器K2；
+	//车辆110V电源电压高于限定值及CAN通讯信号正常时，弹开放电接触器K2；
+	 //K2接触器是给紧急刹车供电，不允许保护切除。
+	if(st_bat_data.fl_bat_volt<=110||un_bat_err.st_bit.rs485_com_err == 1)
+	{
+		K2_START_PIN_ON;  
+	}
+	else{
+	
+	K2_START_PIN_OFF;  
+	}
+	
+
+}
+

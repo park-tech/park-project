@@ -15,6 +15,7 @@ union	Batcore_err_regs  un_batcore_err;
 /********************************************************************************************
 函数申明
 ********************************************************************************************/
+static void fmod_fault_relay(void);
 static void fmod_fault_bat_overV(void);			
 static void fmod_fault_bat_underV(void);
 static void fmod_fault_bat_underV_warn(void);
@@ -37,6 +38,8 @@ static void fmod_fault_rs485_com (void);
 *******************************************************************************************/
 void fmod_fault_detect(void)
 {   
+ //........................接触器故障................................
+    fmod_fault_relay();
 
     //........................电池组过充................................
     fmod_fault_bat_overV();
@@ -73,6 +76,7 @@ void fmod_fault_detect(void)
 	
 	//........................单体电池短板故障................................
 	fmod_fault_bat_short_board ();
+
 	//........................ETH通讯故障..................................
 	//fmod_fault_eth_com();	
 		
@@ -81,6 +85,70 @@ void fmod_fault_detect(void)
     // ........................RS485通讯故障................................
     fmod_fault_rs485_com();
 //	printf("un_bat_err.u16_all = %04x\n", un_bat_err.u16_all );
+}
+
+/******************************************************************************************
+** 函数名称：接触器故障  
+** 函数描述：
+** 输入参数：无
+** 返回值  ：无
+*******************************************************************************************/
+static void  fmod_fault_relay (void)
+{
+	static uint16_t  u16_errK1_count = 0;
+	static uint16_t  u16_errK2_count = 0;
+	static uint16_t  u16_errK3_count = 0;
+	static uint16_t  u16_errK7_count = 0;
+
+	if( st_KM_bit.KM1_work_sign != K1_FEED_VALUE)		 
+	{   
+		if(u16_errK1_count <= 10) //1秒
+		{
+			u16_errK1_count++; 
+		}
+		else
+		{
+			st_KM_bit.KM1_fault_sign=1;
+			u16_errK1_count = 10;              //1秒
+		}
+	}
+	
+	if( st_KM_bit.KM2_work_sign != K2_FEED_VALUE)		 
+	{   
+		if(u16_errK2_count <= 10) //1秒
+		{
+			u16_errK2_count++; 
+		}
+		else
+		{
+			st_KM_bit.KM2_fault_sign=1;
+			u16_errK2_count = 10;              //1秒
+		}
+	}
+	if( st_KM_bit.KM3_work_sign != K3_FEED_VALUE)		 
+	{   
+		if(u16_errK3_count <= 10) //1秒
+		{
+			u16_errK3_count++; 
+		}
+		else
+		{
+			st_KM_bit.KM3_fault_sign=1;
+			u16_errK3_count = 10;              //1秒
+		}
+	}
+	if( st_KM_bit.KM7_work_sign != K7_FEED_VALUE)		 
+	{   
+		if(u16_errK7_count <= 10) //1秒
+		{
+			u16_errK7_count++; 
+		}
+		else
+		{
+			st_KM_bit.KM7_fault_sign=1;
+			u16_errK7_count = 10;              //1秒
+		}
+	}
 }
 
 /******************************************************************************************
@@ -480,7 +548,6 @@ static void  fmod_fault_batcore_underV (void)
 
 	un_batcore_err.st_err.un_underV[0].u32_all =0x00000000;
 	un_batcore_err.st_err.un_underV[1].u32_all =0x00000000;
-	un_batcore_err.st_err.un_underV[2].u32_all =0x00000000;
 
 	for(i = 0; i < TEST_BAT_NUM; i++ )
 	{   
@@ -521,6 +588,7 @@ static void  fmod_fault_batcore_underV (void)
 	}   
 	     
 }
+
 
 /******************************************************************************************
 ** 函数名称：单体电池内阻过高       
