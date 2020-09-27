@@ -13,7 +13,8 @@
 struct  Contactor_status_bits  st_KM_status = {0};
 union	Bat_status_regs        un_bat_status ;
 
-
+static BOOL  K1_LockFailure=0;
+int int_over_chI=0;
 
 /********************************************************************************************
 函数申明
@@ -41,7 +42,7 @@ void fmod_soc_soh_intiset(void)
 *******************************************************************************************/
 void fmod_open_volt_adj_soc(void)
 {        
-	st_bat_data.fl_bat_soc = 400 * (st_bat_data.fl_bat_volt /TEST_BAT_NUM) - 756;         //为什么呈这样的线性？每一个电池开路电压时，电压和容量之间都有一个特定的对应曲线，这个就是根据该曲线来的
+	st_bat_data.fl_bat_soc = 400 * (st_bat_data.fl_bat_volt /TEST_BAT_NUM) - 756;         //一个电池开路电压时，电压和容量之间都有一个特定的对应曲线
 	st_bat_data.fl_bat_Qnow = st_bat_data.fl_bat_soc * 0.01f * st_bat_data.fl_bat_Qc_max ; //第一连接电池的当前容量
 }
 
@@ -170,17 +171,27 @@ void fmod_relay_control()
 //	un_bat_err.st_bit.bat_temp_fault = 1;
 //	un_bat_err.st_bit.batcore_overV = 1;
 //	un_bat_err.st_bit.batcore_underV = 1;
-	
 	//K1控制
 	//当BMS检测到蓄电池组充满（8个蓄电池单体中最高电压大于13.5V）时，弹开K1，停止充电；
 	//当检测到过充恢复时（8个蓄电池单体中最低电压低于13V），重新吸合K1，重新开始充电；
 	//当BMS检测到蓄电池组过温时（温度高于50℃），弹开K1；当检测到温度恢复时（温度低于45℃），重新吸合K1；
 	//当BMS检测到充电电流高于充电过流点时（10A），BMS弹开K1并锁定，等待外部重启操作才能吸合K1。从通讯报警。
-	if(un_bat_err.st_bit.batcore_overV == 1 ||  un_bat_err.st_bit.bat_overT == 1   ||un_bat_err.st_bit.bat_over_chI == 1 )              
+//	if(un_bat_err.st_bit.bat_over_chI == 1)
+//	{
+//		int_over_chI++;
+//		if(int_over_chI==10)
+//		{
+//			K1_LockFailure=1;
+//			int_over_chI=0;
+//		}
+//		
+//	}
+	if(un_bat_err.st_bit.batcore_overV == 1 ||  un_bat_err.st_bit.bat_overT == 1   
+		||K1_LockFailure == 1||POWER_STATUS_VALUE==0 )              
 	{
 		K1_START_PIN_OFF;
 	}
-	else if (un_bat_err.st_bit.bat_over_chI == 0)
+	else
 	{	
 		K1_START_PIN_ON;
 	}
@@ -199,16 +210,19 @@ void fmod_relay_control()
 
 	
 	//接触器K2控制
-	//当BMS检测当检测到车辆110V电源电压低于限值时，及CAN通讯信号丢失时，吸合放电接触器K2；
-	//车辆110V电源电压高于限定值及CAN通讯信号正常时，弹开放电接触器K2；
+	//当检测到车辆充电机故障时，吸合放电接触器K2；
+	//车辆充电机正常时，弹开放电接触器K2； 
 	 //K2接触器是给紧急刹车供电，不允许保护切除。
-	if(st_bat_data.fl_bat_volt<=110||un_bat_err.st_bit.rs485_com_err == 1)
+	if(POWER_STATUS_VALUE==0)
 	{
+		K3_START_PIN_ON; 
+		rt_thread_mdelay(300);		
 		K2_START_PIN_ON;  
 	}
 	else{
 	
-	K2_START_PIN_OFF;  
+	K2_START_PIN_OFF; 
+	K3_START_PIN_OFF;  		
 	}
 	
 

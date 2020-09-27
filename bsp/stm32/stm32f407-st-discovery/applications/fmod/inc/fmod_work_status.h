@@ -7,7 +7,6 @@
 #include "fmod_data_process.h"
 #include "bsp_gpio.h"
 
-
 //..........................函数申明.......................................
 extern void fmod_soc_soh_intiset(void);
 extern void fmod_static_volt_adj_soc(void);

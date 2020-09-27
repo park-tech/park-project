@@ -44,7 +44,7 @@ static void uart5_variable_init(void);
 *********************************************************************************************************/
 static void thread_entry_re_uart5(void *param)
 {
-	basic_uart5_init(BAUD_RATE_38400);
+	basic_uart5_init(BAUD_RATE_115200);
 	uart5_variable_init( );
 	rt_thread_mdelay(200); 
     while(1)

@@ -80,8 +80,8 @@ static void thread_entry_re_pceth(void *param)
 //        else rt_kprintf("TCP socket creat err! res = %d\r\n", res);
     }
 
-    while (1)
     {
+    while (1)
         if(tcp_connect_flag) //socket连接成功，接收到数据（接收数据用回调函数）
 		{		
 			//...............发送数据.........................

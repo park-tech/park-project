@@ -32,7 +32,7 @@ void bsp_gpio_init(void)
    //.............输出配置............................
     rt_pin_mode(MCU_4524A0_PIN, PIN_MODE_OUTPUT);
     rt_pin_mode(MCU_4524A1_PIN, PIN_MODE_OUTPUT);
-	rt_pin_mode(MCU_4524A2_PIN, PIN_MODE_OUTPUT);
+		rt_pin_mode(MCU_4524A2_PIN, PIN_MODE_OUTPUT);
 		rt_pin_mode(MCU_4524A3_PIN, PIN_MODE_OUTPUT);
 		rt_pin_mode(MCU_4524EL_PIN, PIN_MODE_OUTPUT);
 	

@@ -42,10 +42,10 @@ void fmod_fault_detect(void)
     fmod_fault_relay();
 
     //........................电池组过充................................
-    fmod_fault_bat_overV();
+    //fmod_fault_bat_overV();
 
     //........................电池组过放................................
-	fmod_fault_bat_underV();
+	//fmod_fault_bat_underV();
 
 	//........................电池组低压预警................................
 	//fmod_fault_bat_underV_warn();

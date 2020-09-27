@@ -91,7 +91,7 @@ void fmod_parameter_update(void)
 		if( (now_sec - un_prodinfo_rdata.st_data.u32_time >= 4 * 60 *60) && 
 			(st_bat_data.fl_bat_chI + st_bat_data.fl_bat_dischI <= 1 ))
 		{
-			fmod_open_volt_adj_soc( );//开路电压时，电压和容量之间都有一个特定的对应曲线还未知？
+			fmod_open_volt_adj_soc( );//开路电压时，
 		}
 	}
 	

@@ -139,7 +139,7 @@ static int thread_creat_can1_rx(void)
         LOG_D("find %s failed!\n", "can1");
     }
     
-    rt_sem_init(&rx_can1_sem, "ca1_rx_sem", 0, RT_IPC_FLAG_FIFO);   /* 初始化 CAN 接收信号量 */
+    rt_sem_init(&rx_can1_sem, "can1_rx_sem", 0, RT_IPC_FLAG_FIFO);   /* 初始化 CAN 接收信号量 */
     //.................设置CAN波特率.........................
     basic_CAN_Init(can_dev, CAN1_BAUD_RATE);
     //.................设置CANid............................
@@ -214,15 +214,15 @@ static void can1_rx_data(struct rt_can_msg  *rxmsg)
     uint8_t i = 0, j = 0;
     
     
-    if((rxmsg->id >= 0x0601 ) && (rxmsg->id <= 0x0600 + TEST_BAT_NUM ))
-    {
+//    if((rxmsg->id >= 0x0601 ) && (rxmsg->id <= 0x0600 + TEST_BAT_NUM ))
+//    {
         i = rxmsg->id - 0x0601;
 
         for(j = 0; j < 8; j++)
         { 
             //un_swap_re_sbox_data[i].u8_data[j] =	rxmsg->data[j]; 
         }	
-    }
+//    }
 
     // if(re_count < TEST_BAT_NUM)
     // {
