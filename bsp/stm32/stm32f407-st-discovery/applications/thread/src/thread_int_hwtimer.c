@@ -49,9 +49,9 @@ rt_err_t hwtimeout_cb(rt_device_t dev, rt_size_t size)
 	//fmod_sbox_chooseVolt(1);
 	//fmod_sbox_chooseTemp(1);
 	//.......................adc采样.........................
-	if (timer_flag.flag_10ms)
+	if (timer_flag.flag_100ms)
 	{
-		timer_flag.flag_10ms = 0;
+		timer_flag.flag_100ms = 0;
 		adc_sample();
 		//.......................单体电池adc采样.........................
 		cell_adc_sample();
@@ -142,7 +142,7 @@ static void adc_sample(void)
 static void cell_adc_sample(void)
 {
 	
-	//ADCchannelindex=0;
+	//ADCchannelindex=2;
 	cell_temp[ADCchannelindex].u16_get_value = bsp_adchannel_cell_temp();
 	cell_temp[ADCchannelindex].u16_avg_value = Movefilter(&cell_temp[ADCchannelindex], MOV_FILT_SIZE) * batcell_Temp_KP;
 
@@ -681,6 +681,6 @@ static double fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt)
 	double real_bt_Temp_Volt = bt_Temp_Volt / 1000.000;
 	double R_NTC = (real_bt_Temp_Volt * 20000) / (3.3 - real_bt_Temp_Volt);
 	double temp = 1 / (log(R_NTC / 10000) / 3960 + 1 / 298.15) - 273.15;
-	double temp1 = ((temp + 55) * 10);
+	double temp1 = ((temp ) * 10);
 	return temp1;
 }

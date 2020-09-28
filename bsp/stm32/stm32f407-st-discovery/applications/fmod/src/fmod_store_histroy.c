@@ -175,12 +175,12 @@ static char *fmod_make_histroy_jsonbody(void)
 	cJSON_AddItemToObject(pSubJson, "bat_min_volt", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_min_volt));
 	cJSON_AddItemToObject(pSubJson, "bat_max_temp", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_max_temp));
 	cJSON_AddItemToObject(pSubJson, "bat_min_temp", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_min_temp));
-	cJSON_AddItemToObject(pSubJson, "bat_max_R", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_max_R));
-	cJSON_AddItemToObject(pSubJson, "bat_min_R", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_min_R));
+	//cJSON_AddItemToObject(pSubJson, "bat_max_R", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_max_R));
+	//cJSON_AddItemToObject(pSubJson, "bat_min_R", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_min_R));
 	cJSON_AddItemToObject(pSubJson, "bat_Qc_max", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_Qc_max));
 	cJSON_AddItemToObject(pSubJson, "bat_Qnow", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_Qnow));	
 	cJSON_AddItemToObject(pSubJson, "bat_avg_volt", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_avg_volt));
-	cJSON_AddItemToObject(pSubJson, "bat_avg_R", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_avg_R));
+	//cJSON_AddItemToObject(pSubJson, "bat_avg_R", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_avg_R));
 	cJSON_AddItemToObject(pSubJson, "err_bat_num", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_err_bat_num));
 
 	cJSON_AddItemToObject(pSubJson, "bc_volt", cJSON_CreateString(st_histroy_wdata.batcore_volt_string)); 

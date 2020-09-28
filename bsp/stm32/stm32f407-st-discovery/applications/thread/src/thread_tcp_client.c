@@ -420,10 +420,10 @@ static void se_eth_PC_update(void)
     un_seeth_PC_data.st_data.st_se_mvb.u16_bat_min_volt = st_bat_data.u16_bat_min_volt;
     un_seeth_PC_data.st_data.st_se_mvb.u16_bat_max_temp = (st_bat_data.fl_bat_max_temp + 55) *10;
     un_seeth_PC_data.st_data.st_se_mvb.u16_bat_min_temp = (st_bat_data.fl_bat_min_temp + 55) *10;
-    un_seeth_PC_data.st_data.st_se_mvb.u16_bat_max_R = st_bat_data.u16_bat_max_R;
-    un_seeth_PC_data.st_data.st_se_mvb.u16_bat_min_R = st_bat_data.u16_bat_min_R;
+    //un_seeth_PC_data.st_data.st_se_mvb.u16_bat_max_R = st_bat_data.u16_bat_max_R;
+    //un_seeth_PC_data.st_data.st_se_mvb.u16_bat_min_R = st_bat_data.u16_bat_min_R;
     un_seeth_PC_data.st_data.st_se_mvb.u16_bat_avg_volt = st_bat_data.u16_bat_avg_volt;
-    un_seeth_PC_data.st_data.st_se_mvb.u16_bat_avg_R = st_bat_data.u16_bat_avg_R;
+   // un_seeth_PC_data.st_data.st_se_mvb.u16_bat_avg_R = st_bat_data.u16_bat_avg_R;
 	un_seeth_PC_data.st_data.st_se_mvb.u8_bat_err[0] = un_bat_err.u16_all & 0X00FF ;
 	un_seeth_PC_data.st_data.st_se_mvb.u8_bat_err[1] =((un_bat_err.u16_all & 0XFF00) >> 8);
 	un_seeth_PC_data.st_data.st_se_mvb.u8_softversion[0] = 0x01;	 //V1.0

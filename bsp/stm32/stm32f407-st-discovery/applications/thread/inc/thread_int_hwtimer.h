@@ -36,7 +36,7 @@
 #define  bat_Iout2_KP            4.00F      //输出电流2采样数模转换的比例值
 #define  bat_Iout3_KP            1.2F       //输出电流3数模转换的比例值
 #define  bat_Vin_KP              10.00F     //输入电压采样数模转换的比例值
-#define  batcell_Vin_KP          6.50F     //单体电池输入电压采样数模转换的比例值
+#define  batcell_Vin_KP          5.0F     //单体电池输入电压采样数模转换的比例值
 #define  batcell_Temp_KP         1.00F     //单体电池温度采样数模转换的比例值
 
 #define Integral_time  0.0001F          //积分时间 0.36s 采样一次 0.36s = 0.0001h

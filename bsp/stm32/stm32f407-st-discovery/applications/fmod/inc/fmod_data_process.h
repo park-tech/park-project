@@ -177,17 +177,17 @@ struct Bat_data  //62
 	float		 fl_bat_max_temp;	     //电池最高温度实际值 	
 	float		 fl_bat_min_temp;	     //电池最低温度实际值 
 	
-	uint16_t	 u16_bat_max_R;		     //电池单体最高内阻 0.01mΩ 
-	uint16_t	 u16_bat_min_R;		     //电池单体最低内阻 0.01mΩ	
+	//uint16_t	 u16_bat_max_R;		     //电池单体最高内阻 0.01mΩ 
+	//uint16_t	 u16_bat_min_R;		     //电池单体最低内阻 0.01mΩ	
 	
 	float		 fl_bat_Qc_max;		     //电池当前可充的最大电池容量	
 	float	     fl_bat_Qnow;			 //电池工作后实时容量 
 	
   uint16_t	 u16_bat_avg_volt;		 //电池平均单体电压 	1mv
-  uint16_t	 u16_bat_avg_R;		     //电池平均内阻 
+  //uint16_t	 u16_bat_avg_R;		     //电池平均内阻 
 
 	uint16_t	 u16_err_bat_num;		 //故障电池序号
-  uint16_t	 u16_resv;		         //电池平均内阻 	          
+  //uint16_t	 u16_resv;		         //电池平均内阻 	          
 };
 
 struct Bat_status_bits
@@ -235,9 +235,9 @@ union	 Bat_err_regs
 //.............................单体电池信息................................ 
 struct Batcore_data
 {
-	uint16_t	 u16_batcore_volt[84];	 //单体电池电压 1 mv
-	uint16_t     u16_batcore_temp[84];   //(T+55)*10 
-	uint16_t     u16_batcore_R[84];      //单体电池内阻 0.01 m欧   	
+	uint16_t	 u16_batcore_volt[9];	 //单体电池电压 1 mv
+	uint16_t     u16_batcore_temp[9];   //(T+55)*10 
+	//uint16_t     u16_batcore_R[84];      //单体电池内阻 0.01 m欧   	
 };
 //.........................单体电池故障标识................................
 struct Batcore_err_bits          //电池过充，第一组：单体1-32
