@@ -95,15 +95,15 @@ static void fmod_send_485_update(void)
 	un_se485_data.st_data.u8_softversion[0] = 0x01;	                                 //V1.0
 	un_se485_data.st_data.u8_softversion[1] = 0x00; 
 
-    for(i = 0 ; i < 52 ; i++)
-    {
-		//...................单体电池内阻...............................
-		if(st_batcore_data.u16_batcore_R[i] > 255)  un_se485_data.st_data.u8_batcore_R[i] = 0XFF;
-		else 	un_se485_data.st_data.u8_batcore_R[i] = st_batcore_data.u16_batcore_R[i] ;	
-  		
-		//...................单体电池电压...............................
-  		un_se485_data.st_data.u8_batcore_volt[i] = (st_batcore_data.u16_batcore_volt[i] / 20);
-    }
+//    for(i = 0 ; i < 52 ; i++)
+//    {
+//		//...................单体电池内阻...............................
+//		if(st_batcore_data.u16_batcore_R[i] > 255)  un_se485_data.st_data.u8_batcore_R[i] = 0XFF;
+//		else 	un_se485_data.st_data.u8_batcore_R[i] = st_batcore_data.u16_batcore_R[i] ;	
+//  		
+//		//...................单体电池电压...............................
+//  		un_se485_data.st_data.u8_batcore_volt[i] = (st_batcore_data.u16_batcore_volt[i] / 20);
+//    }
 
     un_se485_data.st_data.u8_end = 0XEF;
     un_se485_data.st_data.u8_check = BCC_XOR_check(un_se485_data.u8_data, 131);//需要计算的长度

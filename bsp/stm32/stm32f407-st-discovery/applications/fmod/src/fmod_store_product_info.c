@@ -164,6 +164,7 @@ static void fmod_prodinfo_store_updata(void)
 	un_prodinfo_wdata.st_data.u16_bat_soh  = (uint16_t)(st_bat_data.fl_bat_soh * 10);
 	un_prodinfo_wdata.st_data.u16_bat_Qc_max = (uint16_t)(st_bat_data.fl_bat_Qc_max * 10);
 	un_prodinfo_wdata.st_data.u32_bat_Qnow = (uint32_t)(st_bat_data.fl_bat_Qnow * 10000);
+	
 
 	//..................读取当前时间...........................
 	get_rtc_second(&real_time);

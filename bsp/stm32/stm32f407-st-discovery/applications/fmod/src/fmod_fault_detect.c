@@ -42,10 +42,10 @@ void fmod_fault_detect(void)
     fmod_fault_relay();
 
     //........................电池组过充................................
-    //fmod_fault_bat_overV();
+    fmod_fault_bat_overV();
 
     //........................电池组过放................................
-	//fmod_fault_bat_underV();
+	fmod_fault_bat_underV();
 
 	//........................电池组低压预警................................
 	//fmod_fault_bat_underV_warn();
@@ -175,7 +175,7 @@ static void  fmod_fault_bat_overV (void)
 		}
 	}
 
-	if(st_bat_data.fl_bat_volt <= (BC_OVER_V - 0.08) * TEST_BAT_NUM)	//回差设置	 //过压值为14.7V
+	if(st_bat_data.fl_bat_volt <= (BC_OVER_V - 0.08) * 9)	//回差设置	 //过压值为14.7V
 	{   
 		
 		if(u16_err_count > 0 )
@@ -200,7 +200,7 @@ static void  fmod_fault_bat_underV (void)
 {
 	static uint16_t  u16_err_count = 0;
 	
-	if(st_bat_data.fl_bat_volt < (BC_UNDER_V * TEST_BAT_NUM ) )  
+	if(st_bat_data.fl_bat_volt < (BC_UNDER_V * 9 ) )  
 	{		
 		if(u16_err_count <= 10)  //1秒
 		{
@@ -213,7 +213,7 @@ static void  fmod_fault_bat_underV (void)
 		}
 	}
 
-	if(st_bat_data.fl_bat_volt >= ((BC_UNDER_V + 0.09 ) * TEST_BAT_NUM) ) 	  
+	if(st_bat_data.fl_bat_volt >= ((BC_UNDER_V + 0.09 ) * 9) ) 	  
 	{	
 		if(u16_err_count > 0 )
 		{
@@ -238,7 +238,7 @@ static void  fmod_fault_bat_underV_warn  (void)
 {
     static uint16_t  u16_err_count = 0;
 	
-	if(st_bat_data.fl_bat_volt < BC_LOW_PREWARN_V * TEST_BAT_NUM )		
+	if(st_bat_data.fl_bat_volt < BC_LOW_PREWARN_V * 9 )		
 	{   
 		if(u16_err_count <= 10)  //1秒
 		{
@@ -250,7 +250,7 @@ static void  fmod_fault_bat_underV_warn  (void)
 			u16_err_count = 10;              
 		}
 	}
-	if(st_bat_data.fl_bat_volt >=((BC_LOW_PREWARN_V + 0.1) * TEST_BAT_NUM))		
+	if(st_bat_data.fl_bat_volt >=((BC_LOW_PREWARN_V + 0.1) * 9))		
 	{   
 		if(u16_err_count > 0 )
 		{
@@ -351,7 +351,7 @@ static void  fmod_fault_bat_overT (void)
 	un_batcore_err.st_err.un_overT[1].u32_all = 0x00000000;
 	un_batcore_err.st_err.un_overT[2].u32_all = 0x00000000;
 
-	for(i = 0; i < TEST_BAT_NUM; i++ )
+	for(i = 0; i < 9; i++ )
 	{   
 		if(st_batcore_data.u16_batcore_temp[i] >=  (OVER_TEMP + 55) * 10 )
         {		
@@ -440,7 +440,7 @@ static void  fmod_fault_sensor_T (void)
 	un_batcore_err.st_err.un_Terr[2].u32_all = 0x00000000;
 
 
-	for(i = 0; i < TEST_BAT_NUM; i++ )
+	for(i = 0; i < 9; i++ )
 	{   
 		if((st_batcore_data.u16_batcore_temp[i] >  (120 + 55)*10) || (st_batcore_data.u16_batcore_temp[i] < (-45 + 55)*10))
         {		
@@ -491,12 +491,10 @@ static void  fmod_fault_batcore_overV (void)
 	uint32_t i = 0;
 
 	un_batcore_err.st_err.un_overV[0].u32_all =0x00000000;
-	un_batcore_err.st_err.un_overV[1].u32_all =0x00000000;
-	un_batcore_err.st_err.un_overV[2].u32_all =0x00000000;
 
-	for(i = 0; i < TEST_BAT_NUM; i++ )
+	for(i = 0; i < 9; i++ )
 	{   
-		if(st_batcore_data.u16_batcore_volt[i] >=  (BC_OVER_V + 0.162) * 1000)
+		if(st_batcore_data.u16_batcore_volt[i] >=  (BC_OVER_V + 0.162) * 10)
         {		
 			un_batcore_err.st_err.un_overV[i/32].u32_all |= 1 << (i % 32);	
 		}
@@ -506,9 +504,7 @@ static void  fmod_fault_batcore_overV (void)
 		}
 	}
 	
-    if( (un_batcore_err.st_err.un_overV[0].u32_all >=1) ||
-   	   (un_batcore_err.st_err.un_overV[1].u32_all >=1) ||
-	   (un_batcore_err.st_err.un_overV[2].u32_all >=1) )
+    if( (un_batcore_err.st_err.un_overV[0].u32_all >=1) )
    	{
 		if(u16_err_count <= 20)  //2秒
 		{
@@ -547,32 +543,29 @@ static void  fmod_fault_batcore_underV (void)
 	uint32_t i = 0;
 
 	un_batcore_err.st_err.un_underV[0].u32_all =0x00000000;
-	un_batcore_err.st_err.un_underV[1].u32_all =0x00000000;
 
-	for(i = 0; i < TEST_BAT_NUM; i++ )
+	for(i = 0; i < 9; i++ )
 	{   
-		if(st_batcore_data.u16_batcore_volt[i] <=  (BC_UNDER_V -0.05)* 1000)
+		if(st_batcore_data.u16_batcore_volt[i] <=  (BC_UNDER_V -0.05)* 10)
         {		
-			un_batcore_err.st_err.un_underV[i/32].u32_all |= 1 << (i % 32);	
+			un_batcore_err.st_err.un_underV[0].u32_all |= 1 << (i % 32);	
 		}
 		else
 		{
-			un_batcore_err.st_err.un_underV[i/32].u32_all &= ~(1 << (i % 32));	
+			un_batcore_err.st_err.un_underV[0].u32_all &= ~(1 << (i % 32));	
 		}
 	}
 	
-    if( (un_batcore_err.st_err.un_underV[0].u32_all >=1) ||
-   	    (un_batcore_err.st_err.un_underV[1].u32_all >=1) ||
-	    (un_batcore_err.st_err.un_underV[2].u32_all >=1) )
+    if( (un_batcore_err.st_err.un_underV[0].u32_all >=1))
    	{
-		if(u16_err_count <= 20)  //2秒
+		if(u16_err_count <= 40)  //4秒
 		{
 			u16_err_count++; 
 		}
 		else
 		{
 			un_bat_err.st_bit.batcore_underV = 1;
-			u16_err_count = 20;              
+			u16_err_count = 40;              
 		}
 	}   
 	else
@@ -596,54 +589,54 @@ static void  fmod_fault_batcore_underV (void)
 ** 输入参数：无
 ** 返回值  ：无
 *******************************************************************************************/
-static void  fmod_fault_batcore_overR (void)
-{   
-	static uint16_t  u16_err_count = 0;
-	uint32_t i = 0;
+//static void  fmod_fault_batcore_overR (void)
+//{   
+//	static uint16_t  u16_err_count = 0;
+//	uint32_t i = 0;
 
-	un_batcore_err.st_err.un_overR[0].u32_all =0x00000000;
-	un_batcore_err.st_err.un_overR[1].u32_all =0x00000000;
-	un_batcore_err.st_err.un_overR[2].u32_all =0x00000000;
+//	un_batcore_err.st_err.un_overR[0].u32_all =0x00000000;
+//	un_batcore_err.st_err.un_overR[1].u32_all =0x00000000;
+//	un_batcore_err.st_err.un_overR[2].u32_all =0x00000000;
 
-	for(i = 0; i < TEST_BAT_NUM; i++ )
-	{	
-		if(st_batcore_data.u16_batcore_R[i] >=  BC_OVER_R)
-		{		
-			un_batcore_err.st_err.un_overR[i/32].u32_all |= 1 << (i % 32);	
-		}
-		else
-		{
-			un_batcore_err.st_err.un_overR[i/32].u32_all &= ~(1 << (i % 32));	
-		}
-	}
-	
-	if( (un_batcore_err.st_err.un_overR[0].u32_all >=1) ||
-	    (un_batcore_err.st_err.un_overR[1].u32_all >=1) ||
-	    (un_batcore_err.st_err.un_overR[2].u32_all >=1) )
-	{	
-		if(u16_err_count <= 20)  //2秒
-		{
-			u16_err_count++; 
-		}
-		else
-		{
-			un_bat_err.st_bit.bat_overR = 1;
-			u16_err_count = 20;              
-		}
-	}	
-	else
-	{
-		if(u16_err_count > 0 )
-		{
-			u16_err_count--; 	
-		}
-		else
-		{
-			un_bat_err.st_bit.bat_overR = 0;
-		}
-	}	
-	   	   
-}
+//	for(i = 0; i < 9; i++ )
+//	{	
+//		if(st_batcore_data.u16_batcore_R[i] >=  BC_OVER_R)
+//		{		
+//			un_batcore_err.st_err.un_overR[i/32].u32_all |= 1 << (i % 32);	
+//		}
+//		else
+//		{
+//			un_batcore_err.st_err.un_overR[i/32].u32_all &= ~(1 << (i % 32));	
+//		}
+//	}
+//	
+//	if( (un_batcore_err.st_err.un_overR[0].u32_all >=1) ||
+//	    (un_batcore_err.st_err.un_overR[1].u32_all >=1) ||
+//	    (un_batcore_err.st_err.un_overR[2].u32_all >=1) )
+//	{	
+//		if(u16_err_count <= 20)  //2秒
+//		{
+//			u16_err_count++; 
+//		}
+//		else
+//		{
+//			un_bat_err.st_bit.bat_overR = 1;
+//			u16_err_count = 20;              
+//		}
+//	}	
+//	else
+//	{
+//		if(u16_err_count > 0 )
+//		{
+//			u16_err_count--; 	
+//		}
+//		else
+//		{
+//			un_bat_err.st_bit.bat_overR = 0;
+//		}
+//	}	
+//	   	   
+//}
 
 /******************************************************************************************
 ** 函数名称：电池短板故障       
@@ -656,9 +649,9 @@ static void  fmod_fault_bat_short_board (void)
 	static uint16_t  u16_err_count = 0;
 	uint32_t i = 0;
 
-	for(i = 0; i < TEST_BAT_NUM; i++ )
+	for(i = 0; i < 9; i++ )
 	{   
-		if( ((st_batcore_data.u16_batcore_volt[i] <  (st_bat_data.u16_bat_avg_volt -0.55) * 1000) && (st_batcore_data.u16_batcore_R[i] >=  BC_OVER_R) ) 
+		if( ((st_batcore_data.u16_batcore_volt[i] <  (st_bat_data.u16_bat_avg_volt -0.55) * 1000)) 
             || (st_batcore_data.u16_batcore_volt[i] < 1.2 * 1000))
 	    {		
 			un_batcore_err.st_err.un_short_board[i/32].u32_all |= 1 << (i % 32);	
@@ -680,7 +673,7 @@ static void  fmod_fault_bat_short_board (void)
 		else
 		{
 			un_bat_err.st_bit.batcore_underV = 1;
-            for(i = 0; i < TEST_BAT_NUM; i++ )
+            for(i = 0; i < 9; i++ )
             {
 				if( (un_batcore_err.st_err.un_short_board[i/32].u32_all >>(i % 32)) ==1 )
                 {

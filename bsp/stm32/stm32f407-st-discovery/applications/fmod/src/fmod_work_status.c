@@ -221,8 +221,8 @@ void fmod_relay_control()
 	}
 	else{
 	
-	K2_START_PIN_OFF; 
-	K3_START_PIN_OFF;  		
+		K2_START_PIN_OFF; 
+		K3_START_PIN_OFF;  		
 	}
 	
 

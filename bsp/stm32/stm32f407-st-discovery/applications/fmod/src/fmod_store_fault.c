@@ -194,9 +194,9 @@ static char *fmod_make_fault_jsonbody(void)
 	cJSON_AddItemToObject(pSubJson, "bcA_overT", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overT[0].u32_all));
 	cJSON_AddItemToObject(pSubJson, "bcB_overT", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overT[1].u32_all));
 	cJSON_AddItemToObject(pSubJson, "bcC_overT", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overT[2].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcA_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[0].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcB_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[1].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcC_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[2].u32_all));
+	//cJSON_AddItemToObject(pSubJson, "bcA_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[0].u32_all));
+	//cJSON_AddItemToObject(pSubJson, "bcB_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[1].u32_all));
+	//cJSON_AddItemToObject(pSubJson, "bcC_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[2].u32_all));
 	cJSON_AddItemToObject(pSubJson, "bcA_Terr", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_Terr[0].u32_all));
 	cJSON_AddItemToObject(pSubJson, "bcB_Terr", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_Terr[1].u32_all));
 	cJSON_AddItemToObject(pSubJson, "bcC_Terr", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_Terr[2].u32_all));
@@ -353,7 +353,7 @@ static void fmod_fault_batcore_updata(void)
     uint8_t i = 0;
 	char  batcore_data[6] = {0};
 
-    for(i = 0; i < 84; i++ ) 
+    for(i = 0; i < 9; i++ ) 
     {  
 	    sprintf(batcore_data, "%04x", st_batcore_data.u16_batcore_volt[i]);
 		st_fault_wdata.batcore_volt_string[4*i]   = batcore_data[0];
@@ -362,7 +362,7 @@ static void fmod_fault_batcore_updata(void)
 		st_fault_wdata.batcore_volt_string[4*i+3] = batcore_data[3];
     }
 	
-    for(i = 0; i < 84; i++ )
+    for(i = 0; i < 9; i++ )
     {  
 	    sprintf(batcore_data, "%04x", st_batcore_data.u16_batcore_temp[i]);
 		st_fault_wdata.batcore_temp_string[4*i]   = batcore_data[0];
@@ -371,14 +371,14 @@ static void fmod_fault_batcore_updata(void)
 		st_fault_wdata.batcore_temp_string[4*i+3] = batcore_data[3];
     }
 
-	for(i = 0; i < 84; i++ )
-	{  
-		sprintf(batcore_data, "%04x", st_batcore_data.u16_batcore_R[i]);
-		st_fault_wdata.batcore_R_string[4*i]   = batcore_data[0];
-		st_fault_wdata.batcore_R_string[4*i+1] = batcore_data[1];
-		st_fault_wdata.batcore_R_string[4*i+2] = batcore_data[2];
-		st_fault_wdata.batcore_R_string[4*i+3] = batcore_data[3];
-	}
+//	for(i = 0; i < 84; i++ )
+//	{  
+//		sprintf(batcore_data, "%04x", st_batcore_data.u16_batcore_R[i]);
+//		st_fault_wdata.batcore_R_string[4*i]   = batcore_data[0];
+//		st_fault_wdata.batcore_R_string[4*i+1] = batcore_data[1];
+//		st_fault_wdata.batcore_R_string[4*i+2] = batcore_data[2];
+//		st_fault_wdata.batcore_R_string[4*i+3] = batcore_data[3];
+//	}
 	
 }
 /********************************************************************************************

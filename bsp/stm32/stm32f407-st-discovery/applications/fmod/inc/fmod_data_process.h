@@ -40,11 +40,11 @@
 #define LIP_Battery   0          //磷酸铁锂电池 
 
 //...................铅酸电池特性................................ 
-#define VRLA_BC_Chfull_V   13.6               //充满电压值     
-#define VRLA_BC_OVER_V     14.7              //单体电池过压值 
+#define VRLA_BC_Chfull_V   12.3               //充满电压值     
+#define VRLA_BC_OVER_V     13.6               //单体电池过压值 
 #define VRLA_BC_UNDER_V    10.5             //单体电池欠压值 
 #define VRLA_BC_LOW_PREWARN_V    10.8         //单体电池低压预警值
-#define VRLA_BC_OVER_R       20               //单体电池内阻过高值2MR  单位mR的10倍  //海泰蓄电池项目用不到             1=0.1mR
+//#define VRLA_BC_OVER_R       20               //单体电池内阻过高值2MR  单位mR的10倍  //海泰蓄电池项目用不到             1=0.1mR
 #define VRLA_OVER_CHI      5.4               //电池充电过流值  充电器的电流最大2A，此处填写蓄电池的实际充电过流值
 
 ////...................铅酸电池特性................................ 
@@ -288,7 +288,7 @@ struct Batcore_fault_regs
 	union Batcore_err_reg     un_overV[3];//0-31位表示 第1-32节单体电池过充状态,位置1表示过压
 	union Batcore_err_reg     un_underV[3];//0-31位表示 第1-32节单体电池过放状态
 	union Batcore_err_reg     un_overT[3];//0-31位表示 第1-32节单体电池过温状态
-    union Batcore_err_reg     un_overR[3];//0-31位表示 第1-32节单体电池内阻过高
+  //union Batcore_err_reg     un_overR[3];//0-31位表示 第1-32节单体电池内阻过高
 	union Batcore_err_reg     un_Terr[3];  //0-31位表示 第1-32节单体电池温度传感器故障,    
 	union Batcore_err_reg     un_short_board[3];  //0-31位表示 第1-32节单体电池短板故障,  	
 };

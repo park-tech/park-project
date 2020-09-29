@@ -62,7 +62,9 @@ void fmod_variable_init(void)
 	st_product_info.u16_product_num = 0x0001;    //产品编号
 	st_product_info.u8_car_num = 0x01;           //车号	
 	st_product_info.u8_bat_num = 0x09;           //电池检测数量  
-
+	
+	st_product_preset.u8_ch_overI=0x02;
+	st_product_preset.u8_disch_overI=0x96;
     un_bat_status.st_bit.bat_first_work = 1;     //初始化都当做首次启动
 
    // strcpy(st_2g_send_data.i8_timestring, timestr);  //设定初始上传时间			

@@ -380,7 +380,7 @@ static void se_eth_PC_data(void)
     {
         endian_swaps(&un_swap_seeth_PC_data.st_data.st_batcore_data.u16_batcore_volt[i]);
         endian_swaps(&un_swap_seeth_PC_data.st_data.st_batcore_data.u16_batcore_temp[i]);
-        endian_swaps(&un_swap_seeth_PC_data.st_data.st_batcore_data.u16_batcore_R[i]);
+        //endian_swaps(&un_swap_seeth_PC_data.st_data.st_batcore_data.u16_batcore_R[i]);
     }
    // un_swap_seeth_PC_data.st_data.un_batcore_err = un_batcore_err;
  
@@ -433,7 +433,7 @@ static void se_eth_PC_update(void)
     {
         un_seeth_PC_data.st_data.st_batcore_data.u16_batcore_volt[i] = st_batcore_data.u16_batcore_volt[i];
         un_seeth_PC_data.st_data.st_batcore_data.u16_batcore_temp[i] = st_batcore_data.u16_batcore_temp[i];
-        un_seeth_PC_data.st_data.st_batcore_data.u16_batcore_R[i] = st_batcore_data.u16_batcore_R[i];
+       // un_seeth_PC_data.st_data.st_batcore_data.u16_batcore_R[i] = st_batcore_data.u16_batcore_R[i];
     }
     un_seeth_PC_data.st_data.un_batcore_err = un_batcore_err;
     
