@@ -99,56 +99,152 @@ static void  fmod_fault_relay (void)
 	static uint16_t  u16_errK2_count = 0;
 	static uint16_t  u16_errK3_count = 0;
 	static uint16_t  u16_errK7_count = 0;
-
-	if( st_KM_bit.KM1_work_sign != K1_FEED_VALUE)		 
+	static uint16_t  u16_lockK1_count = 0;
+	static uint16_t  u16_lockK2_count = 0;
+	static uint16_t  u16_lockK3_count = 0;
+	static uint16_t  u16_lockK7_count = 0;
+	static uint16_t  u16_upK1_count = 0;
+	static uint16_t  u16_upK2_count = 0;
+	static uint16_t  u16_upK3_count = 0;
+	static uint16_t  u16_upK7_count = 0;
+	
+	
+	
+	//K1故障判断
+	if(u16_lockK1_count >=3)
+	{
+		st_KM_bit.KM1_fault_sign=1;
+	}
+	else if( st_KM_bit.KM1_work_sign != K1_FEED_VALUE)		 
 	{   
-		if(u16_errK1_count <= 10) //1秒
+		if(u16_errK1_count <= 20) 			//2秒
 		{
 			u16_errK1_count++; 
 		}
 		else
 		{
+			if(u16_upK1_count==0)
+			{
+				u16_lockK1_count++;
+			}
 			st_KM_bit.KM1_fault_sign=1;
-			u16_errK1_count = 10;              //1秒
+			u16_upK7_count++;
+			u16_errK1_count = 20;              //2秒
+			if(u16_upK1_count>=50)
+			{
+				u16_upK1_count=50;
+			}
 		}
 	}
+	else
+	{
+		st_KM_bit.KM1_fault_sign=0;
+		u16_errK1_count = 0;   
+		u16_upK1_count=0;
+	}
 	
-	if( st_KM_bit.KM2_work_sign != K2_FEED_VALUE)		 
+	
+//K2故障判断
+	if(u16_lockK2_count >=3)
+	{
+		st_KM_bit.KM2_fault_sign=1;
+	}
+	else if( st_KM_bit.KM2_work_sign != K2_FEED_VALUE)		 
 	{   
-		if(u16_errK2_count <= 10) //1秒
+		if(u16_errK2_count <= 20) 			//2秒
 		{
 			u16_errK2_count++; 
 		}
 		else
 		{
+			if(u16_upK2_count==0)
+			{
+				u16_lockK2_count++;
+			}
 			st_KM_bit.KM2_fault_sign=1;
-			u16_errK2_count = 10;              //1秒
+			u16_upK2_count++;
+			u16_errK2_count = 20;              //2秒
+			if(u16_upK2_count>=50)
+			{
+				u16_upK2_count=50;
+			}
 		}
 	}
-	if( st_KM_bit.KM3_work_sign != K3_FEED_VALUE)		 
+	else
+	{
+		st_KM_bit.KM2_fault_sign=0;
+		u16_errK2_count = 0;   
+		u16_upK2_count=0;
+	}
+	
+	
+	//K3故障判断
+	if(u16_lockK3_count >=3)
+	{
+		st_KM_bit.KM3_fault_sign=1;
+	}
+	else if( st_KM_bit.KM3_work_sign != K3_FEED_VALUE)		 
 	{   
-		if(u16_errK3_count <= 10) //1秒
+		if(u16_errK3_count <= 20) 			//2秒
 		{
 			u16_errK3_count++; 
 		}
 		else
 		{
+			if(u16_upK3_count==0)
+			{
+				u16_lockK3_count++;
+			}
 			st_KM_bit.KM3_fault_sign=1;
-			u16_errK3_count = 10;              //1秒
+			u16_upK3_count++;
+			u16_errK3_count = 20;              //2秒
+			if(u16_upK3_count>=50)
+			{
+				u16_upK3_count=50;
+			}
 		}
 	}
-	if( st_KM_bit.KM7_work_sign != K7_FEED_VALUE)		 
+	else
+	{
+		st_KM_bit.KM3_fault_sign=0;
+		u16_errK3_count = 0;   
+		u16_upK3_count=0;
+	}
+	
+	
+	//K7故障判断
+	if(u16_lockK7_count >=3)
+	{
+		st_KM_bit.KM7_fault_sign=1;
+	}
+	else if( st_KM_bit.KM7_work_sign != K7_FEED_VALUE)		 
 	{   
-		if(u16_errK7_count <= 10) //1秒
+		if(u16_errK7_count <= 20) 			//2秒
 		{
 			u16_errK7_count++; 
 		}
 		else
 		{
+			if(u16_upK7_count==0)
+			{
+				u16_lockK7_count++;
+			}
 			st_KM_bit.KM7_fault_sign=1;
-			u16_errK7_count = 10;              //1秒
+			u16_upK7_count++;
+			u16_errK7_count = 20;              //2秒
+			if(u16_upK7_count>=50)
+			{
+				u16_upK7_count=50;
+			}
 		}
 	}
+	else
+	{
+		st_KM_bit.KM7_fault_sign=0;
+		u16_errK7_count = 0;   
+		u16_upK7_count=0;
+	}
+	
 }
 
 /******************************************************************************************
@@ -162,7 +258,7 @@ static void  fmod_fault_bat_overV (void)
 	static uint16_t  u16_err_count = 0;
 	
 
-	if(st_bat_data.fl_bat_volt >= (BC_OVER_V * TEST_BAT_NUM ))		 //过压值为14.7V
+	if(st_bat_data.fl_bat_volt >= (BC_OVER_V * TEST_BAT_NUM ))		 //过压值为14V
 	{   
 		if(u16_err_count <= 10) //1秒
 		{
@@ -175,7 +271,7 @@ static void  fmod_fault_bat_overV (void)
 		}
 	}
 
-	if(st_bat_data.fl_bat_volt <= (BC_OVER_V - 0.08) * 9)	//回差设置	 //过压值为14.7V
+	if(st_bat_data.fl_bat_volt <= (BC_OVER_V - 0.48) * 9)	//回差设置	 //过压值为14V
 	{   
 		
 		if(u16_err_count > 0 )
@@ -646,56 +742,56 @@ static void  fmod_fault_batcore_underV (void)
 *******************************************************************************************/
 static void  fmod_fault_bat_short_board (void)
 {  
-	static uint16_t  u16_err_count = 0;
-	uint32_t i = 0;
+//	static uint16_t  u16_err_count = 0;
+//	uint32_t i = 0;
 
-	for(i = 0; i < 9; i++ )
-	{   
-		if( ((st_batcore_data.u16_batcore_volt[i] <  (st_bat_data.u16_bat_avg_volt -0.55) * 1000)) 
-            || (st_batcore_data.u16_batcore_volt[i] < 1.2 * 1000))
-	    {		
-			un_batcore_err.st_err.un_short_board[i/32].u32_all |= 1 << (i % 32);	
-		}
-		else
-		{
-			un_batcore_err.st_err.un_short_board[i/32].u32_all &= ~(1 << (i % 32));	
-		}	
-	}
-	
-    if( (un_batcore_err.st_err.un_short_board[0].u32_all >=1) ||
-   	    (un_batcore_err.st_err.un_short_board[1].u32_all >=1) ||
-	    (un_batcore_err.st_err.un_short_board[2].u32_all >=1) )
-   	{
-		if(u16_err_count <= 20)  //2秒
-		{
-			u16_err_count++; 
-		}
-		else
-		{
-			un_bat_err.st_bit.batcore_underV = 1;
-            for(i = 0; i < 9; i++ )
-            {
-				if( (un_batcore_err.st_err.un_short_board[i/32].u32_all >>(i % 32)) ==1 )
-                {
-					st_bat_data.u16_err_bat_num = i;
-				}
+//	for(i = 0; i < 9; i++ )
+//	{   
+//		if( ((st_batcore_data.u16_batcore_volt[i] <  (st_bat_data.u16_bat_avg_volt -0.55) * 1000)) 
+//            || (st_batcore_data.u16_batcore_volt[i] < 1.2 * 1000))
+//	    {		
+//			un_batcore_err.st_err.un_short_board[i/32].u32_all |= 1 << (i % 32);	
+//		}
+//		else
+//		{
+//			un_batcore_err.st_err.un_short_board[i/32].u32_all &= ~(1 << (i % 32));	
+//		}	
+//	}
+//	
+//    if( (un_batcore_err.st_err.un_short_board[0].u32_all >=1) ||
+//   	    (un_batcore_err.st_err.un_short_board[1].u32_all >=1) ||
+//	    (un_batcore_err.st_err.un_short_board[2].u32_all >=1) )
+//   	{
+//		if(u16_err_count <= 20)  //2秒
+//		{
+//			u16_err_count++; 
+//		}
+//		else
+//		{
+//			un_bat_err.st_bit.batcore_underV = 1;
+//            for(i = 0; i < 9; i++ )
+//            {
+//				if( (un_batcore_err.st_err.un_short_board[i/32].u32_all >>(i % 32)) ==1 )
+//                {
+//					st_bat_data.u16_err_bat_num = i;
+//				}
 
-			}
-			u16_err_count = 20;              
-		}
-	}   
-	else
-	{
-	    if(u16_err_count > 0 )
-		{
-			u16_err_count--; 	
-		}
-		else
-		{
-			un_bat_err.st_bit.batcore_underV = 0;
-			st_bat_data.u16_err_bat_num = 0;
-		}
-	}   
+//			}
+//			u16_err_count = 20;              
+//		}
+//	}   
+//	else
+//	{
+//	    if(u16_err_count > 0 )
+//		{
+//			u16_err_count--; 	
+//		}
+//		else
+//		{
+//			un_bat_err.st_bit.batcore_underV = 0;
+//			st_bat_data.u16_err_bat_num = 0;
+//		}
+//	}   
 	     
 }
 /******************************************************************************************

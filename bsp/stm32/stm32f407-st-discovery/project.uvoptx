@@ -164,38 +164,6 @@
           <ExecCommand></ExecCommand>
           <Expression></Expression>
         </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>567</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134244990</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>applications\fmod\src\fmod_fault_detect.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\rtthread\applications/fmod/src/fmod_fault_detect.c\567</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>551</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134244910</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>applications\fmod\src\fmod_fault_detect.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\rtthread\applications/fmod/src/fmod_fault_detect.c\551</Expression>
-        </Bp>
       </Breakpoint>
       <WatchWindow1>
         <Ww>

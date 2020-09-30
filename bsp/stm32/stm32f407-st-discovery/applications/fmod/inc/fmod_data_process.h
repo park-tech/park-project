@@ -40,8 +40,8 @@
 #define LIP_Battery   0          //磷酸铁锂电池 
 
 //...................铅酸电池特性................................ 
-#define VRLA_BC_Chfull_V   12.3               //充满电压值     
-#define VRLA_BC_OVER_V     13.6               //单体电池过压值 
+#define VRLA_BC_Chfull_V   13.2              //充满电压值     
+#define VRLA_BC_OVER_V     14               //单体电池过压值 
 #define VRLA_BC_UNDER_V    10.5             //单体电池欠压值 
 #define VRLA_BC_LOW_PREWARN_V    10.8         //单体电池低压预警值
 //#define VRLA_BC_OVER_R       20               //单体电池内阻过高值2MR  单位mR的10倍  //海泰蓄电池项目用不到             1=0.1mR
