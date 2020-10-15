@@ -93,6 +93,7 @@
 #define RT_MTD_NAND_DEBUG
 #define RT_USING_RTC
 #define RT_USING_SPI
+#define RT_USING_WDT
 
 /* Using USB */
 
