@@ -177,6 +177,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>un_bat_err</ItemText>
         </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>st_KM_bit</ItemText>
+        </Ww>
       </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>

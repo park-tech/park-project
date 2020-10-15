@@ -190,10 +190,12 @@ void fmod_relay_control()
 		||K1_LockFailure == 1||POWER_STATUS_VALUE==0 )              
 	{
 		K1_START_PIN_OFF;
+		st_KM_bit.KM1_work_sign=0;
 	}
 	else
 	{	
 		K1_START_PIN_ON;
+		st_KM_bit.KM1_work_sign=1;
 	}
 	
 	//接触器K7控制
@@ -203,9 +205,11 @@ void fmod_relay_control()
 		(SPEED0_STATUS_VALUE==1 && un_bat_err.st_bit.batcore_underV == 1  ))//为区别车辆休眠的工况，当速度信号为0，通讯中有允许断电的信号且电池电压不大于11V时，切除K7。                     
 	{
 		K7_START_PIN_OFF;
+		st_KM_bit.KM7_work_sign=0;
 	}
 	else{	
 		K7_START_PIN_ON;
+		st_KM_bit.KM7_work_sign=1;
 	}
 
 	
@@ -215,14 +219,19 @@ void fmod_relay_control()
 	 //K2接触器是给紧急刹车供电，不允许保护切除。
 	if(POWER_STATUS_VALUE==0)
 	{
-		K3_START_PIN_ON; 
+		K3_START_PIN_ON;
+		st_KM_bit.KM3_work_sign=1;		
 		rt_thread_mdelay(300);		
-		K2_START_PIN_ON;  
+		K2_START_PIN_ON; 
+		st_KM_bit.KM2_work_sign=1;		
 	}
 	else{
 	
-		K2_START_PIN_OFF; 
-		K3_START_PIN_OFF;  		
+		K2_START_PIN_OFF;
+		st_KM_bit.KM2_work_sign=0;		
+		K3_START_PIN_OFF;
+		st_KM_bit.KM3_work_sign=0;
+  		
 	}
 	
 

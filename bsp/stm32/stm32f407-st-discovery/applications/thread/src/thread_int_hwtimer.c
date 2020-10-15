@@ -114,6 +114,7 @@ static void timebase_count(void)
 ******************************************************************************************/
 static void adc_sample(void)
 {
+	uint16_t u16_bat_volt=0;
 	Iin.u16_get_value = bsp_adchannel_Iin();
 	Iin.u16_avg_value = Movefilter(&Iin, MOV_FILT_SIZE) * bat_Iin_KP;
 
@@ -131,7 +132,29 @@ static void adc_sample(void)
 
 	st_bat_data.fl_bat_chI = Iin.u16_avg_value * 0.01f;
 	st_bat_data.fl_bat_dischI = (Iout1.u16_avg_value + Iout2.u16_avg_value + Iout3.u16_avg_value) * 0.01f;
-	st_bat_data.fl_bat_volt = Vin.u16_avg_value * 0.01f;
+	
+	st_bat_data.u16_bat_min_volt=st_batcore_data.u16_batcore_volt[0];//电池最低电压初始化
+	for(uint16_t i=0;i<TEST_BAT_NUM;i++)
+	{
+		//电池总电压
+		u16_bat_volt += st_batcore_data.u16_batcore_volt[i];
+		//电池最高电压
+		if(st_bat_data.u16_bat_max_volt<st_batcore_data.u16_batcore_volt[i])
+		{
+			st_bat_data.u16_bat_max_volt=st_batcore_data.u16_batcore_volt[i];
+		}
+		//电池最低电压
+		
+		if(st_bat_data.u16_bat_min_volt>st_batcore_data.u16_batcore_volt[i])
+		{
+			st_bat_data.u16_bat_min_volt=st_batcore_data.u16_batcore_volt[i];
+		}
+	}
+	
+	st_bat_data.fl_bat_volt =u16_bat_volt;
+	
+	st_bat_data.u16_bat_avg_volt=st_bat_data.fl_bat_volt/TEST_BAT_NUM;
+	//st_bat_data.fl_bat_volt = Vin.u16_avg_value * 0.01f;
 }
 /*****************************************************************************************
 ** 函数名称：
@@ -154,11 +177,11 @@ static void cell_adc_sample(void)
 
 	if (ADCchannelindex % 2==0)
 	{
-		st_batcore_data.u16_batcore_volt[ADCchannelindex] = cell_vol_b1[ADCchannelindex].u16_avg_value * 0.01f;
+		st_batcore_data.u16_batcore_volt[ADCchannelindex] = cell_vol_b1[ADCchannelindex].u16_avg_value*0.01f ;
 	}
 	else
 	{
-		st_batcore_data.u16_batcore_volt[ADCchannelindex] = cell_vol_b0[ADCchannelindex].u16_avg_value * 0.01f;
+		st_batcore_data.u16_batcore_volt[ADCchannelindex] = cell_vol_b0[ADCchannelindex].u16_avg_value*0.01f ;
 	}
 	st_batcore_data.u16_batcore_temp[ADCchannelindex] = fmod_sbox_Temp_Convert(cell_temp[ADCchannelindex].u16_avg_value);
 
@@ -681,6 +704,6 @@ static double fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt)
 	double real_bt_Temp_Volt = bt_Temp_Volt / 1000.000;
 	double R_NTC = (real_bt_Temp_Volt * 20000) / (3.3 - real_bt_Temp_Volt);
 	double temp = 1 / (log(R_NTC / 10000) / 3960 + 1 / 298.15) - 273.15;
-	double temp1 = ((temp ) * 10);
+	double temp1 = ((temp+55 ) * 10);
 	return temp1;
 }

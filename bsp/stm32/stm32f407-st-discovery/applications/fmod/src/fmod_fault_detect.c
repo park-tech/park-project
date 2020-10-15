@@ -183,7 +183,7 @@ static void  fmod_fault_relay (void)
 	{
 		st_KM_bit.KM3_fault_sign=1;
 	}
-	else if( st_KM_bit.KM3_work_sign != K3_FEED_VALUE)		 
+	else if( st_KM_bit.KM3_work_sign == K3_FEED_VALUE)		//K3反馈为常闭节点，所以驱动与反馈应相反 
 	{   
 		if(u16_errK3_count <= 20) 			//2秒
 		{
@@ -256,7 +256,7 @@ static void  fmod_fault_relay (void)
 static void  fmod_fault_bat_overV (void)
 {
 	static uint16_t  u16_err_count = 0;
-	
+
 
 	if(st_bat_data.fl_bat_volt >= (BC_OVER_V * TEST_BAT_NUM ))		 //过压值为14V
 	{   
@@ -444,8 +444,6 @@ static void  fmod_fault_bat_overT (void)
 	uint32_t i = 0;
 
 	un_batcore_err.st_err.un_overT[0].u32_all = 0x00000000;
-	un_batcore_err.st_err.un_overT[1].u32_all = 0x00000000;
-	un_batcore_err.st_err.un_overT[2].u32_all = 0x00000000;
 
 	for(i = 0; i < 9; i++ )
 	{   
@@ -459,7 +457,7 @@ static void  fmod_fault_bat_overT (void)
 		}
 	}
 	
-	if(st_bat_data.fl_bat_max_temp >=  OVER_TEMP ) 
+	if(st_bat_data.fl_bat_max_temp >=  (OVER_TEMP + 55) * 10 ) 
 	{	
 		if(u16_err_count <= 10)  //1秒
 		{
@@ -471,7 +469,7 @@ static void  fmod_fault_bat_overT (void)
 			u16_err_count = 10;              
 		}
 	}
-	if(st_bat_data.fl_bat_max_temp < 0.95 * OVER_TEMP)	
+	if(st_bat_data.fl_bat_max_temp < 0.95 * (OVER_TEMP + 55) * 10)	
 	{	
 		if(u16_err_count > 0 )
 		{
@@ -495,7 +493,7 @@ static void  fmod_fault_bat_underT (void)
 {
 	static uint16_t  u16_err_count = 0;
 
-	if(st_bat_data.fl_bat_min_temp <=  UNDER_TEMP ) 
+	if(st_bat_data.fl_bat_min_temp <=  (UNDER_TEMP + 55) * 10 ) 
 	{	
 		if(u16_err_count <= 10)  //1秒
 		{
@@ -507,7 +505,7 @@ static void  fmod_fault_bat_underT (void)
 			u16_err_count = 10;              
 		}
 	}
-	if(st_bat_data.fl_bat_min_temp >  (UNDER_TEMP + 5))
+	if(st_bat_data.fl_bat_min_temp >  ((UNDER_TEMP + 5) + 55) * 10)
 	{	
 		if(u16_err_count > 0 )
 		{
@@ -532,10 +530,7 @@ static void  fmod_fault_sensor_T (void)
 	uint32_t i = 0;
 	
 	un_batcore_err.st_err.un_Terr[0].u32_all = 0x00000000;
-	un_batcore_err.st_err.un_Terr[1].u32_all = 0x00000000;
-	un_batcore_err.st_err.un_Terr[2].u32_all = 0x00000000;
-
-
+	
 	for(i = 0; i < 9; i++ )
 	{   
 		if((st_batcore_data.u16_batcore_temp[i] >  (120 + 55)*10) || (st_batcore_data.u16_batcore_temp[i] < (-45 + 55)*10))
@@ -548,9 +543,7 @@ static void  fmod_fault_sensor_T (void)
 		}
 	}
 	
-    if( (un_batcore_err.st_err.un_Terr[0].u32_all >=1) ||
-   	   (un_batcore_err.st_err.un_Terr[1].u32_all >=1) ||
-	   (un_batcore_err.st_err.un_Terr[2].u32_all >=1) )
+    if( (un_batcore_err.st_err.un_Terr[0].u32_all >=1))
    	{
 		if(u16_err_count <= 20)  //1秒
 		{
@@ -742,56 +735,54 @@ static void  fmod_fault_batcore_underV (void)
 *******************************************************************************************/
 static void  fmod_fault_bat_short_board (void)
 {  
-//	static uint16_t  u16_err_count = 0;
-//	uint32_t i = 0;
+	static uint16_t  u16_err_count = 0;
+	uint32_t i = 0;
 
-//	for(i = 0; i < 9; i++ )
-//	{   
-//		if( ((st_batcore_data.u16_batcore_volt[i] <  (st_bat_data.u16_bat_avg_volt -0.55) * 1000)) 
-//            || (st_batcore_data.u16_batcore_volt[i] < 1.2 * 1000))
-//	    {		
-//			un_batcore_err.st_err.un_short_board[i/32].u32_all |= 1 << (i % 32);	
-//		}
-//		else
-//		{
-//			un_batcore_err.st_err.un_short_board[i/32].u32_all &= ~(1 << (i % 32));	
-//		}	
-//	}
-//	
-//    if( (un_batcore_err.st_err.un_short_board[0].u32_all >=1) ||
-//   	    (un_batcore_err.st_err.un_short_board[1].u32_all >=1) ||
-//	    (un_batcore_err.st_err.un_short_board[2].u32_all >=1) )
-//   	{
-//		if(u16_err_count <= 20)  //2秒
-//		{
-//			u16_err_count++; 
-//		}
-//		else
-//		{
-//			un_bat_err.st_bit.batcore_underV = 1;
-//            for(i = 0; i < 9; i++ )
-//            {
-//				if( (un_batcore_err.st_err.un_short_board[i/32].u32_all >>(i % 32)) ==1 )
-//                {
-//					st_bat_data.u16_err_bat_num = i;
-//				}
+	for(i = 0; i < 9; i++ )
+	{   
+		if( ((st_batcore_data.u16_batcore_volt[i] <  (st_bat_data.u16_bat_avg_volt -0.55) * 1000)) 
+            || (st_batcore_data.u16_batcore_volt[i] < 10.5))
+	    {		
+			un_batcore_err.st_err.un_short_board[i/32].u32_all |= 1 << (i % 32);	
+		}
+		else
+		{
+			un_batcore_err.st_err.un_short_board[i/32].u32_all &= ~(1 << (i % 32));	
+		}	
+	}
+	
+    if( (un_batcore_err.st_err.un_short_board[0].u32_all >=1) )
+   	{
+		if(u16_err_count <= 20)  //2秒
+		{
+			u16_err_count++; 
+		}
+		else
+		{
+			un_bat_err.st_bit.batcore_underV = 1;
+            for(i = 0; i < 9; i++ )
+            {
+				if( (un_batcore_err.st_err.un_short_board[i/32].u32_all >>(i % 32)) ==1 )
+                {
+					st_bat_data.u16_err_bat_num = i;
+				}
 
-//			}
-//			u16_err_count = 20;              
-//		}
-//	}   
-//	else
-//	{
-//	    if(u16_err_count > 0 )
-//		{
-//			u16_err_count--; 	
-//		}
-//		else
-//		{
-//			un_bat_err.st_bit.batcore_underV = 0;
-//			st_bat_data.u16_err_bat_num = 0;
-//		}
-//	}   
+			}
+			u16_err_count = 20;              
+		}
+	}   
+	else
+	{
+	    if(u16_err_count > 0 )
+		{
+			u16_err_count--; 	
+		}
+		else
+		{
+			un_bat_err.st_bit.batcore_underV = 0;
+			st_bat_data.u16_err_bat_num = 0;
+		}
+	}   
 	     
 }
 /******************************************************************************************
