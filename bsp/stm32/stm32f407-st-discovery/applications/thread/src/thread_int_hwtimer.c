@@ -113,8 +113,15 @@ static void timebase_count(void)
 ** 返回值  ：无
 ******************************************************************************************/
 static void adc_sample(void)
-{
+{   
 	uint16_t u16_bat_volt=0;
+	uint16_t u16_bat_min_volt_temp=st_batcore_data.u16_batcore_volt[0];   //电池最低电压初始化
+	uint16_t u16_bat_max_volt_temp=st_batcore_data.u16_batcore_volt[0];   //电池最高电压初始化
+	uint16_t fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最低温度初始化
+	uint16_t fl_bat_max_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最高温度初始化
+	
+	
+	
 	Iin.u16_get_value = bsp_adchannel_Iin();
 	Iin.u16_avg_value = Movefilter(&Iin, MOV_FILT_SIZE) * bat_Iin_KP;
 
@@ -130,31 +137,47 @@ static void adc_sample(void)
 	Vin.u16_get_value = bsp_adchannel_Vin();
 	Vin.u16_avg_value = Movefilter(&Vin, MOV_FILT_SIZE) * bat_Vin_KP;
 
-	st_bat_data.fl_bat_chI = Iin.u16_avg_value * 0.01f;
-	st_bat_data.fl_bat_dischI = (Iout1.u16_avg_value + Iout2.u16_avg_value + Iout3.u16_avg_value) * 0.01f;
-	
-	st_bat_data.u16_bat_min_volt=st_batcore_data.u16_batcore_volt[0];//电池最低电压初始化
+	st_bat_data.fl_bat_chI = Iin.u16_avg_value * 0.1f;
+	st_bat_data.fl_bat_dischI = (Iout1.u16_avg_value + Iout2.u16_avg_value + Iout3.u16_avg_value) * 0.1f;
+
 	for(uint16_t i=0;i<TEST_BAT_NUM;i++)
 	{
 		//电池总电压
 		u16_bat_volt += st_batcore_data.u16_batcore_volt[i];
-		//电池最高电压
-		if(st_bat_data.u16_bat_max_volt<st_batcore_data.u16_batcore_volt[i])
-		{
-			st_bat_data.u16_bat_max_volt=st_batcore_data.u16_batcore_volt[i];
-		}
-		//电池最低电压
 		
-		if(st_bat_data.u16_bat_min_volt>st_batcore_data.u16_batcore_volt[i])
+		//电池最高电压
+		if(u16_bat_max_volt_temp<st_batcore_data.u16_batcore_volt[i])
 		{
-			st_bat_data.u16_bat_min_volt=st_batcore_data.u16_batcore_volt[i];
+			u16_bat_max_volt_temp=st_batcore_data.u16_batcore_volt[i];
+		}
+		
+		//电池最低电压
+		if(u16_bat_min_volt_temp>st_batcore_data.u16_batcore_volt[i])
+		{
+			u16_bat_min_volt_temp=st_batcore_data.u16_batcore_volt[i];
+		}
+		
+		//电池最高温度
+		if(fl_bat_max_temp_temp<st_batcore_data.u16_batcore_temp[i])
+		{
+			fl_bat_max_temp_temp=st_batcore_data.u16_batcore_temp[i];
+		}
+		
+		//电池最低温度
+		if(fl_bat_min_temp_temp>st_batcore_data.u16_batcore_temp[i])
+		{
+			fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[i];
 		}
 	}
 	
-	st_bat_data.fl_bat_volt =u16_bat_volt;
 	
+	st_bat_data.fl_bat_volt =u16_bat_volt;
+	st_bat_data.u16_bat_max_volt=u16_bat_max_volt_temp;
+	st_bat_data.u16_bat_min_volt=u16_bat_min_volt_temp;
+	st_bat_data.fl_bat_max_temp=fl_bat_max_temp_temp;
+	st_bat_data.fl_bat_min_temp=fl_bat_min_temp_temp;
+		
 	st_bat_data.u16_bat_avg_volt=st_bat_data.fl_bat_volt/TEST_BAT_NUM;
-	//st_bat_data.fl_bat_volt = Vin.u16_avg_value * 0.01f;
 }
 /*****************************************************************************************
 ** 函数名称：
@@ -583,122 +606,7 @@ static void fmod_sbox_chooseTemp(int bt_index)
 		break;
 	}
 }
-static void fmod_sbox_choosePassiveEquilibrium(int bt_index)
-{
-	switch (bt_index)
-	{
-	case 1:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_OFF;
-		MCU_4524A1_PIN_OFF;
-		MCU_4524A2_PIN_OFF;
-		MCU_4524A3_PIN_OFF;
-	}
-	break;
-	case 3:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_ON;
-		MCU_4524A1_PIN_OFF;
-		MCU_4524A2_PIN_OFF;
-		MCU_4524A3_PIN_OFF;
-	}
-	break;
-	case 2:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_OFF;
-		MCU_4524A1_PIN_ON;
-		MCU_4524A2_PIN_OFF;
-		MCU_4524A3_PIN_OFF;
-	}
-	break;
-	case 4:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_ON;
-		MCU_4524A1_PIN_ON;
-		MCU_4524A2_PIN_OFF;
-		MCU_4524A3_PIN_OFF;
-	}
-	break;
-	case 5:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_OFF;
-		MCU_4524A1_PIN_OFF;
-		MCU_4524A2_PIN_ON;
-		MCU_4524A3_PIN_OFF;
-	}
-	break;
-	case 6:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_ON;
-		MCU_4524A1_PIN_OFF;
-		MCU_4524A2_PIN_ON;
-		MCU_4524A3_PIN_OFF;
-	}
-	break;
-	case 7:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_OFF;
-		MCU_4524A1_PIN_ON;
-		MCU_4524A2_PIN_ON;
-		MCU_4524A3_PIN_OFF;
-	}
-	break;
-	case 8:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_ON;
-		MCU_4524A1_PIN_ON;
-		MCU_4524A2_PIN_ON;
-		MCU_4524A3_PIN_OFF;
-	}
-	break;
-	case 10:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_OFF;
-		MCU_4524A1_PIN_OFF;
-		MCU_4524A2_PIN_OFF;
-		MCU_4524A3_PIN_ON;
-	}
-	break;
-	case 9:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_ON;
-		MCU_4524A1_PIN_OFF;
-		MCU_4524A2_PIN_OFF;
-		MCU_4524A3_PIN_ON;
-	}
-	break;
-	case 12:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_OFF;
-		MCU_4524A1_PIN_ON;
-		MCU_4524A2_PIN_OFF;
-		MCU_4524A3_PIN_ON;
-	}
-	break;
-	case 11:
-	{
-		MCU_4524EL_PIN_OFF;
-		MCU_4524A0_PIN_ON;
-		MCU_4524A1_PIN_ON;
-		MCU_4524A2_PIN_OFF;
-		MCU_4524A3_PIN_ON;
-	}
-	break;
-	default:
-		break;
-	}
-}
+
 static double fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt)
 {
 	double real_bt_Temp_Volt = bt_Temp_Volt / 1000.000;

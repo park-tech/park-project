@@ -63,7 +63,7 @@ void fmod_fault_detect(void)
 	fmod_fault_bat_underT();
 	
 	//........................电池温度传感器故障................................
-	//fmod_fault_sensor_T();
+	fmod_fault_sensor_T();
 
 	//........................单体电池过压................................
 	fmod_fault_batcore_overV ();
@@ -258,7 +258,7 @@ static void  fmod_fault_bat_overV (void)
 	static uint16_t  u16_err_count = 0;
 
 
-	if(st_bat_data.fl_bat_volt >= (BC_OVER_V * TEST_BAT_NUM ))		 //过压值为14V
+	if(st_bat_data.fl_bat_volt >= (BC_OVER_V *10* TEST_BAT_NUM ))		 //过压值为14V
 	{   
 		if(u16_err_count <= 10) //1秒
 		{
@@ -271,7 +271,7 @@ static void  fmod_fault_bat_overV (void)
 		}
 	}
 
-	if(st_bat_data.fl_bat_volt <= (BC_OVER_V - 0.48) * 9)	//回差设置	 //过压值为14V
+	if(st_bat_data.fl_bat_volt <= (BC_OVER_V - 0.48) *10* TEST_BAT_NUM )	//回差设置	 //过压值为14V
 	{   
 		
 		if(u16_err_count > 0 )
@@ -296,7 +296,7 @@ static void  fmod_fault_bat_underV (void)
 {
 	static uint16_t  u16_err_count = 0;
 	
-	if(st_bat_data.fl_bat_volt < (BC_UNDER_V * 9 ) )  
+	if(st_bat_data.fl_bat_volt < (BC_UNDER_V *10* TEST_BAT_NUM  ) )  
 	{		
 		if(u16_err_count <= 10)  //1秒
 		{
@@ -309,7 +309,7 @@ static void  fmod_fault_bat_underV (void)
 		}
 	}
 
-	if(st_bat_data.fl_bat_volt >= ((BC_UNDER_V + 0.09 ) * 9) ) 	  
+	if(st_bat_data.fl_bat_volt >= ((BC_UNDER_V + 0.09 ) *10* TEST_BAT_NUM ) ) 	  
 	{	
 		if(u16_err_count > 0 )
 		{
@@ -334,7 +334,7 @@ static void  fmod_fault_bat_underV_warn  (void)
 {
     static uint16_t  u16_err_count = 0;
 	
-	if(st_bat_data.fl_bat_volt < BC_LOW_PREWARN_V * 9 )		
+	if(st_bat_data.fl_bat_volt < BC_LOW_PREWARN_V *10* TEST_BAT_NUM  )		
 	{   
 		if(u16_err_count <= 10)  //1秒
 		{
@@ -346,7 +346,7 @@ static void  fmod_fault_bat_underV_warn  (void)
 			u16_err_count = 10;              
 		}
 	}
-	if(st_bat_data.fl_bat_volt >=((BC_LOW_PREWARN_V + 0.1) * 9))		
+	if(st_bat_data.fl_bat_volt >=((BC_LOW_PREWARN_V + 0.1) *10* TEST_BAT_NUM ))		
 	{   
 		if(u16_err_count > 0 )
 		{
@@ -371,7 +371,7 @@ static void  fmod_fault_bat_over_chI (void)
 {
 	static uint16_t  u16_err_count = 0;
 
-	if(st_bat_data.fl_bat_chI >=  st_product_preset.u8_ch_overI )	
+	if(st_bat_data.fl_bat_chI >=  st_product_preset.u8_ch_overI*10 )	
 	{	
 		if(u16_err_count <= 10)  //1秒
 		{
@@ -383,7 +383,7 @@ static void  fmod_fault_bat_over_chI (void)
 			u16_err_count = 10;              
 		}
 	}
-	if(st_bat_data.fl_bat_chI < 0.9f * st_product_preset.u8_ch_overI) 	
+	if(st_bat_data.fl_bat_chI < 0.9f * st_product_preset.u8_ch_overI*10) 	
 	{	
 		if(u16_err_count > 0 )
 		{
@@ -407,7 +407,7 @@ static void  fmod_fault_bat_overdischI (void)
 	static uint16_t  u16_err_count = 0;
 
 	
-	if(st_bat_data.fl_bat_dischI >=  st_product_preset.u8_disch_overI )	
+	if(st_bat_data.fl_bat_dischI >=  st_product_preset.u8_disch_overI *10 )	
 	{	
 		if(u16_err_count <= 5)  //1秒
 		{
@@ -419,7 +419,7 @@ static void  fmod_fault_bat_overdischI (void)
 			u16_err_count = 5;              
 		}
 	}
-	if(st_bat_data.fl_bat_dischI < 0.9f * st_product_preset.u8_disch_overI) 	
+	if(st_bat_data.fl_bat_dischI < 0.9f * st_product_preset.u8_disch_overI *10) 	
 	{	
 		if(u16_err_count > 0 )
 		{
@@ -740,8 +740,8 @@ static void  fmod_fault_bat_short_board (void)
 
 	for(i = 0; i < 9; i++ )
 	{   
-		if( ((st_batcore_data.u16_batcore_volt[i] <  (st_bat_data.u16_bat_avg_volt -0.55) * 1000)) 
-            || (st_batcore_data.u16_batcore_volt[i] < 10.5))
+		if( ((st_batcore_data.u16_batcore_volt[i] <  (st_bat_data.u16_bat_avg_volt -10) )) //小于平均值1V
+            || (st_batcore_data.u16_batcore_volt[i] < 105))                              //低于10.5V
 	    {		
 			un_batcore_err.st_err.un_short_board[i/32].u32_all |= 1 << (i % 32);	
 		}

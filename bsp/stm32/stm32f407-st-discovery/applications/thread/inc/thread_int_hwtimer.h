@@ -56,6 +56,5 @@ struct  Movefilter     // 滑动滤波器
 
 //..........................函数申明.......................................
 rt_err_t hwtimeout_cb(rt_device_t dev, rt_size_t size);
-
 #endif
 

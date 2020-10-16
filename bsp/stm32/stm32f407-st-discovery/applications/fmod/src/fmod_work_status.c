@@ -19,7 +19,7 @@ int int_over_chI=0;
 /********************************************************************************************
 函数申明
 ********************************************************************************************/
-
+static void fmod_sbox_choosePassiveEquilibrium(int bt_index);
 
 /******************************************************************************************
 ** 函数名称：soc_soh_intiset        
@@ -157,35 +157,10 @@ void fmod_updata_soh(void)
 *********************************************************************************************************///
 void fmod_relay_control()
 {
-//	st_KM_bit.KM1_fault_sign=1;
-//	st_KM_bit.KM2_fault_sign=1;
-//	st_KM_bit.KM3_fault_sign=1;
-//	st_KM_bit.KM7_fault_sign=1;
-//	un_bat_err.st_bit.bat_overV = 1;
-//	un_bat_err.st_bit.bat_underV = 1;
-//	un_bat_err.st_bit.bat_underV_warn = 1;
-//	un_bat_err.st_bit.bat_over_chI = 1;
-//	un_bat_err.st_bit.bat_overdischI = 1;
-//	un_bat_err.st_bit.bat_overT = 1;
-//	un_bat_err.st_bit.bat_underT = 1;
-//	un_bat_err.st_bit.bat_temp_fault = 1;
-//	un_bat_err.st_bit.batcore_overV = 1;
-//	un_bat_err.st_bit.batcore_underV = 1;
-	//K1控制
-	//当BMS检测到蓄电池组充满（8个蓄电池单体中最高电压大于13.5V）时，弹开K1，停止充电；
-	//当检测到过充恢复时（8个蓄电池单体中最低电压低于13V），重新吸合K1，重新开始充电；
-	//当BMS检测到蓄电池组过温时（温度高于50℃），弹开K1；当检测到温度恢复时（温度低于45℃），重新吸合K1；
-	//当BMS检测到充电电流高于充电过流点时（10A），BMS弹开K1并锁定，等待外部重启操作才能吸合K1。从通讯报警。
-//	if(un_bat_err.st_bit.bat_over_chI == 1)
-//	{
-//		int_over_chI++;
-//		if(int_over_chI==10)
-//		{
-//			K1_LockFailure=1;
-//			int_over_chI=0;
-//		}
-//		
-//	}
+	if(un_bat_err.st_bit.bat_over_chI == 1)
+	{
+		K1_LockFailure=1;
+	}
 	if(un_bat_err.st_bit.batcore_overV == 1 ||  un_bat_err.st_bit.bat_overT == 1   
 		||K1_LockFailure == 1||POWER_STATUS_VALUE==0 )              
 	{
@@ -198,9 +173,6 @@ void fmod_relay_control()
 		st_KM_bit.KM1_work_sign=1;
 	}
 	
-	//接触器K7控制
-	//断开K7分为2种情况：速度信号为0，无通讯信号，此时判定为车辆休眠，断开K7；
-	//为区别车辆休眠的工况，当速度信号为0，通讯中有允许断电的信号且电池电压不大于11V时，切除K7。
 	if((SPEED0_STATUS_VALUE==1 && un_bat_err.st_bit.rs485_com_err == 1)||//断开K7分为2种情况：速度信号为0，无通讯信号，此时判定为车辆休眠，断开K7；
 		(SPEED0_STATUS_VALUE==1 && un_bat_err.st_bit.batcore_underV == 1  ))//为区别车辆休眠的工况，当速度信号为0，通讯中有允许断电的信号且电池电压不大于11V时，切除K7。                     
 	{
@@ -211,29 +183,163 @@ void fmod_relay_control()
 		K7_START_PIN_ON;
 		st_KM_bit.KM7_work_sign=1;
 	}
-
-	
-	//接触器K2控制
-	//当检测到车辆充电机故障时，吸合放电接触器K2；
-	//车辆充电机正常时，弹开放电接触器K2； 
-	 //K2接触器是给紧急刹车供电，不允许保护切除。
 	if(POWER_STATUS_VALUE==0)
+	{
+		K2_START_PIN_ON; 
+		st_KM_bit.KM2_work_sign=1;
+	}		
+	else{
+		K2_START_PIN_OFF;
+		st_KM_bit.KM2_work_sign=0;		
+	}
+	
+	
+	if(POWER_STATUS_VALUE==0 && !(un_bat_err.st_bit.batcore_overV||
+		un_bat_err.st_bit.batcore_underV||un_bat_err.st_bit.bat_over_chI||
+		un_bat_err.st_bit.bat_overdischI||un_bat_err.st_bit.bat_overV||
+		un_bat_err.st_bit.bat_overT||un_bat_err.st_bit.bat_short_board||	
+		un_bat_err.st_bit.bat_temp_fault||un_bat_err.st_bit.bat_underT||
+		un_bat_err.st_bit.bat_underV))
 	{
 		K3_START_PIN_ON;
 		st_KM_bit.KM3_work_sign=1;		
-		rt_thread_mdelay(300);		
-		K2_START_PIN_ON; 
-		st_KM_bit.KM2_work_sign=1;		
+		//rt_thread_mdelay(300);		
+		
 	}
 	else{
 	
-		K2_START_PIN_OFF;
-		st_KM_bit.KM2_work_sign=0;		
+		
 		K3_START_PIN_OFF;
 		st_KM_bit.KM3_work_sign=0;
   		
 	}
 	
-
+	for(int i=0;i<TEST_BAT_NUM;i++)
+	{
+		if(st_batcore_data.u16_batcore_volt[i]>st_bat_data.u16_bat_avg_volt+10)
+		{
+			fmod_sbox_choosePassiveEquilibrium(i+1);
+		}
+	
+	}
+	
+	
+	
+	
 }
-
+static void fmod_sbox_choosePassiveEquilibrium(int bt_index)
+{
+	switch (bt_index)
+	{
+	case 1:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_OFF;
+		MCU_4524A1_PIN_OFF;
+		MCU_4524A2_PIN_OFF;
+		MCU_4524A3_PIN_OFF;
+	}
+	break;
+	case 3:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_ON;
+		MCU_4524A1_PIN_OFF;
+		MCU_4524A2_PIN_OFF;
+		MCU_4524A3_PIN_OFF;
+	}
+	break;
+	case 2:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_OFF;
+		MCU_4524A1_PIN_ON;
+		MCU_4524A2_PIN_OFF;
+		MCU_4524A3_PIN_OFF;
+	}
+	break;
+	case 4:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_ON;
+		MCU_4524A1_PIN_ON;
+		MCU_4524A2_PIN_OFF;
+		MCU_4524A3_PIN_OFF;
+	}
+	break;
+	case 5:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_OFF;
+		MCU_4524A1_PIN_OFF;
+		MCU_4524A2_PIN_ON;
+		MCU_4524A3_PIN_OFF;
+	}
+	break;
+	case 6:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_ON;
+		MCU_4524A1_PIN_OFF;
+		MCU_4524A2_PIN_ON;
+		MCU_4524A3_PIN_OFF;
+	}
+	break;
+	case 7:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_OFF;
+		MCU_4524A1_PIN_ON;
+		MCU_4524A2_PIN_ON;
+		MCU_4524A3_PIN_OFF;
+	}
+	break;
+	case 8:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_ON;
+		MCU_4524A1_PIN_ON;
+		MCU_4524A2_PIN_ON;
+		MCU_4524A3_PIN_OFF;
+	}
+	break;
+	case 10:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_OFF;
+		MCU_4524A1_PIN_OFF;
+		MCU_4524A2_PIN_OFF;
+		MCU_4524A3_PIN_ON;
+	}
+	break;
+	case 9:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_ON;
+		MCU_4524A1_PIN_OFF;
+		MCU_4524A2_PIN_OFF;
+		MCU_4524A3_PIN_ON;
+	}
+	break;
+	case 12:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_OFF;
+		MCU_4524A1_PIN_ON;
+		MCU_4524A2_PIN_OFF;
+		MCU_4524A3_PIN_ON;
+	}
+	break;
+	case 11:
+	{
+		MCU_4524EL_PIN_OFF;
+		MCU_4524A0_PIN_ON;
+		MCU_4524A1_PIN_ON;
+		MCU_4524A2_PIN_OFF;
+		MCU_4524A3_PIN_ON;
+	}
+	break;
+	default:
+		break;
+	}
+}

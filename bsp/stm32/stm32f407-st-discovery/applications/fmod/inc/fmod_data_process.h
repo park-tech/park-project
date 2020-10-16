@@ -285,12 +285,12 @@ union Batcore_err_reg
 
 struct Batcore_fault_regs
 {	
-	union Batcore_err_reg     un_overV[3];//0-31位表示 第1-32节单体电池过充状态,位置1表示过压
-	union Batcore_err_reg     un_underV[3];//0-31位表示 第1-32节单体电池过放状态
-	union Batcore_err_reg     un_overT[3];//0-31位表示 第1-32节单体电池过温状态
-  //union Batcore_err_reg     un_overR[3];//0-31位表示 第1-32节单体电池内阻过高
-	union Batcore_err_reg     un_Terr[3];  //0-31位表示 第1-32节单体电池温度传感器故障,    
-	union Batcore_err_reg     un_short_board[3];  //0-31位表示 第1-32节单体电池短板故障,  	
+	union Batcore_err_reg     un_overV[1];//0-31位表示 第1-32节单体电池过充状态,位置1表示过压
+	union Batcore_err_reg     un_underV[1];//0-31位表示 第1-32节单体电池过放状态
+	union Batcore_err_reg     un_overT[1];//0-31位表示 第1-32节单体电池过温状态
+  //union Batcore_err_reg     un_overR[1];//0-31位表示 第1-32节单体电池内阻过高
+	union Batcore_err_reg     un_Terr[1];  //0-31位表示 第1-32节单体电池温度传感器故障,    
+	union Batcore_err_reg     un_short_board[1];  //0-31位表示 第1-32节单体电池短板故障,  	
 };
 
 union	Batcore_err_regs
