@@ -187,6 +187,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>un_batcore_err</ItemText>
         </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>st_KM_status</ItemText>
+        </Ww>
       </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>

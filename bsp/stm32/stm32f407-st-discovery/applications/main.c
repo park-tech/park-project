@@ -79,22 +79,22 @@ int main(void)
         un_ago_bat_err.u16_all = un_bat_err.u16_all;
         
          //........................1分钟存储一次SOC,SOH..............................
-				if( product_preset_flag || timer_flag.flag_1min)
-				{   
-					product_preset_flag = 0;
-          timer_flag.flag_1min = 0;
-			
-					fmod_prodinfo_store( );	
-				}
-				//.........................2分钟存储一次历史数据..............................
-				if(timer_flag.flag_2min )
-				{
-					timer_flag.flag_2min = 0;
-					fmod_histroy_store( );
-				}	
-				rt_thread_mdelay(100);
-				}
+		if( product_preset_flag || timer_flag.flag_1min)
+		{   
+			product_preset_flag = 0;
+			timer_flag.flag_1min = 0;
+	
+			fmod_prodinfo_store( );	
+		}
+		//.........................2分钟存储一次历史数据..............................
+		if(timer_flag.flag_2min )
+		{
+			timer_flag.flag_2min = 0;
+			fmod_histroy_store( );
+		}	
+		rt_thread_mdelay(100);
+		}
 
-				return RT_EOK;
+		return RT_EOK;
 }
 

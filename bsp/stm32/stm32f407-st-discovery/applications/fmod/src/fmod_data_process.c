@@ -85,18 +85,18 @@ void fmod_parameter_update(void)
 	
 	//........................计算SOC和SOH............................. 
 	//......刚上电时对电池进行开路电压对SOC的调整，静止时间大于4小时,且此时充放电电流小于1A..........
-	if(run_count < 1)
-	{
-		run_count = 1;
-		get_rtc_second(&now_sec);
-   
-		if( (now_sec - un_prodinfo_rdata.st_data.u32_time >= 4 * 60 *60) && 
-			(st_bat_data.fl_bat_chI + st_bat_data.fl_bat_dischI <= 1 ))
-		{
-			fmod_open_volt_adj_soc( );//开路电压时，
-		}
-	}
-	
+//	if(run_count < 1)
+//	{
+//		run_count = 1;
+//		get_rtc_second(&now_sec);
+//   
+//		if( (now_sec - un_prodinfo_rdata.st_data.u32_time >= 4 * 60 *60) && 
+//			(st_bat_data.fl_bat_chI + st_bat_data.fl_bat_dischI <= 10 ))     //1A
+//		{
+//			fmod_open_volt_adj_soc( );//开路电压时，
+//		}
+//	}
+//	
 	fmod_updata_soh( ); //在浮充状态时会更新SOH	
 	fmod_updata_soc( );   
 } 

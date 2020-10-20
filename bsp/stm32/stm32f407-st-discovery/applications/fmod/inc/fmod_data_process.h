@@ -101,7 +101,7 @@
 #endif
 
 //................................电池通用数据特征..................................
-#define Bat_Qb             18             // 标称容量18Ah
+#define Bat_Qb             4.5             // 标称容量4.5Ah
 #define OVER_TEMP          55               // 电池过温值
 #define UNDER_TEMP        -20               // 电池低温值
 #define Charge_full_V      (BC_Chfull_V * TEST_BAT_NUM ) //电池充满电压

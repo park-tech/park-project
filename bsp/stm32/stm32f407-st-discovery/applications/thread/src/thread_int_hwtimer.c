@@ -43,7 +43,7 @@ static double fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt);
 ***************************************************************************************************/
 rt_err_t hwtimeout_cb(rt_device_t dev, rt_size_t size)
 {
-
+	static uint16_t count = 0;
 	timebase_count();
 
 	//fmod_sbox_chooseVolt(1);
@@ -55,8 +55,15 @@ rt_err_t hwtimeout_cb(rt_device_t dev, rt_size_t size)
 		adc_sample();
 		//.......................单体电池adc采样.........................
 		cell_adc_sample();
-		//.......................当前容量累计的计算.........................
-		bat_Qnow_updata();
+		
+	}
+	count++;
+	if(count >= 36)          //3.6ms
+	{	
+	    //.......................当前容量累计的计算.........................
+		bat_Qnow_updata( );
+		
+		count = 0;
 	}
 	return 0;
 }
@@ -263,9 +270,17 @@ static void bat_Qnow_updata(void)
 	static float fl_bat_all_I = 0;	   //当前总电流
 	static float fl_bat_lastall_I = 0; //上次总电流
 	double Q_unit = 0;
-
-	fl_bat_all_I = st_bat_data.fl_bat_chI - st_bat_data.fl_bat_dischI;																					//当前总电流
-	Q_unit = ((double)(fl_bat_all_I + fl_bat_lastall_I) / 2) * Integral_time * fmod_bat_effect(st_bat_data.fl_bat_dischI, st_bat_data.fl_bat_max_temp); //本次积分的容量
+	if(POWER_STATUS_VALUE==0)
+	{
+		fl_bat_all_I = st_bat_data.fl_bat_chI - st_bat_data.fl_bat_dischI;	//当前总电流
+	}
+	else
+	{
+		fl_bat_all_I = st_bat_data.fl_bat_chI;
+	}
+	
+	
+	Q_unit = ((double)(fl_bat_all_I + fl_bat_lastall_I) / 2) * Integral_time * fmod_bat_effect(st_bat_data.fl_bat_dischI/10, st_bat_data.fl_bat_max_temp/10-55); //本次积分的容量
 
 	st_bat_data.fl_bat_Qnow = st_bat_data.fl_bat_Qnow + Q_unit; //当前容量
 
@@ -293,31 +308,29 @@ static float fmod_bat_effect(float bat_i, float tempb)
 	//................不同放电电流对应的与0.2C时放电的系数值................
 	bat_IC = bat_i / Bat_Qb;
 
-	if (bat_IC <= 0.2f) //小于0.2C放电，或充电时
+	if (bat_IC <= 0.05f) //小于0.05C放电，或充电时
 	{
 		current_k = 1;
 	}
-	if (bat_IC > 0.2f && bat_IC <= 0.5f)
-		current_k = 100 / (-46.67f * bat_IC + 109.33f);
-	if (bat_IC > 0.5f && bat_IC <= 1)
-		current_k = 100 / (-21 * bat_IC + 96.5f);
+	if (bat_IC > 0.05f && bat_IC <= 0.2f)
+		current_k = 100 / (-133.3f * bat_IC + 106.6f);//取25度0.05C到0.2C段
+	if (bat_IC > 0.2f && bat_IC <= 1)
+		current_k = 100 / (-37.5 * bat_IC + 87.5f);//取25度0.2C到1C段
 	if (bat_IC > 1)
-		current_k = 100 / (-11 * bat_IC + 86.5f);
+		current_k = 100 / (-10.0* bat_IC + 60.0f);//取25度1C到3C段
 
-	if (tempb <= -40)
-		temp_k = 100 / 37.5f;
-	if ((tempb > -40) && (tempb <= -15))
-		temp_k = 100 / (1.3f * tempb + 89.5f); //与25度时100容量为100时对应的比值
-	if ((tempb > -15) && (tempb <= 0))
-		temp_k = 100 / (tempb + 85);
-	if ((tempb > 0) && (tempb <= 15))
-		temp_k = 100 / (0.66667f * tempb + 85);
-	if ((tempb > 15) && (tempb <= 30))
-		temp_k = 100 / (0.5333f * tempb + 87);
-	if ((tempb > 30) && (tempb <= 45))
-		temp_k = 100 / (0.6f * tempb + 85);
-	if (tempb > 45)
-		temp_k = 100 / 109;
+	if (tempb <= -20)
+		temp_k = 100 / 58.0f;
+	if ((tempb > -20) && (tempb <= 0))
+		temp_k = 100 / (1.2f * tempb + 82.0f); //与25度时100容量为100时对应的比值
+	if ((tempb > 0) && (tempb <= 20))
+		temp_k = 100 / (0.75*tempb + 82);
+	if ((tempb > 20) && (tempb <= 30))
+		temp_k = 100 / (0.5f * tempb + 87);
+	if ((tempb > 30) && (tempb <= 50))
+		temp_k = 100 / (0.3f * tempb + 93);
+	if (tempb > 50)
+		temp_k = 100 / 108;
 	bat_k = current_k * temp_k;
 
 	//rt_printf("current_k=%.4f temp_k=%.4f bat_k=%.4f\n", current_k,temp_k,bat_k);

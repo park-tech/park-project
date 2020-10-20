@@ -86,15 +86,15 @@ void fmod_updata_soh(void)
 	float_charge_sign = 0;
 	for(i = 0; i < 10; i++)
 	{
-		if(fl_bat_agochI[i] >= 1) //连续10次都小于1A
+		if(fl_bat_agochI[i] >= 1*10) //连续10次都小于1A
 		{
         	float_charge_sign++;
 		}
 	}
 	
     //......电池充满时对soh的校正...判定依据：电压大于充满电压，放电电流小于1A	两次充电电流都小于充满电流，		 
-	if( (st_bat_data.fl_bat_volt >= Charge_full_V) && (st_bat_data.fl_bat_dischI <= 1) &&
-		(st_bat_data.fl_bat_chI < Charge_full_I) && (float_charge_sign == 0) )
+	if( (st_bat_data.fl_bat_volt >= Charge_full_V*10) && (st_bat_data.fl_bat_dischI <= 1*10) &&
+		(st_bat_data.fl_bat_chI < Charge_full_I*10) && (float_charge_sign == 0) )
 	{
 		if(!un_bat_status.st_bit.bat_full)						  //每次充电的第一次进入充满状态
 		{	 
@@ -131,7 +131,7 @@ void fmod_updata_soh(void)
 	}
 
 	//.................充满标志清0(电压小于13.6)，表示下次又可以进行第一次冲满状态..........
-	if(st_bat_data.fl_bat_volt <= (Charge_full_V - 0.8))   
+	if(st_bat_data.fl_bat_volt <= (Charge_full_V - 0.8)*10)   
 	{
 		un_bat_status.st_bit.bat_full = 0; 		 
 	}
