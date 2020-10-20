@@ -216,7 +216,7 @@ struct Bat_err_bits
 	uint16_t batcore_overV:1;	 //电池单体电池过充
 	uint16_t batcore_underV:1;	 //电池单体电池过放
 
-    uint16_t bat_overR:1;	     //电池内阻过高
+    uint16_t PassiveEquilibrium:1;	     //电池内阻过高
 	uint16_t self_check_err:1;   //自检故障
 	uint16_t bat_underT:1;	     //电池低温 
 	uint16_t bat_temp_fault:1;	 //温度传感器故障

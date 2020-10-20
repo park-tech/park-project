@@ -34,17 +34,17 @@ void fmod_soc_soh_intiset(void)
 	st_bat_data.fl_bat_Qc_max =  Bat_Qb;     //第一连接电池认为最大容量是初始容量   为实际值的10000倍
 	st_bat_data.fl_bat_Qnow = st_bat_data.fl_bat_soc * 0.01f * Bat_Qb ; //第一连接电池的当前容量
 }
-/******************************************************************************************
-** 函数名称：soc_soh_intiset        
-** 函数描述：根据开路电压校正SOC的值
-** 输入参数：无
-** 返回值  ：    无
-*******************************************************************************************/
-void fmod_open_volt_adj_soc(void)
-{        
-	st_bat_data.fl_bat_soc = 400 * (st_bat_data.fl_bat_volt /TEST_BAT_NUM) - 756;         //一个电池开路电压时，电压和容量之间都有一个特定的对应曲线
-	st_bat_data.fl_bat_Qnow = st_bat_data.fl_bat_soc * 0.01f * st_bat_data.fl_bat_Qc_max ; //第一连接电池的当前容量
-}
+///******************************************************************************************
+//** 函数名称：soc_soh_intiset        
+//** 函数描述：根据开路电压校正SOC的值
+//** 输入参数：无
+//** 返回值  ：    无
+//*******************************************************************************************/
+//void fmod_open_volt_adj_soc(void)
+//{        
+//	st_bat_data.fl_bat_soc = 400 * (st_bat_data.fl_bat_volt /TEST_BAT_NUM) - 756;         //一个电池开路电压时，电压和容量之间都有一个特定的对应曲线
+//	st_bat_data.fl_bat_Qnow = st_bat_data.fl_bat_soc * 0.01f * st_bat_data.fl_bat_Qc_max ; //第一连接电池的当前容量
+//}
 
 /******************************************************************************************
 ** 函数名称：根据静态电压调节SOC        
@@ -213,12 +213,14 @@ void fmod_relay_control()
 		st_KM_bit.KM3_work_sign=0;
   		
 	}
-	
+	un_bat_err.st_bit.PassiveEquilibrium=0;
 	for(int i=0;i<TEST_BAT_NUM;i++)
 	{
+		
 		if(st_batcore_data.u16_batcore_volt[i]>st_bat_data.u16_bat_avg_volt+10)
 		{
 			fmod_sbox_choosePassiveEquilibrium(i+1);
+			un_bat_err.st_bit.PassiveEquilibrium=1;
 		}
 	
 	}
