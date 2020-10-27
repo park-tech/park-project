@@ -119,7 +119,7 @@ static int thread_creat_can1_se(void)
 
     return 0;
 }
-INIT_APP_EXPORT(thread_creat_can1_se);
+//INIT_APP_EXPORT(thread_creat_can1_se);
 /********************************************************************************************
 ** 函数名称：     
 ** 函数描述：CAN接收线程的初始化
@@ -164,7 +164,7 @@ static int thread_creat_can1_rx(void)
     }
     return 0;
 }
-INIT_APP_EXPORT(thread_creat_can1_rx);
+//INIT_APP_EXPORT(thread_creat_can1_rx);
 
 /********************************************************************************************
 ** 函数名称：     

@@ -129,7 +129,7 @@ void endian_swaps(void* data)
 {
     uint8_t  temp = 0;
 	uint8_t* bdata = (uint8_t*)data;
-	 	
+	
 	temp = bdata[0];
 	bdata[0] = bdata[1];       //最后一个和第一个对调
 	bdata[1] = temp;

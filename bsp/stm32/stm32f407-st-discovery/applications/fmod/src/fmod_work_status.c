@@ -198,8 +198,8 @@ void fmod_relay_control()
 		un_bat_err.st_bit.batcore_underV||un_bat_err.st_bit.bat_over_chI||
 		un_bat_err.st_bit.bat_overdischI||un_bat_err.st_bit.bat_overV||
 		un_bat_err.st_bit.bat_overT||un_bat_err.st_bit.bat_short_board||	
-		un_bat_err.st_bit.bat_temp_fault||un_bat_err.st_bit.bat_underT||
-		un_bat_err.st_bit.bat_underV))
+		un_bat_err.st_bit.bat_temp_fault||
+		un_bat_err.st_bit.bat_underV))//un_bat_err.st_bit.bat_underT
 	{
 		K3_START_PIN_ON;
 		st_KM_bit.KM3_work_sign=1;		
