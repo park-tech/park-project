@@ -32,39 +32,44 @@ static int16_t Movefilter(struct Movefilter *MovAvgVar, uint16_t Size);
 static float fmod_bat_effect(float bat_i, float tempb);
 static void fmod_sbox_chooseVolt(int bt_index);
 static void fmod_sbox_chooseTemp(int bt_index);
-static void fmod_sbox_choosePassiveEquilibrium(int bt_index);
 static double fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt);
 
 /**************************************************************************************************
 ** 函数名称：
-** 函数描述：硬件定时器中断函数
+** 函数描述：硬件定时器中断函数     （10ms执行一次）
 ** 输入参数：
 ** 返回值  ：无
 ***************************************************************************************************/
 rt_err_t hwtimeout_cb(rt_device_t dev, rt_size_t size)
 {
 	static uint16_t count = 0;
+	static uint16_t count1 = 0;
+	static uint16_t count2 = 0;
 	timebase_count();
 
-	//fmod_sbox_chooseVolt(1);
-	//fmod_sbox_chooseTemp(1);
 	//.......................adc采样.........................
-	if (timer_flag.flag_10ms)
+	if (count1 >= 9)          //90ms
 	{
-		timer_flag.flag_10ms = 0;
 		adc_sample();
-		//.......................单体电池adc采样.........................
-		cell_adc_sample();
-		
+		count1 = 0;
 	}
-	count++;
-	if(count >= 36)          //3.6ms
+	if (count2 >= 1)          //10ms
+	{
+		cell_adc_sample();
+		count2 = 0;
+	}
+	
+	if(count >= 36)          //360ms
 	{	
 	    //.......................当前容量累计的计算.........................
 		bat_Qnow_updata( );
 		
 		count = 0;
 	}
+	
+	count++;
+	count1++;
+	count2++;
 	return 0;
 }
 /**************************************************************************************************
@@ -121,70 +126,35 @@ static void timebase_count(void)
 ******************************************************************************************/
 static void adc_sample(void)
 {   
-	uint16_t u16_bat_volt=0;
-	uint16_t u16_bat_min_volt_temp=st_batcore_data.u16_batcore_volt[0];   //电池最低电压初始化
-	uint16_t u16_bat_max_volt_temp=st_batcore_data.u16_batcore_volt[0];   //电池最高电压初始化
-	uint16_t fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最低温度初始化
-	uint16_t fl_bat_max_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最高温度初始化
 	
-	
-	
+	//输入电流采样
 	Iin.u16_get_value = bsp_adchannel_Iin();
 	Iin.u16_avg_value = Movefilter(&Iin, MOV_FILT_SIZE) * bat_Iin_KP;
-
+	
+	//输出负载1电流采样
 	Iout1.u16_get_value = bsp_adchannel_Iout1();
 	Iout1.u16_avg_value = Movefilter(&Iout1, MOV_FILT_SIZE) * bat_Iout1_KP;
-
+	
+	//输出负载2电流采样
 	Iout2.u16_get_value = bsp_adchannel_Iout2();
 	Iout2.u16_avg_value = Movefilter(&Iout2, MOV_FILT_SIZE) * bat_Iout2_KP;
-
+	
+	//输出负载3电流采样
 	Iout3.u16_get_value = bsp_adchannel_Iout3();
 	Iout3.u16_avg_value = Movefilter(&Iout3, MOV_FILT_SIZE) * bat_Iout3_KP;
-
+	
+	//输入电压采样
 	Vin.u16_get_value = bsp_adchannel_Vin();
 	Vin.u16_avg_value = Movefilter(&Vin, MOV_FILT_SIZE) * bat_Vin_KP;
-
+	
+	//输入电流汇总
 	st_bat_data.fl_bat_chI = Iin.u16_avg_value * 0.1f;
+	//输出电流汇总
 	st_bat_data.fl_bat_dischI = (Iout1.u16_avg_value + Iout2.u16_avg_value + Iout3.u16_avg_value) * 0.1f;
-
-	for(uint16_t i=0;i<TEST_BAT_NUM;i++)
-	{
-		//电池总电压
-		u16_bat_volt += st_batcore_data.u16_batcore_volt[i];
-		
-		//电池最高电压
-		if(u16_bat_max_volt_temp<st_batcore_data.u16_batcore_volt[i])
-		{
-			u16_bat_max_volt_temp=st_batcore_data.u16_batcore_volt[i];
-		}
-		
-		//电池最低电压
-		if(u16_bat_min_volt_temp>st_batcore_data.u16_batcore_volt[i])
-		{
-			u16_bat_min_volt_temp=st_batcore_data.u16_batcore_volt[i];
-		}
-		
-		//电池最高温度
-		if(fl_bat_max_temp_temp<st_batcore_data.u16_batcore_temp[i])
-		{
-			fl_bat_max_temp_temp=st_batcore_data.u16_batcore_temp[i];
-		}
-		
-		//电池最低温度
-		if(fl_bat_min_temp_temp>st_batcore_data.u16_batcore_temp[i])
-		{
-			fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[i];
-		}
-	}
 	
 	
-	st_bat_data.fl_bat_volt =u16_bat_volt;
-	st_bat_data.u16_bat_max_volt=u16_bat_max_volt_temp;
-	st_bat_data.u16_bat_min_volt=u16_bat_min_volt_temp;
-	st_bat_data.fl_bat_max_temp=fl_bat_max_temp_temp;
-	st_bat_data.fl_bat_min_temp=fl_bat_min_temp_temp;
-		
-	st_bat_data.u16_bat_avg_volt=st_bat_data.fl_bat_volt/TEST_BAT_NUM;
+	
+	
 }
 /*****************************************************************************************
 ** 函数名称：
@@ -194,8 +164,9 @@ static void adc_sample(void)
 ******************************************************************************************/
 static void cell_adc_sample(void)
 {
-	
-	//ADCchannelindex=7;
+//GPIO初始化配置
+//90ms全部采完
+
 	cell_temp[ADCchannelindex].u16_get_value = bsp_adchannel_cell_temp();
 	cell_temp[ADCchannelindex].u16_avg_value = Movefilter(&cell_temp[ADCchannelindex], MOV_FILT_SIZE) * batcell_Temp_KP;
 
@@ -214,16 +185,25 @@ static void cell_adc_sample(void)
 		st_batcore_data.u16_batcore_volt[ADCchannelindex] = cell_vol_b0[ADCchannelindex].u16_avg_value*0.01f ;
 	}
 	st_batcore_data.u16_batcore_temp[ADCchannelindex] = fmod_sbox_Temp_Convert(cell_temp[ADCchannelindex].u16_avg_value);
-
-	ADCchannelindex++;
 	
-	if (ADCchannelindex == 9)
+	ADCchannelindex++;
+	//切换通道
+	if(ADCchannelindex==9)
 	{
 		ADCchannelindex = 0;
+	
 	}
 	
-	fmod_sbox_chooseVolt(ADCchannelindex + 1);
-	fmod_sbox_chooseTemp(ADCchannelindex + 1);
+	else
+	{
+		fmod_sbox_chooseVolt(1+ADCchannelindex);
+		fmod_sbox_chooseTemp(1+ADCchannelindex);
+	
+	}
+		
+	
+	
+	
 }
 
 /**********************************************************************************

@@ -31,6 +31,7 @@ static void  fmod_fault_bat_short_board (void);
 static void fmod_fault_eth_com(void);	
 static void fmod_fault_mvb_com(void);
 static void fmod_fault_rs485_com (void);
+
 /******************************************************************************************
 函数描述：判断故障
 输入参数：无
@@ -865,6 +866,24 @@ static void  fmod_fault_rs485_com (void)
 			un_bat_err.st_bit.rs485_com_err = 1;
 			rs485_com_count = 6;
 		}
+	}
+}/******************************************************************************************
+** 函数名称：mvb通讯故障       
+** 函数描述：
+** 输入参数：无
+** 返回值  ：无
+*******************************************************************************************/
+void  fmod_self_test (void)
+{
+	if( st_KM_bit.KM1_work_sign != K1_FEED_VALUE||st_KM_bit.KM2_work_sign != K2_FEED_VALUE||
+		st_KM_bit.KM3_work_sign == K3_FEED_VALUE||st_KM_bit.KM7_work_sign != K7_FEED_VALUE)		 
+	{   
+		un_bat_err.st_bit.self_check_err=1;
+	
+	}
+	else
+	{
+		un_bat_err.st_bit.self_check_err=1;
 	}
 }
 

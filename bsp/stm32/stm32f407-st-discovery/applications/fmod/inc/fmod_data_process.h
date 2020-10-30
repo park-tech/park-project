@@ -20,7 +20,7 @@
 #include "fmod_com_mvb.h"
 #include "fmod_com_rs485.h"
 #include "fmod_com_sbox.h"
-
+#include "fmod_PassiveEquilibrium.h"
 
 #include "bsp_gpio.h"
 #include "basic_timer.h"

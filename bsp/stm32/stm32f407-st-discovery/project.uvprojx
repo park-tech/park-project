@@ -622,6 +622,11 @@
               <FileType>1</FileType>
               <FilePath>.\applications\fmod\src\fmod_wdg.c</FilePath>
             </File>
+            <File>
+              <FileName>fmod_PassiveEquilibrium.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\fmod\src\fmod_PassiveEquilibrium.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

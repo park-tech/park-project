@@ -12,5 +12,7 @@
 extern  union   Re_mvb_data  un_remvb_data;
 //..........................函数申明.......................................
 void fmod_fault_detect(void);
+void fmod_self_test(void);
+
 
 #endif

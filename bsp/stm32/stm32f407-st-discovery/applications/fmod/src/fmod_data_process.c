@@ -21,7 +21,7 @@ struct  Batcore_data  st_batcore_data;
 /********************************************************************************************
 函数申明
 ********************************************************************************************/
-//static void fmod_adc_data_update(void);
+static void fmod_adc_data_update(void);
 
 
 /** * @ : *************************************************************************
@@ -81,43 +81,89 @@ void fmod_parameter_update(void)
 	static uint8_t  run_count = 0 ;
 	uint32_t  now_sec= 0;
 	
-   //fmod_adc_data_update( );      // 已经在硬件中断函数中读取了
+	
+	//.......................电池电流电压温度参数更新............................. 
+	
+    fmod_adc_data_update( );      // 更新最大、最低单体电压，温度等值
 	
 	//........................计算SOC和SOH............................. 
 	//......刚上电时对电池进行开路电压对SOC的调整，静止时间大于4小时,且此时充放电电流小于1A..........
-//	if(run_count < 1)
-//	{
-//		run_count = 1;
-//		get_rtc_second(&now_sec);
-//   
-//		if( (now_sec - un_prodinfo_rdata.st_data.u32_time >= 4 * 60 *60) && 
-//			(st_bat_data.fl_bat_chI + st_bat_data.fl_bat_dischI <= 10 ))     //1A
-//		{
-//			fmod_open_volt_adj_soc( );//开路电压时，
-//		}
-//	}
-//	
+	//	if(run_count < 1)
+	//	{
+	//		run_count = 1;
+	//		get_rtc_second(&now_sec);
+	//   
+	//		if( (now_sec - un_prodinfo_rdata.st_data.u32_time >= 4 * 60 *60) && 
+	//			(st_bat_data.fl_bat_chI + st_bat_data.fl_bat_dischI <= 10 ))     //1A
+	//		{
+	//			fmod_open_volt_adj_soc( );//开路电压时，
+	//		}
+	//	}
+	//	
 	fmod_updata_soh( ); //在浮充状态时会更新SOH	
 	fmod_updata_soc( );   
 } 
 
 /** * @ : **********************************************************************
- * @name: 逻辑数据的赋值
- * @describe:逻辑数据的赋值 获取ADC采样值，使用硬件定时器采样，不需要使用消息队列
+ * @name: ADC数据的更新
+ * @describe:更新最大、最低单体电压，温度等值
  * @param : 
  * @return: 
  * @  : ************************************************************************/
-// static void fmod_get_adc_data_update(void)
-// {	
-	 
-//     // uint16_t re_buf[ADC_RE_LEN] = {0};
+ static void fmod_adc_data_update(void)
+ {	
+	
+	uint16_t u16_bat_volt=0;
+	uint16_t u16_bat_min_volt_temp=st_batcore_data.u16_batcore_volt[0];   //电池最低电压初始化
+	uint16_t u16_bat_max_volt_temp=st_batcore_data.u16_batcore_volt[0];   //电池最高电压初始化
+	uint16_t fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最低温度初始化
+	uint16_t fl_bat_max_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最高温度初始化
+	
+	
+	
 
-// 	// if ( rt_mq_recv(&adc_rx_mq, &re_buf, sizeof(re_buf), 5) == RT_EOK )   //超时时间5ms 单位为ms
-// 	// {
-//     //  st_bat_data.fl_bat_chI   =   re_buf[0] * 0.01f; 
-// 	// 	   st_bat_data.fl_bat_dischI  = re_buf[1] * 0.01f; 
-// 	// }	
-// }
+
+
+	for(uint16_t i=0;i<TEST_BAT_NUM;i++)
+	{
+		//电池总电压
+		u16_bat_volt += st_batcore_data.u16_batcore_volt[i];
+		
+		//电池最高电压
+		if(u16_bat_max_volt_temp<st_batcore_data.u16_batcore_volt[i])
+		{
+			u16_bat_max_volt_temp=st_batcore_data.u16_batcore_volt[i];
+		}
+		
+		//电池最低电压
+		if(u16_bat_min_volt_temp>st_batcore_data.u16_batcore_volt[i])
+		{
+			u16_bat_min_volt_temp=st_batcore_data.u16_batcore_volt[i];
+		}
+		
+		//电池最高温度
+		if(fl_bat_max_temp_temp<st_batcore_data.u16_batcore_temp[i])
+		{
+			fl_bat_max_temp_temp=st_batcore_data.u16_batcore_temp[i];
+		}
+		
+		//电池最低温度
+		if(fl_bat_min_temp_temp>st_batcore_data.u16_batcore_temp[i])
+		{
+			fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[i];
+		}
+	}
+
+
+	st_bat_data.fl_bat_volt =u16_bat_volt;
+	st_bat_data.u16_bat_max_volt=u16_bat_max_volt_temp;
+	st_bat_data.u16_bat_min_volt=u16_bat_min_volt_temp;
+	st_bat_data.fl_bat_max_temp=fl_bat_max_temp_temp;
+	st_bat_data.fl_bat_min_temp=fl_bat_min_temp_temp;
+	
+	st_bat_data.u16_bat_avg_volt=st_bat_data.fl_bat_volt/TEST_BAT_NUM;
+
+ }
 
 /*********************************************************************************************************
 ** 函数名称：
