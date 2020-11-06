@@ -70,12 +70,12 @@ int main(void)
 		}
         
 				//.........................判断是否有新故障存储..............................
-        if( (un_bat_err.u16_all > 0) &&                           //有故障
-            (un_ago_bat_err.u16_all != un_bat_err.u16_all))       //和上次故障不一样
+        if( (un_bat_err.u32_all > 0) &&                           //有故障
+            (un_ago_bat_err.u32_all != un_bat_err.u32_all))       //和上次故障不一样
         {    
             fmod_fault_store( );
         }
-        un_ago_bat_err.u16_all = un_bat_err.u16_all;
+        un_ago_bat_err.u32_all = un_bat_err.u32_all;
         
          //........................1分钟存储一次SOC,SOH..............................
 		if( product_preset_flag || timer_flag.flag_1min)

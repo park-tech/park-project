@@ -29,20 +29,20 @@ void fmod_dtube_display(void)
 	
 	if(st_KM_bit.KM1_work_sign== 1)        			showdata = 0x00014; 	//优先级中
 	if(st_KM_bit.KM2_work_sign== 1)        			showdata = 0x00015; 	//优先级中
-	if(un_bat_err.st_bit.PassiveEquilibrium== 1)	showdata = 0x00012;		//优先级中
+	if(un_bat_err.st_bat_err_bit.PassiveEquilibrium== 1)	showdata = 0x00012;		//优先级中
 	
-	if(st_KM_bit.KM1_fault_sign == 1)   			showdata = 0x0000;      //优先级高
-	if(st_KM_bit.KM2_fault_sign == 1)   			showdata = 0x0001;
-	if(st_KM_bit.KM3_fault_sign == 1)   			showdata = 0x0002;
-	if(st_KM_bit.KM7_fault_sign == 1)   			showdata = 0x0003;
-	if(un_bat_err.st_bit.batcore_overV == 1)    	showdata = 0x0004;  	
-	if(un_bat_err.st_bit.batcore_underV == 1)   	showdata = 0x0005; 	
-	if(un_bat_err.st_bit.bat_over_chI == 1)     	showdata = 0x0006;  
-	if(un_bat_err.st_bit.bat_overdischI == 1)   	showdata = 0x0007;
-	if(un_bat_err.st_bit.bat_overT == 1)        	showdata = 0x0009; 
-	if(un_bat_err.st_bit.bat_underT == 1)       	showdata = 0x00010; 
-	if(un_bat_err.st_bit.bat_short_board== 1)   	showdata = 0x00011; 
-	if(un_bat_err.st_bit.self_check_err== 1)    	showdata = 0x00013;
+	if(un_bat_err.st_bat_err_bit.KM1_fault_sign == 1)   			showdata = 0x0000;      //优先级高
+	if(un_bat_err.st_bat_err_bit.KM2_fault_sign == 1)   			showdata = 0x0001;
+	if(un_bat_err.st_bat_err_bit.KM3_fault_sign == 1)   			showdata = 0x0002;
+	if(un_bat_err.st_bat_err_bit.KM7_fault_sign == 1)   			showdata = 0x0003;
+	if(un_bat_err.st_bat_err_bit.batcore_overV == 1)    	showdata = 0x0004;  	
+	if(un_bat_err.st_bat_err_bit.batcore_underV == 1)   	showdata = 0x0005; 	
+	if(un_bat_err.st_bat_err_bit.bat_over_chI == 1)     	showdata = 0x0006;  
+	if(un_bat_err.st_bat_err_bit.bat_overdischI == 1)   	showdata = 0x0007;
+	if(un_bat_err.st_bat_err_bit.bat_overT == 1)        	showdata = 0x0009; 
+	if(un_bat_err.st_bat_err_bit.bat_underT == 1)       	showdata = 0x00010; 
+	//if(un_bat_err.st_bat_err_bit.bat_short_board== 1)   	showdata = 0x00011; 
+	if(un_bat_err.st_bat_err_bit.self_check_err== 1)    	showdata = 0x00013;
 	
 	
 	

@@ -90,8 +90,8 @@ static void fmod_send_485_update(void)
     un_se485_data.st_data.u16_bat_min_temp = (st_bat_data.fl_bat_min_temp + 55) *10;
 
 	un_se485_data.st_data.u16_bat_avg_volt = st_bat_data.u16_bat_avg_volt;
-	un_se485_data.st_data.u8_bat_err[0] = un_bat_err.u16_all & 0X00FF ;
-	un_se485_data.st_data.u8_bat_err[1] = ((un_bat_err.u16_all & 0XFF00) >> 8);
+//	un_se485_data.st_data.u8_bat_err[0] = un_bat_err.u32_all & 0X00FF ;
+//	un_se485_data.st_data.u8_bat_err[1] = ((un_bat_err.u32_all & 0XFF00) >> 8);
 	un_se485_data.st_data.u8_softversion[0] = 0x01;	                                 //V1.0
 	un_se485_data.st_data.u8_softversion[1] = 0x00; 
 

@@ -11,8 +11,9 @@
 ********************************************************************************************/
 struct  Product_info  st_product_info;
 struct  product_preset st_product_preset;
+struct  Bat_err_bits   st_bat_err_bit;
 struct  Contactor_status_bits   st_KM_bit;
-
+struct  Sys_Inout_bits   st_Inout_bits;
 struct  Bat_data      st_bat_data;  
 struct  Batcore_data  st_batcore_data;
 
@@ -22,7 +23,7 @@ struct  Batcore_data  st_batcore_data;
 函数申明
 ********************************************************************************************/
 static void fmod_adc_data_update(void);
-
+static void fmod_inout_data_update(void);
 
 /** * @ : *************************************************************************
  * @name: 
@@ -85,21 +86,7 @@ void fmod_parameter_update(void)
 	//.......................电池电流电压温度参数更新............................. 
 	
     fmod_adc_data_update( );      // 更新最大、最低单体电压，温度等值
-	
-	//........................计算SOC和SOH............................. 
-	//......刚上电时对电池进行开路电压对SOC的调整，静止时间大于4小时,且此时充放电电流小于1A..........
-	//	if(run_count < 1)
-	//	{
-	//		run_count = 1;
-	//		get_rtc_second(&now_sec);
-	//   
-	//		if( (now_sec - un_prodinfo_rdata.st_data.u32_time >= 4 * 60 *60) && 
-	//			(st_bat_data.fl_bat_chI + st_bat_data.fl_bat_dischI <= 10 ))     //1A
-	//		{
-	//			fmod_open_volt_adj_soc( );//开路电压时，
-	//		}
-	//	}
-	//	
+	fmod_inout_data_update( );      // 更新数字量输入输出信号
 	fmod_updata_soh( ); //在浮充状态时会更新SOH	
 	fmod_updata_soc( );   
 } 
@@ -119,11 +106,6 @@ void fmod_parameter_update(void)
 	uint16_t fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最低温度初始化
 	uint16_t fl_bat_max_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最高温度初始化
 	
-	
-	
-
-
-
 	for(uint16_t i=0;i<TEST_BAT_NUM;i++)
 	{
 		//电池总电压
@@ -164,7 +146,53 @@ void fmod_parameter_update(void)
 	st_bat_data.u16_bat_avg_volt=st_bat_data.fl_bat_volt/TEST_BAT_NUM;
 
  }
+/** * @ : **********************************************************************
+ * @name: 数字量输入输出数据更新
+ * @describe:
+ * @param : 
+ * @return: 
+ * @  : ************************************************************************/
+ static void fmod_inout_data_update(void)
+ {	
+	
+	if(1==WAKEUP_STATUS_VALUE)
+	{
+		st_Inout_bits.Wakeup=1;
+	}
+	else
+	{
+		st_Inout_bits.Wakeup=0;
+	
+	}
+	if(1==SPEED0_STATUS_VALUE)
+	{
+		st_Inout_bits.speed0=1;
+	}
+	else
+	{
+		st_Inout_bits.speed0=0;
+	
+	}
+	if(1==EBCU_STATUS_VALUE)
+	{
+		st_Inout_bits.EBCU=1;
+	}
+	else
+	{
+		st_Inout_bits.EBCU=0;
+	
+	}
+	if(1==POWER_STATUS_VALUE)
+	{
+		st_Inout_bits.Outside_charger_status=1;
+	}
+	else
+	{
+		st_Inout_bits.Outside_charger_status=0;
+	
+	}
 
+ }
 /*********************************************************************************************************
 ** 函数名称：
 ** 函数描述：字节序（大小端字节序）的转换short(u16)

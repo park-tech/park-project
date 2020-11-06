@@ -25,7 +25,7 @@ static void fmod_sbox_choosePassiveEquilibrium (int bt_index);
 void fmod_PassiveEquilibrium(void)
 {   
 	
-	un_bat_err.st_bit.PassiveEquilibrium=0;
+	un_bat_err.st_bat_err_bit.PassiveEquilibrium=0;
 	
 	for(int i=0;i<TEST_BAT_NUM;i++)
 	{
@@ -33,7 +33,7 @@ void fmod_PassiveEquilibrium(void)
 		if(st_batcore_data.u16_batcore_volt[i]>st_bat_data.u16_bat_avg_volt+10)//当单体电压高于平均电压1V时启动被动均衡机制
 		{
 			fmod_sbox_choosePassiveEquilibrium(i+1);
-			un_bat_err.st_bit.PassiveEquilibrium=1;
+			un_bat_err.st_bat_err_bit.PassiveEquilibrium=1;
 		}
 	
 	}

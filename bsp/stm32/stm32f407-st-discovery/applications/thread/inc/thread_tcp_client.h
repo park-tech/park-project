@@ -41,30 +41,30 @@ union Re_eth_PC_data
 //.....................发送的ETH数据.....................
 struct Send_eth_message
 {   
-	uint16_t   u16_life;		                        //2字节
-    uint16_t   u16_resv;                                    //2字节
-	struct     Send_mvb_message     st_se_mvb;              //32字节
-	
-    struct     Batcore_data      st_batcore_data;           //504字节
-	union      Batcore_err_regs  un_batcore_err;            //72字节
+	//uint16_t   u16_life;                                  //2字节
+	struct     Bat_data_message    st_bat_data;             //52字节
+	struct     Bat_err_bits        st_bat_err_bit;         //4个字节
+	struct     Bat_lock_bits       st_bat_lock_bit;       //2个字节
+	struct     Sys_Inout_bits       st_sys_Inout_bit;      //1个字节
+	struct     Contactor_status_bits    st_KM_status_bit;  //1个字节
+
+    struct     Batcore_data        st_batcore_data;           //48字节
 	
 	uint8_t    u8_uptime[6];                                //系统时间6
-	uint8_t    u8_resv0[2];                                 //2 预留
-
-	uint8_t    u8_bat_num;                                  //电池测试数量
-	uint8_t    u8_car_num;                                  //车号
+	
+	uint16_t    u16_bat_num;                                  //电池测试数量
+	uint16_t    u16_car_num;                                  //车号
 	uint16_t   u16_product_num;                             //产品编号
 	
-	struct     Contactor_status_bits    st_KM_bit;          //
-	uint8_t    u8_ch_overI;                                 //充电过流值
-	uint8_t    u8_disch_overI;                              //放电过流值
-	uint8_t    u8_resv1;                                    //预留	
+	uint16_t    u16_ch_overI;                                 //充电过流值
+	uint16_t    u16_disch_overI;                              //放电过流值
+	uint8_t    u8_resv0[12];                                    //预留	
 };
 
 union  Se_eth_PC_data
 {
 	struct   Send_eth_message  st_data;
-    uint8_t  u8_data[628];        //send_eth_packdata
+    uint8_t  u8_data[112];        //send_eth_packdata
 };
 
 extern  union   Re_eth_PC_data   un_reeth_PC_data;

@@ -121,7 +121,7 @@ static void fmod_fault_store_update(void)
 
 	fmod_fault_batcore_updata( );
 	
-	st_fault_wdata.un_bat_err.u16_all = un_bat_err.u16_all;
+	st_fault_wdata.un_bat_err.u32_all = un_bat_err.u32_all;
 	
 	st_fault_wdata.un_batcore_err = un_batcore_err;
 
@@ -162,48 +162,48 @@ static char *fmod_make_fault_jsonbody(void)
 		cJSON_Delete(pJsonRoot);
 		return NULL;
     }
-	cJSON_AddItemToObject(pSubJson, "bat_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_volt));
-	cJSON_AddItemToObject(pSubJson, "bat_soc", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_soc));
-	cJSON_AddItemToObject(pSubJson, "bat_soh", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_soh));
-	cJSON_AddItemToObject(pSubJson, "bat_chI", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_chI));
-	cJSON_AddItemToObject(pSubJson, "bat_dischI", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_dischI));
-	cJSON_AddItemToObject(pSubJson, "bat_max_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_max_volt));
-	cJSON_AddItemToObject(pSubJson, "bat_min_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_min_volt));
-	cJSON_AddItemToObject(pSubJson, "bat_max_temp", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_max_temp));
-	cJSON_AddItemToObject(pSubJson, "bat_min_temp", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_min_temp));
-	//cJSON_AddItemToObject(pSubJson, "bat_max_R", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_max_R));
-	//cJSON_AddItemToObject(pSubJson, "bat_min_R", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_min_R));
-	cJSON_AddItemToObject(pSubJson, "bat_Qc_max", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_Qc_max));
-	cJSON_AddItemToObject(pSubJson, "bat_Qnow", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_Qnow));	
-	cJSON_AddItemToObject(pSubJson, "bat_avg_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_avg_volt));
-	//cJSON_AddItemToObject(pSubJson, "bat_avg_R", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_avg_R));
-	cJSON_AddItemToObject(pSubJson, "err_bat_num", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_err_bat_num));
+//	cJSON_AddItemToObject(pSubJson, "bat_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_volt));
+//	cJSON_AddItemToObject(pSubJson, "bat_soc", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_soc));
+//	cJSON_AddItemToObject(pSubJson, "bat_soh", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_soh));
+//	cJSON_AddItemToObject(pSubJson, "bat_chI", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_chI));
+//	cJSON_AddItemToObject(pSubJson, "bat_dischI", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_dischI));
+//	cJSON_AddItemToObject(pSubJson, "bat_max_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_max_volt));
+//	cJSON_AddItemToObject(pSubJson, "bat_min_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_min_volt));
+//	cJSON_AddItemToObject(pSubJson, "bat_max_temp", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_max_temp));
+//	cJSON_AddItemToObject(pSubJson, "bat_min_temp", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_min_temp));
+//	//cJSON_AddItemToObject(pSubJson, "bat_max_R", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_max_R));
+//	//cJSON_AddItemToObject(pSubJson, "bat_min_R", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_min_R));
+//	cJSON_AddItemToObject(pSubJson, "bat_Qc_max", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_Qc_max));
+//	cJSON_AddItemToObject(pSubJson, "bat_Qnow", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_Qnow));	
+//	cJSON_AddItemToObject(pSubJson, "bat_avg_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_avg_volt));
+//	//cJSON_AddItemToObject(pSubJson, "bat_avg_R", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_avg_R));
+//	cJSON_AddItemToObject(pSubJson, "err_bat_num", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_err_bat_num));
 
-	cJSON_AddItemToObject(pSubJson, "bc_volt", cJSON_CreateString(st_fault_wdata.batcore_volt_string)); 
-	cJSON_AddItemToObject(pSubJson, "bc_temp", cJSON_CreateString(st_fault_wdata.batcore_temp_string)); 
-	cJSON_AddItemToObject(pSubJson, "bc_R", cJSON_CreateString(st_fault_wdata.batcore_R_string)); 
+//	cJSON_AddItemToObject(pSubJson, "bc_volt", cJSON_CreateString(st_fault_wdata.batcore_volt_string)); 
+//	cJSON_AddItemToObject(pSubJson, "bc_temp", cJSON_CreateString(st_fault_wdata.batcore_temp_string)); 
+//	cJSON_AddItemToObject(pSubJson, "bc_R", cJSON_CreateString(st_fault_wdata.batcore_R_string)); 
 
-	cJSON_AddItemToObject(pSubJson, "bat_err", cJSON_CreateNumber(st_fault_wdata.un_bat_err.u16_all));
+//	cJSON_AddItemToObject(pSubJson, "bat_err", cJSON_CreateNumber(st_fault_wdata.un_bat_err.u16_all));
 
-	cJSON_AddItemToObject(pSubJson, "bcA_overV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overV[0].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcB_overV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overV[1].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcC_overV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overV[2].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcA_underV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_underV[0].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcB_underV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_underV[1].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcC_underV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_underV[2].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcA_overT", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overT[0].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcB_overT", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overT[1].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcC_overT", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overT[2].u32_all));
-	//cJSON_AddItemToObject(pSubJson, "bcA_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[0].u32_all));
-	//cJSON_AddItemToObject(pSubJson, "bcB_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[1].u32_all));
-	//cJSON_AddItemToObject(pSubJson, "bcC_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[2].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcA_Terr", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_Terr[0].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcB_Terr", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_Terr[1].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcC_Terr", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_Terr[2].u32_all));
-    cJSON_AddItemToObject(pSubJson, "bcA_short", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_short_board[0].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcB_short", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_short_board[1].u32_all));
-	cJSON_AddItemToObject(pSubJson, "bcC_short", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_short_board[2].u32_all));
-	cJSON_AddItemToObject(pJsonRoot,  "gy2_bms_data", pSubJson);
+//	cJSON_AddItemToObject(pSubJson, "bcA_overV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overV[0].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcB_overV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overV[1].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcC_overV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overV[2].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcA_underV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_underV[0].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcB_underV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_underV[1].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcC_underV", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_underV[2].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcA_overT", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overT[0].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcB_overT", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overT[1].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcC_overT", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overT[2].u32_all));
+//	//cJSON_AddItemToObject(pSubJson, "bcA_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[0].u32_all));
+//	//cJSON_AddItemToObject(pSubJson, "bcB_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[1].u32_all));
+//	//cJSON_AddItemToObject(pSubJson, "bcC_overR", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_overR[2].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcA_Terr", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_Terr[0].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcB_Terr", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_Terr[1].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcC_Terr", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_Terr[2].u32_all));
+//    cJSON_AddItemToObject(pSubJson, "bcA_short", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_short_board[0].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcB_short", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_short_board[1].u32_all));
+//	cJSON_AddItemToObject(pSubJson, "bcC_short", cJSON_CreateNumber(st_fault_wdata.un_batcore_err.st_err.un_short_board[2].u32_all));
+//	cJSON_AddItemToObject(pJsonRoot,  "gy2_bms_data", pSubJson);
 
 
     cJSON_AddItemToObject(pJsonRoot, "version", cJSON_CreateString(st_fault_wdata.i8_version));
