@@ -10,9 +10,10 @@
 /********************************************************************************************
 变量定义
 ********************************************************************************************/
-struct  Contactor_status_bits  st_KM_status = {0};
+//struct  Contactor_status_bits  st_KM_status = {0};
 union	Bat_status_regs        un_bat_status ;
 
+union   Contactor_status_regs     un_KM_bit;
 static BOOL  K1_LockFailure=0;
 int int_over_chI=0;
                    
@@ -163,39 +164,39 @@ void fmod_relay_control()
 		K1_LockFailure=1;
 	}
 	if(un_bat_err.st_bat_err_bit.batcore_overV == 1 ||  un_bat_err.st_bat_err_bit.bat_overT == 1   
-		||K1_LockFailure == 1||st_Inout_bits.Outside_charger_status==0 )              
+		||K1_LockFailure == 1||un_sys_Inout_bit.st_Inout_bits.Outside_charger_status==0 )              
 	{
 		K1_START_PIN_OFF;
-		st_KM_bit.KM1_work_sign=0;
+		un_KM_bit.st_KM_bit.KM1_work_sign=0;
 	}
 	else
 	{	
 		K1_START_PIN_ON;
-		st_KM_bit.KM1_work_sign=1;
+		un_KM_bit.st_KM_bit.KM1_work_sign=1;
 	}
 	
-	if((st_Inout_bits.speed0==1 && un_bat_err.st_bat_err_bit.CANorMVB_com_err == 1)||//断开K7分为2种情况：速度信号为0，无通讯信号，此时判定为车辆休眠，断开K7；
-		(st_Inout_bits.speed0==1 && un_bat_err.st_bat_err_bit.batcore_underV == 1  ))//为区别车辆休眠的工况，当速度信号为0，通讯中有允许断电的信号且电池电压不大于11V时，切除K7。                     
+	if((un_sys_Inout_bit.st_Inout_bits.speed0==1 && un_bat_err.st_bat_err_bit.CANorMVB_com_err == 1)||//断开K7分为2种情况：速度信号为0，无通讯信号，此时判定为车辆休眠，断开K7；
+		(un_sys_Inout_bit.st_Inout_bits.speed0==1 && un_bat_err.st_bat_err_bit.batcore_underV == 1  ))//为区别车辆休眠的工况，当速度信号为0，通讯中有允许断电的信号且电池电压不大于11V时，切除K7。                     
 	{
 		K7_START_PIN_OFF;
-		st_KM_bit.KM7_work_sign=0;
+		un_KM_bit.st_KM_bit.KM7_work_sign=0;
 	}
 	else{	
 		K7_START_PIN_ON;
-		st_KM_bit.KM7_work_sign=1;
+		un_KM_bit.st_KM_bit.KM7_work_sign=1;
 	}
-	if(st_Inout_bits.Outside_charger_status==0)
+	if(un_sys_Inout_bit.st_Inout_bits.Outside_charger_status==0)
 	{
 		K2_START_PIN_ON; 
-		st_KM_bit.KM2_work_sign=1;
+		un_KM_bit.st_KM_bit.KM2_work_sign=1;
 	}		
 	else{
 		K2_START_PIN_OFF;
-		st_KM_bit.KM2_work_sign=0;		
+		un_KM_bit.st_KM_bit.KM2_work_sign=0;		
 	}
 	
 	
-	if(st_Inout_bits.Outside_charger_status==0 && !(un_bat_err.st_bat_err_bit.batcore_overV||
+	if(un_sys_Inout_bit.st_Inout_bits.Outside_charger_status==0 && !(un_bat_err.st_bat_err_bit.batcore_overV||
 		un_bat_err.st_bat_err_bit.bat_over_chI||
 		un_bat_err.st_bat_err_bit.bat_overdischI||un_bat_err.st_bat_err_bit.bat_overV||
 		un_bat_err.st_bat_err_bit.bat_overT||	
@@ -203,14 +204,14 @@ void fmod_relay_control()
 		un_bat_err.st_bat_err_bit.bat_underV))//un_bat_err.st_bit.bat_underT
 	{
 		K3_START_PIN_ON;
-		st_KM_bit.KM3_work_sign=1;			
+		un_KM_bit.st_KM_bit.KM3_work_sign=1;			
 		
 	}
 	else{
 	
 		
 		K3_START_PIN_OFF;
-		st_KM_bit.KM3_work_sign=0;
+	    un_KM_bit.st_KM_bit.KM3_work_sign=0;
   		
 	}
 	

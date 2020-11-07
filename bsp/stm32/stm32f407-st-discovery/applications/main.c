@@ -35,7 +35,7 @@ int main(void)
 	fmod_self_test();//接触器反馈，原始状态的信息  放在故障检测里面
 		
     //.......................等待300ms ADC先第一次采样完成...............
-		rt_thread_mdelay(300);
+	rt_thread_mdelay(300);
 
     while (RT_TRUE)
     {  
@@ -59,7 +59,7 @@ int main(void)
 		if(timer_flag.flag_500ms )
 		{
 			timer_flag.flag_500ms = 0;
-			fmod_sbox_com( );
+			
 			//fmod_mvb_com( );
 		}
 

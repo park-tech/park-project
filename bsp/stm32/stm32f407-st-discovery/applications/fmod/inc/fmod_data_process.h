@@ -19,7 +19,6 @@
 #include "fmod_dtube_display.h"
 #include "fmod_com_mvb.h"
 #include "fmod_com_rs485.h"
-#include "fmod_com_sbox.h"
 #include "fmod_PassiveEquilibrium.h"
 
 #include "bsp_gpio.h"
@@ -164,6 +163,7 @@ struct product_preset     //产品预设值 20B
 struct Bat_data  //62
 {
 	float	     fl_bat_volt;			 //电池电压 	
+	float	     fl_charger_volt;			 //外部充电机电压 
 	
 	float        fl_bat_soc;             //电池剩余容量 100倍 
 	float        fl_bat_soh;             //电池健康状态 100倍   	
@@ -213,6 +213,31 @@ struct Sys_Inout_bits
 	uint16_t resv1:1;               //预留
 	uint16_t resv2:1;               //预留
 };
+union	 Sys_Inout_regs
+{
+	struct	 Sys_Inout_bits  st_Inout_bits;
+	uint8_t  u8_all;   
+};
+ //..........................接触器状态标志....................
+struct Contactor_status_bits         
+{
+	uint8_t  KM1_work_sign:1;
+	uint8_t  KM2_work_sign:1;
+	uint8_t  KM3_work_sign:1;
+	uint8_t  KM7_work_sign:1;
+	
+	uint8_t  resv0:1;
+	uint8_t  resv1:1;
+	uint8_t  resv2:1;
+	uint8_t  resv3:1;
+	
+};
+union	Contactor_status_regs
+{
+	struct	     Contactor_status_bits  st_KM_bit ;
+	uint8_t  u8_all;   
+};
+
 
 //系统故障锁死位
 struct Bat_lock_bits
@@ -237,7 +262,11 @@ struct Bat_lock_bits
 	uint16_t resv10:1;               //预留
 	uint16_t resv11:1;               //预留
 };
-
+union	 Bat_lock_regs
+{
+	struct	 Bat_lock_bits  st_bat_lock_bit;
+	uint16_t  u16_all;   
+};
 
 //系统故障位
 struct Bat_err_bits
@@ -258,9 +287,9 @@ struct Bat_err_bits
 	uint32_t batcore_V_fault:1;	 //单体（模组）电压采样线断开故障
 
 	uint32_t bat_temp_fault:1;	 //温度传感器故障
-	uint32_t PassiveEquilibrium:1;	 //单体（模组）电池压差故障
+	uint32_t batcore_over_difV:1;	 //单体（模组）电池压差故障
     uint32_t batcore_TEqui_fault:1;	     //电池内阻过高
-	uint32_t resv:1;              //预留
+	uint32_t PassiveEquilibrium:1;              //被动均衡
 
 	uint32_t self_check_err:1;   //自检故障
 	uint32_t SYSin_com_err:1;     //内部通讯故障
@@ -339,20 +368,6 @@ union	Batcore_err_regs
 };
 
 
- //..........................接触器状态标志....................
-struct Contactor_status_bits         
-{
-	uint8_t  KM1_work_sign:1;
-	uint8_t  KM2_work_sign:1;
-	uint8_t  KM3_work_sign:1;
-	uint8_t  KM7_work_sign:1;
-	
-	uint8_t  resv0:1;
-	uint8_t  resv1:1;
-	uint8_t  resv2:1;
-	uint8_t  resv3:1;
-	
-};
 
 
 //.............................以太网发送的电池相关的数据................................ 
@@ -376,10 +391,10 @@ struct Bat_data_message   //bat_data为f类型，以太网传输时需16进制�
 	uint16_t	 u16_bat_max_temp;		 //电池最高温度 = T*10 + 550
 	uint16_t	 u16_bat_min_temp;		 //电池最低温度 = T*10 + 550
 	
-	uint16_t	 u16_bat_max_volt_index; //最高电压单体（模组）编号
-	uint16_t	 u16_bat_min_volt_index; //最低电压单体（模组）编号
-	uint16_t	 u16_bat_max_temp_index; //最高温度单体（模组）编号
-	uint16_t	 u16_bat_min_temp_index; //最低温度单体（模组）编号
+	uint16_t	 u16_batcore_max_volt_index; //最高电压单体（模组）编号
+	uint16_t	 u16_batcore_min_volt_index; //最低电压单体（模组）编号
+	uint16_t	 u16_batcore_max_temp_index; //最高温度单体（模组）编号
+	uint16_t	 u16_batcore_min_temp_index; //最低温度单体（模组）编号
 	uint16_t	 u16_bat__Terr_index;    //单体（模组）温度传感器故障编号，与上面几个不同，每一个位对应一个故障
 
 	uint8_t	     resv[6];
@@ -501,15 +516,22 @@ struct Timer_flag
 extern  struct  Product_info      st_product_info;
 extern  struct  product_preset    st_product_preset;
 
-extern  struct  Bat_data          st_bat_data;  
+extern  struct  Bat_data          st_bat_data; 
+
+
 extern  union	Bat_err_regs      un_bat_err;
+ 
+extern  union	Bat_lock_regs    un_bat_lock;
+
 extern  union	Bat_status_regs   un_bat_status ;
 
 extern  struct  Batcore_data      st_batcore_data;
 extern  union	Batcore_err_regs  un_batcore_err;
-extern  struct  Contactor_status_bits   st_KM_bit;
-extern  struct  Sys_Inout_bits   st_Inout_bits;
 
+extern  union	Contactor_status_regs   un_KM_bit;
+
+extern  union	 Sys_Inout_regs   un_sys_Inout_bit;
+	
 
 extern  union   Can_se_sbox_data      un_se_sbox_data;
 extern  union   Can_re_sbox_data      un_re_sbox_data[SUM_BAT_NUM_MAX];

@@ -13,10 +13,11 @@ struct  Product_info  st_product_info;
 struct  product_preset st_product_preset;
 struct  Bat_err_bits   st_bat_err_bit;
 struct  Contactor_status_bits   st_KM_bit;
-struct  Sys_Inout_bits   st_Inout_bits;
+//struct  Sys_Inout_bits   st_Inout_bits;
 struct  Bat_data      st_bat_data;  
 struct  Batcore_data  st_batcore_data;
 
+union   Sys_Inout_regs     un_sys_Inout_bit;
 //extern  struct rt_messagequeue adc_rx_mq; 
 
 /********************************************************************************************
@@ -115,6 +116,7 @@ void fmod_parameter_update(void)
 		if(u16_bat_max_volt_temp<st_batcore_data.u16_batcore_volt[i])
 		{
 			u16_bat_max_volt_temp=st_batcore_data.u16_batcore_volt[i];
+			
 		}
 		
 		//电池最低电压
@@ -133,6 +135,7 @@ void fmod_parameter_update(void)
 		if(fl_bat_min_temp_temp>st_batcore_data.u16_batcore_temp[i])
 		{
 			fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[i];
+		
 		}
 	}
 
@@ -157,38 +160,38 @@ void fmod_parameter_update(void)
 	
 	if(1==WAKEUP_STATUS_VALUE)
 	{
-		st_Inout_bits.Wakeup=1;
+		un_sys_Inout_bit.st_Inout_bits.Wakeup=1;
 	}
 	else
 	{
-		st_Inout_bits.Wakeup=0;
+		un_sys_Inout_bit.st_Inout_bits.Wakeup=0;
 	
 	}
 	if(1==SPEED0_STATUS_VALUE)
 	{
-		st_Inout_bits.speed0=1;
+		un_sys_Inout_bit.st_Inout_bits.speed0=1;
 	}
 	else
 	{
-		st_Inout_bits.speed0=0;
+		un_sys_Inout_bit.st_Inout_bits.speed0=0;
 	
 	}
 	if(1==EBCU_STATUS_VALUE)
 	{
-		st_Inout_bits.EBCU=1;
+		un_sys_Inout_bit.st_Inout_bits.EBCU=1;
 	}
 	else
 	{
-		st_Inout_bits.EBCU=0;
+		un_sys_Inout_bit.st_Inout_bits.EBCU=0;
 	
 	}
 	if(1==POWER_STATUS_VALUE)
 	{
-		st_Inout_bits.Outside_charger_status=1;
+		un_sys_Inout_bit.st_Inout_bits.Outside_charger_status=1;
 	}
 	else
 	{
-		st_Inout_bits.Outside_charger_status=0;
+		un_sys_Inout_bit.st_Inout_bits.Outside_charger_status=0;
 	
 	}
 

@@ -11,11 +11,13 @@
 ********************************************************************************************/
 union	Bat_err_regs      un_bat_err;
 union	Batcore_err_regs  un_batcore_err;
+union   Bat_lock_regs     un_bat_lock;
+extern union	Contactor_status_regs   un_KM_bit;
 
 /********************************************************************************************
 函数申明
 ********************************************************************************************/
-static void fmod_fault_relay(void);
+
 static void fmod_fault_bat_overV(void);			
 static void fmod_fault_bat_underV(void);
 static void fmod_fault_bat_underV_warn(void);
@@ -26,11 +28,9 @@ static void fmod_fault_bat_underT(void);
 static void fmod_fault_sensor_T(void);
 static void fmod_fault_batcore_overV (void);
 static void fmod_fault_batcore_underV (void);
-static void fmod_fault_batcore_overR (void);
-static void  fmod_fault_bat_short_board (void);
-static void fmod_fault_eth_com(void);	
-static void fmod_fault_mvb_com(void);
-static void fmod_fault_rs485_com (void);
+
+static void fmod_fault_CAN_com(void);
+static void fmod_fault_relay(void);
 
 /******************************************************************************************
 函数描述：判断故障
@@ -47,9 +47,6 @@ void fmod_fault_detect(void)
 
     //........................电池组过放................................
 	fmod_fault_bat_underV();
-
-	//........................电池组低压预警................................
-	//fmod_fault_bat_underV_warn();
 
 	//........................电池组充电过流................................
 	fmod_fault_bat_over_chI();
@@ -72,252 +69,11 @@ void fmod_fault_detect(void)
 	//........................单体电池欠压................................
 	fmod_fault_batcore_underV ();
 
-	//........................单体电池内阻过高................................
-	//fmod_fault_batcore_overR ();
-	
-	//........................单体电池短板故障................................
-	fmod_fault_bat_short_board ();
-
-	//........................ETH通讯故障..................................
-	//fmod_fault_eth_com();	
-		
 	//........................MVB通讯故障.....................................
-	//fmod_fault_mvb_com();
-    // ........................RS485通讯故障................................
-    fmod_fault_rs485_com();
-//	printf("un_bat_err.u16_all = %04x\n", un_bat_err.u16_all );
+	fmod_fault_CAN_com();
 }
-///****************************晁绵星版本****************************************************
-//** 函数名称：电池放电过流       
-//** 函数描述：
-//** 输入参数：无
-//** 返回值  ：无
-//*******************************************************************************************/
-//static void  fmod_fault_bat_overdischI (void)
-//{
-// static uint16_t  u16_err_count = 0;
-// static uint16_t  disI_start_timer_flag=0;  //故障计时开始标志
-// static uint16_t disI_fault_count=0;       //故障计数
-// static uint16_t disI_fault_time=0;       //故障计时
-////.........故障判断
-// if(st_bat_data.fl_bat_dischI >=  st_product_preset.u8_disch_overI) 
-// { 
-//  if(u16_err_count <= 10)  //延时1秒
-//  {
-//   u16_err_count++; 
-//  }
-//  else
-//  {
-//   if(!un_bat_err.st_bit.bat_overdischI) 
-//   {
-//    un_bat_err.st_bit.bat_overdischI = 1;
-//    disI_fault_count++;
-//    disI_start_timer_flag = 1;
-//   }
-//   u16_err_count = 300; 
-//  }
-//  
-// }
-// //.........故障恢复  考虑发生死锁的时候
-// if((st_bat_data.fl_bat_dischI < 0.9f * st_product_preset.u8_disch_overI) &&  st_SY_bit.disI_lock_sign ==0)  
-// { 
-//  if(un_bat_err.st_bit.bat_overdischI)
-//  {
-//   if(u16_err_count > 0 )
-//   {
-//    u16_err_count--;  
-//   }
-//   else
-//   {
-//    un_bat_err.st_bit.bat_overdischI = 0;
-//   } 
-//  }
-//  else
-//  {
-//   u16_err_count = 0;
-//   un_bat_err.st_bit.bat_overdischI = 0;
-//  }
-//  
-// }
 
-// //........故障计时
-// if(disI_start_timer_flag==1)
-// {
-//  if(disI_fault_time<=3500)//防止溢出
-//  {
-//   disI_fault_time++;
-//  }
-// }
-////.......判断该故障是否锁死
-// if(disI_fault_time>=3000 && disI_fault_count>=3) 
-//  {
-//    st_SY_bit.disI_lock_sign = 1; 
-//  }
-//  if(disI_fault_time>=3000 && disI_fault_count<3) 
-//  {
-//    disI_fault_count=0;
-//    disI_start_timer_flag=0;
-//  }   
-//}
-/******************************************************************************************
-** 函数名称：接触器故障  
-** 函数描述：
-** 输入参数：无
-** 返回值  ：无
-*******************************************************************************************/
-static void  fmod_fault_relay (void)
-{
-	static uint16_t  u16_errK1_count = 0;
-	static uint16_t  u16_errK2_count = 0;
-	static uint16_t  u16_errK3_count = 0;
-	static uint16_t  u16_errK7_count = 0;
-	static uint16_t  u16_lockK1_count = 0;
-	static uint16_t  u16_lockK2_count = 0;
-	static uint16_t  u16_lockK3_count = 0;
-	static uint16_t  u16_lockK7_count = 0;
-	static uint16_t  u16_upK1_count = 0;
-	static uint16_t  u16_upK2_count = 0;
-	static uint16_t  u16_upK3_count = 0;
-	static uint16_t  u16_upK7_count = 0;
-	
-	
-	
-	//K1故障判断
-	if(u16_lockK1_count >=3)
-	{
-		un_bat_err.st_bat_err_bit.KM1_fault_sign=1;
-	}
-	else if( st_KM_bit.KM1_work_sign != K1_FEED_VALUE)		 
-	{   
-		if(u16_errK1_count <= 20) 			//2秒
-		{
-			u16_errK1_count++; 
-		}
-		else
-		{
-			if(u16_upK1_count==0)
-			{
-				u16_lockK1_count++;
-			}
-			un_bat_err.st_bat_err_bit.KM1_fault_sign=1;
-			u16_upK7_count++;
-			u16_errK1_count = 20;              //2秒
-			if(u16_upK1_count>=50)
-			{
-				u16_upK1_count=50;
-			}
-		}
-	}
-	else
-	{
-		un_bat_err.st_bat_err_bit.KM1_fault_sign=0;
-		u16_errK1_count = 0;   
-		u16_upK1_count=0;
-	}
-	
-	
-//K2故障判断
-	if(u16_lockK2_count >=3)
-	{
-		un_bat_err.st_bat_err_bit.KM2_fault_sign=1;
-	}
-	else if( st_KM_bit.KM2_work_sign != K2_FEED_VALUE)		 
-	{   
-		if(u16_errK2_count <= 20) 			//2秒
-		{
-			u16_errK2_count++; 
-		}
-		else
-		{
-			if(u16_upK2_count==0)
-			{
-				u16_lockK2_count++;
-			}
-			un_bat_err.st_bat_err_bit.KM2_fault_sign=1;
-			u16_upK2_count++;
-			u16_errK2_count = 20;              //2秒
-			if(u16_upK2_count>=50)
-			{
-				u16_upK2_count=50;
-			}
-		}
-	}
-	else
-	{
-		un_bat_err.st_bat_err_bit.KM2_fault_sign=0;
-		u16_errK2_count = 0;   
-		u16_upK2_count=0;
-	}
-	
-	
-	//K3故障判断
-	if(u16_lockK3_count >=3)
-	{
-		un_bat_err.st_bat_err_bit.KM3_fault_sign=1;
-	}
-	else if( st_KM_bit.KM3_work_sign == K3_FEED_VALUE)		//K3反馈为常闭节点，所以驱动与反馈应相反 
-	{   
-		if(u16_errK3_count <= 20) 			//2秒
-		{
-			u16_errK3_count++; 
-		}
-		else
-		{
-			if(u16_upK3_count==0)
-			{
-				u16_lockK3_count++;
-			}
-			un_bat_err.st_bat_err_bit.KM3_fault_sign=1;
-			u16_upK3_count++;
-			u16_errK3_count = 20;              //2秒
-			if(u16_upK3_count>=50)
-			{
-				u16_upK3_count=50;
-			}
-		}
-	}
-	else
-	{
-		un_bat_err.st_bat_err_bit.KM3_fault_sign=0;
-		u16_errK3_count = 0;   
-		u16_upK3_count=0;
-	}
-	
-	
-	//K7故障判断
-	if(u16_lockK7_count >=3)
-	{
-		un_bat_err.st_bat_err_bit.KM7_fault_sign=1;
-	}
-	else if( st_KM_bit.KM7_work_sign != K7_FEED_VALUE)		 
-	{   
-		if(u16_errK7_count <= 20) 			//2秒
-		{
-			u16_errK7_count++; 
-		}
-		else
-		{
-			if(u16_upK7_count==0)
-			{
-				u16_lockK7_count++;
-			}
-			un_bat_err.st_bat_err_bit.KM7_fault_sign=1;
-			u16_upK7_count++;
-			u16_errK7_count = 20;              //2秒
-			if(u16_upK7_count>=50)
-			{
-				u16_upK7_count=50;
-			}
-		}
-	}
-	else
-	{
-		un_bat_err.st_bat_err_bit.KM7_fault_sign=0;
-		u16_errK7_count = 0;   
-		u16_upK7_count=0;
-	}
-	
-}
+
 
 /******************************************************************************************
 ** 函数名称：电池过充       
@@ -397,44 +153,7 @@ static void  fmod_fault_bat_underV (void)
 
 
 /******************************************************************************************
-** 函数名称：电池低压预警       
-** 函数描述：
-** 输入参数：无
-** 返回值  ：无
-*******************************************************************************************/
-static void  fmod_fault_bat_underV_warn  (void)
-{
-    static uint16_t  u16_err_count = 0;
-	
-	if(st_bat_data.fl_bat_volt < BC_LOW_PREWARN_V *10* TEST_BAT_NUM  )		
-	{   
-		if(u16_err_count <= 10)  //1秒
-		{
-			u16_err_count++; 
-		}
-		else
-		{
-			un_bat_err.st_bat_err_bit.bat_underV_warn = 1;
-			u16_err_count = 10;              
-		}
-	}
-	if(st_bat_data.fl_bat_volt >=((BC_LOW_PREWARN_V + 0.1) *10* TEST_BAT_NUM ))		
-	{   
-		if(u16_err_count > 0 )
-		{
-			u16_err_count--; 	
-		}
-		else
-		{
-			un_bat_err.st_bat_err_bit.bat_underV_warn = 0;
-		}	
-	}
-
-
-}
-
-/******************************************************************************************
-** 函数名称：电池过充       
+** 函数名称：电池充电过流       
 ** 函数描述：
 ** 输入参数：无
 ** 返回值  ：无
@@ -442,30 +161,68 @@ static void  fmod_fault_bat_underV_warn  (void)
 static void  fmod_fault_bat_over_chI (void)
 {
 	static uint16_t  u16_err_count = 0;
-
-	if(st_bat_data.fl_bat_chI >=  st_product_preset.u8_ch_overI*10 )	
-	{	
-		if(u16_err_count <= 10)  //1秒
+	static uint16_t  overchI_start_timer_flag=0;  //故障计时开始标志
+	static uint16_t overchI_fault_count=0;       //故障计数
+	static uint16_t overchI_fault_time=0;       //故障计时
+	//.........故障判断
+	if(st_bat_data.fl_bat_chI >=  st_product_preset.u8_ch_overI*10) 
+	{ 
+		if(u16_err_count <= 10)  //延时1秒
 		{
 			u16_err_count++; 
 		}
 		else
 		{
-			un_bat_err.st_bat_err_bit.bat_over_chI = 1;
-			u16_err_count = 10;              
+			if(!un_bat_err.st_bat_err_bit.bat_over_chI) 
+			{
+				un_bat_err.st_bat_err_bit.bat_over_chI = 1;
+				overchI_fault_count++;
+				overchI_start_timer_flag = 1;
+			}
+			u16_err_count = 300; 
 		}
+
 	}
-	if(st_bat_data.fl_bat_chI < 0.9f * st_product_preset.u8_ch_overI*10) 	
-	{	
-		if(u16_err_count > 0 )
+	//.........故障恢复  考虑发生锁死的时候
+	if((st_bat_data.fl_bat_chI < 0.9f * st_product_preset.u8_ch_overI*10) &&  0==un_bat_lock.st_bat_lock_bit.bat_over_chI_lock )  
+	{ 
+		if(un_bat_err.st_bat_err_bit.bat_over_chI)
 		{
-			u16_err_count--; 	
+			if(u16_err_count > 0 )
+			{
+				u16_err_count--;  
+			}
+			else
+			{
+				un_bat_err.st_bat_err_bit.bat_over_chI = 0;
+			} 
 		}
 		else
 		{
+			u16_err_count = 0;
 			un_bat_err.st_bat_err_bit.bat_over_chI = 0;
-		}	
-	}	
+		}
+
+	}
+
+	//........故障计时
+	if(1==overchI_start_timer_flag)
+	{
+		if(overchI_fault_time<=3500)//防止溢出
+		{
+			overchI_fault_time++;
+		}
+	}
+	//.......判断该故障是否锁死
+	if(overchI_fault_time<3000 && overchI_fault_count>=3) 
+	{
+		un_bat_lock.st_bat_lock_bit.bat_over_chI_lock  = 1; 
+	}
+	if(overchI_fault_time>=3000 && overchI_fault_count<3) 
+	{
+		overchI_fault_count=0;
+		overchI_start_timer_flag=0;
+	}   
 }
 
 /******************************************************************************************
@@ -513,46 +270,68 @@ static void  fmod_fault_bat_overdischI (void)
 static void  fmod_fault_bat_overT (void)
 {
 	static uint16_t  u16_err_count = 0;
-	uint32_t i = 0;
-
-	un_batcore_err.st_err.un_overT[0].u16_all = 0x00000000;
-
-	for(i = 0; i < 9; i++ )
-	{   
-		if(st_batcore_data.u16_batcore_temp[i] >=  (OVER_TEMP + 55) * 10 )
-        {		
-			 un_batcore_err.st_err.un_overT[i/32].u16_all |= 1 << (i % 32);	
-		}
-		else
-		{
-			un_batcore_err.st_err.un_overT[i/32].u16_all &= ~(1 << (i % 32));	
-		}
-	}
-	
-	if(st_bat_data.fl_bat_max_temp >=  (OVER_TEMP + 55) * 10 ) 
-	{	
-		if(u16_err_count <= 10)  //1秒
+	static uint16_t  overT_start_timer_flag=0;  //故障计时开始标志
+	static uint16_t overT_fault_count=0;       //故障计数
+	static uint16_t overT_fault_time=0;       //故障计时
+	//.........故障判断
+	if(st_batcore_data.u16_batcore_temp[0] >=  (OVER_TEMP + 55) * 10) 
+	{ 
+		if(u16_err_count <= 10)  //延时1秒
 		{
 			u16_err_count++; 
 		}
 		else
 		{
-			un_bat_err.st_bat_err_bit.bat_overT = 1;
-			u16_err_count = 10;              
+			if(!un_bat_err.st_bat_err_bit.bat_overT) 
+			{
+				un_bat_err.st_bat_err_bit.bat_overT = 1;
+				overT_fault_count++;
+				overT_start_timer_flag = 1;
+			}
+			u16_err_count = 300; 
 		}
+
 	}
-	if(st_bat_data.fl_bat_max_temp < 0.95 * (OVER_TEMP + 55) * 10)	
-	{	
-		if(u16_err_count > 0 )
+	//.........故障恢复  考虑发生锁死的时候
+	if((st_batcore_data.u16_batcore_temp[0]< (OVER_TEMP + 50) * 10) &&  0==un_bat_lock.st_bat_lock_bit.bat_overT_lock )  
+	{ 
+		if(un_bat_err.st_bat_err_bit.bat_overT)
 		{
-			u16_err_count--; 	
+			if(u16_err_count > 0 )
+			{
+				u16_err_count--;  
+			}
+			else
+			{
+				un_bat_err.st_bat_err_bit.bat_overT = 0;
+			} 
 		}
 		else
 		{
+			u16_err_count = 0;
 			un_bat_err.st_bat_err_bit.bat_overT = 0;
-		}	
+		}
+
 	}
 
+	//........故障计时
+	if(1==overT_start_timer_flag)
+	{
+		if(overT_fault_time<=3500)//防止溢出
+		{
+			overT_fault_time++;
+		}
+	}
+	//.......判断该故障是否锁死
+	if(overT_fault_time<3000 && overT_fault_count>=3) 
+	{
+		un_bat_lock.st_bat_lock_bit.bat_overT_lock  = 1; 
+	}
+	if(overT_fault_time>=3000 && overT_fault_count<3) 
+	{
+		overT_fault_count=0;
+		overT_start_timer_flag=0;
+	}   
 }
 
 /******************************************************************************************
@@ -590,56 +369,7 @@ static void  fmod_fault_bat_underT (void)
 	}
 }
 
-/******************************************************************************************
-** 函数名称：单体电池温度传感器故障      
-** 函数描述：-45~125为检测温度的范围，超出则判断为温度传感器故障
-** 输入参数：无
-** 返回值  ：无
-*******************************************************************************************/
-static void  fmod_fault_sensor_T (void)
-{
-	static uint16_t  u16_err_count = 0;
-	uint32_t i = 0;
-	
-	un_batcore_err.st_err.un_Terr[0].u16_all = 0x00000000;
-	
-	for(i = 0; i < 9; i++ )
-	{   
-		if((st_batcore_data.u16_batcore_temp[i] >  (120 + 55)*10) || (st_batcore_data.u16_batcore_temp[i] < (-45 + 55)*10))
-        {		
-			un_batcore_err.st_err.un_Terr[i/32].u16_all |= 1 << (i % 32);	
-		}
-		else
-		{
-			un_batcore_err.st_err.un_Terr[i/32].u16_all &= ~(1 << (i % 32));	
-		}
-	}
-	
-    if( (un_batcore_err.st_err.un_Terr[0].u16_all >=1))
-   	{
-		if(u16_err_count <= 20)  //1秒
-		{
-			u16_err_count++; 
-		}
-		else
-		{
-			un_bat_err.st_bat_err_bit.bat_temp_fault = 1;
-			u16_err_count = 20;              
-		}
-	}   
-	else
-	{
-	    if(u16_err_count > 0 )
-		{
-			u16_err_count--; 	
-		}
-		else
-		{
-			un_bat_err.st_bat_err_bit.bat_temp_fault = 0;
-		}
-	}   
- 	   
-}
+
 /******************************************************************************************
 ** 函数名称：单体电池过压       
 ** 函数描述：
@@ -651,7 +381,7 @@ static void  fmod_fault_batcore_overV (void)
 	static uint16_t  u16_err_count = 0;
 	uint32_t i = 0;
 
-	un_batcore_err.st_err.un_overV[0].u16_all =0x00000000;
+	un_batcore_err.st_err.un_overV[0].u16_all =0x0000;
 
 	for(i = 0; i < 9; i++ )
 	{   
@@ -701,19 +431,19 @@ static void  fmod_fault_batcore_overV (void)
 static void  fmod_fault_batcore_underV (void)
 {  
 	static uint16_t  u16_err_count = 0;
-	uint32_t i = 0;
+	uint16_t i = 0;
 
-	un_batcore_err.st_err.un_underV[0].u16_all =0x00000000;
+	un_batcore_err.st_err.un_underV[0].u16_all =0x0000;
 
 	for(i = 0; i < 9; i++ )
 	{   
 		if(st_batcore_data.u16_batcore_volt[i] <=  (BC_UNDER_V -0.05)* 10)
         {		
-			un_batcore_err.st_err.un_underV[0].u16_all |= 1 << (i % 32);	
+			un_batcore_err.st_err.un_underV[0].u16_all |= 1 << (i % 16);	
 		}
 		else
 		{
-			un_batcore_err.st_err.un_underV[0].u16_all &= ~(1 << (i % 32));	
+			un_batcore_err.st_err.un_underV[0].u16_all &= ~(1 << (i % 16));	
 		}
 	}
 	
@@ -742,104 +472,40 @@ static void  fmod_fault_batcore_underV (void)
 	}   
 	     
 }
-
-
 /******************************************************************************************
-** 函数名称：单体电池内阻过高       
-** 函数描述：
+** 函数名称：单体电池温度传感器故障      
+** 函数描述：-45~125为检测温度的范围，超出则判断为温度传感器故障
 ** 输入参数：无
 ** 返回值  ：无
 *******************************************************************************************/
-//static void  fmod_fault_batcore_overR (void)
-//{   
-//	static uint16_t  u16_err_count = 0;
-//	uint32_t i = 0;
-
-//	un_batcore_err.st_err.un_overR[0].u32_all =0x00000000;
-//	un_batcore_err.st_err.un_overR[1].u32_all =0x00000000;
-//	un_batcore_err.st_err.un_overR[2].u32_all =0x00000000;
-
-//	for(i = 0; i < 9; i++ )
-//	{	
-//		if(st_batcore_data.u16_batcore_R[i] >=  BC_OVER_R)
-//		{		
-//			un_batcore_err.st_err.un_overR[i/32].u32_all |= 1 << (i % 32);	
-//		}
-//		else
-//		{
-//			un_batcore_err.st_err.un_overR[i/32].u32_all &= ~(1 << (i % 32));	
-//		}
-//	}
-//	
-//	if( (un_batcore_err.st_err.un_overR[0].u32_all >=1) ||
-//	    (un_batcore_err.st_err.un_overR[1].u32_all >=1) ||
-//	    (un_batcore_err.st_err.un_overR[2].u32_all >=1) )
-//	{	
-//		if(u16_err_count <= 20)  //2秒
-//		{
-//			u16_err_count++; 
-//		}
-//		else
-//		{
-//			un_bat_err.st_bit.bat_overR = 1;
-//			u16_err_count = 20;              
-//		}
-//	}	
-//	else
-//	{
-//		if(u16_err_count > 0 )
-//		{
-//			u16_err_count--; 	
-//		}
-//		else
-//		{
-//			un_bat_err.st_bit.bat_overR = 0;
-//		}
-//	}	
-//	   	   
-//}
-
-/******************************************************************************************
-** 函数名称：电池短板故障       
-** 函数描述：
-** 输入参数：无
-** 返回值  ：无
-*******************************************************************************************/
-static void  fmod_fault_bat_short_board (void)
-{  
+static void  fmod_fault_sensor_T (void)
+{
 	static uint16_t  u16_err_count = 0;
-	uint32_t i = 0;
-
+	uint16_t i = 0;
+	
+	un_batcore_err.st_err.un_Terr[0].u16_all = 0x0000;
+	
 	for(i = 0; i < 9; i++ )
 	{   
-		if( ((st_batcore_data.u16_batcore_volt[i] <  (st_bat_data.u16_bat_avg_volt -10) )) //小于平均值1V
-            || (st_batcore_data.u16_batcore_volt[i] < 105))                              //低于10.5V
-	    {		
-			un_batcore_err.st_err.un_short_board[i/32].u16_all |= 1 << (i % 32);	
+		if((st_batcore_data.u16_batcore_temp[i] >  (120 + 55)*10) || (st_batcore_data.u16_batcore_temp[i] < (-45 + 55)*10))
+        {		
+			un_batcore_err.st_err.un_Terr[i/16].u16_all |= 1 << (i % 16);	
 		}
 		else
 		{
-			un_batcore_err.st_err.un_short_board[i/32].u16_all &= ~(1 << (i % 32));	
-		}	
+			un_batcore_err.st_err.un_Terr[i/16].u16_all &= ~(1 << (i % 16));	
+		}
 	}
 	
-    if( (un_batcore_err.st_err.un_short_board[0].u16_all >=1) )
+    if( (un_batcore_err.st_err.un_Terr[0].u16_all >=1))
    	{
-		if(u16_err_count <= 20)  //2秒
+		if(u16_err_count <= 20)  //1秒
 		{
 			u16_err_count++; 
 		}
 		else
 		{
-			un_bat_err.st_bat_err_bit.batcore_underV = 1;
-            for(i = 0; i < 9; i++ )
-            {
-				if( (un_batcore_err.st_err.un_short_board[i/32].u16_all >>(i % 32)) ==1 )
-                {
-					st_bat_data.u16_err_bat_num = i;
-				}
-
-			}
+			un_bat_err.st_bat_err_bit.bat_temp_fault = 1;
 			u16_err_count = 20;              
 		}
 	}   
@@ -851,29 +517,261 @@ static void  fmod_fault_bat_short_board (void)
 		}
 		else
 		{
-			un_bat_err.st_bat_err_bit.batcore_underV = 0;
-			st_bat_data.u16_err_bat_num = 0;
+			un_bat_err.st_bat_err_bit.bat_temp_fault = 0;
 		}
 	}   
-	     
+ 	   
+}
+
+
+uint16_t fmod_Passive_Equilibrium(void)
+{
+	static uint16_t  u16_err_count = 0;
+	uint16_t Passive_Equilibrium_bit= 0x0000;
+	
+	for(uint16_t i = 0; i < 9; i++ )
+	{   
+		
+		if(st_batcore_data.u16_batcore_volt[i]>st_bat_data.u16_bat_avg_volt+10)
+		{	
+			Passive_Equilibrium_bit|= 1 << (i % 16);			
+		}
+		else
+		{
+			Passive_Equilibrium_bit &= ~(1 << (i % 16));	
+		}
+		
+	}
+	 if( (Passive_Equilibrium_bit >=1))
+   	{
+		if(u16_err_count <= 20)  //1秒
+		{
+			u16_err_count++; 
+		}
+		else
+		{
+			un_bat_err.st_bat_err_bit.PassiveEquilibrium=1;
+			u16_err_count = 20;              
+		}
+	}   
+	else
+	{
+	    if(u16_err_count > 0 )
+		{
+			u16_err_count--; 	
+		}
+		else
+		{
+			un_bat_err.st_bat_err_bit.PassiveEquilibrium=0;
+		}
+	}
+	
+	
+	if(1==un_bat_err.st_bat_err_bit.PassiveEquilibrium)	
+	{
+		return Passive_Equilibrium_bit; 
+	}
+	else
+	{
+		return 0; 
+	}
+    
+
+}	
+///******************************************************************************************
+//** 函数名称：自检故障      
+//** 函数描述：
+//** 输入参数：无
+//** 返回值  ：无
+//*******************************************************************************************/
+void  fmod_self_test (void)
+{
+	uint16_t  u16_err_count = 0;
+	if( un_KM_bit.st_KM_bit.KM1_work_sign != K1_FEED_VALUE||un_KM_bit.st_KM_bit.KM2_work_sign != K2_FEED_VALUE||
+		un_KM_bit.st_KM_bit.KM3_work_sign == K3_FEED_VALUE||un_KM_bit.st_KM_bit.KM7_work_sign != K7_FEED_VALUE)		 
+	{   
+		if(u16_err_count <= 10) //1秒
+		{
+			u16_err_count++; 
+		}
+		else
+		{
+			un_bat_err.st_bat_err_bit.self_check_err=1;
+			u16_err_count = 10;              //1秒
+		}
+		
+	}
+	else
+	{
+		un_bat_err.st_bat_err_bit.self_check_err=0;
+	}
 }
 /******************************************************************************************
-** 函数名称：ETH通讯故障    
+** 函数名称：接触器故障  
 ** 函数描述：
 ** 输入参数：无
 ** 返回值  ：无
 *******************************************************************************************/
-static void  fmod_fault_eth_com(void)
+static void  fmod_fault_relay (void)
 {
+	static uint16_t  u16_errK1_count = 0;
+	static uint16_t  u16_errK2_count = 0;
+	static uint16_t  u16_errK3_count = 0;
+	static uint16_t  u16_errK7_count = 0;
+	static uint16_t  u16_lockK1_count = 0;
+	static uint16_t  u16_lockK2_count = 0;
+	static uint16_t  u16_lockK3_count = 0;
+	static uint16_t  u16_lockK7_count = 0;
+	static uint16_t  u16_upK1_count = 0;
+	static uint16_t  u16_upK2_count = 0;
+	static uint16_t  u16_upK3_count = 0;
+	static uint16_t  u16_upK7_count = 0;
+	
+	
+	
+	//K1故障判断
+	if(u16_lockK1_count >=3)
+	{
+		un_bat_err.st_bat_err_bit.KM1_fault_sign=1;
+	}
+	else if( un_KM_bit.st_KM_bit.KM1_work_sign != K1_FEED_VALUE)		 
+	{   
+		if(u16_errK1_count <= 20) 			//2秒
+		{
+			u16_errK1_count++; 
+		}
+		else
+		{
+			if(u16_upK1_count==0)
+			{
+				u16_lockK1_count++;
+			}
+			un_bat_err.st_bat_err_bit.KM1_fault_sign=1;
+			u16_upK7_count++;
+			u16_errK1_count = 20;              //2秒
+			if(u16_upK1_count>=50)
+			{
+				u16_upK1_count=50;
+			}
+		}
+	}
+	else
+	{
+		un_bat_err.st_bat_err_bit.KM1_fault_sign=0;
+		u16_errK1_count = 0;   
+		u16_upK1_count=0;
+	}
+	
+	
+//K2故障判断
+	if(u16_lockK2_count >=3)
+	{
+		un_bat_err.st_bat_err_bit.KM2_fault_sign=1;
+	}
+	else if( un_KM_bit.st_KM_bit.KM2_work_sign != K2_FEED_VALUE)		 
+	{   
+		if(u16_errK2_count <= 20) 			//2秒
+		{
+			u16_errK2_count++; 
+		}
+		else
+		{
+			if(u16_upK2_count==0)
+			{
+				u16_lockK2_count++;
+			}
+			un_bat_err.st_bat_err_bit.KM2_fault_sign=1;
+			u16_upK2_count++;
+			u16_errK2_count = 20;              //2秒
+			if(u16_upK2_count>=50)
+			{
+				u16_upK2_count=50;
+			}
+		}
+	}
+	else
+	{
+		un_bat_err.st_bat_err_bit.KM2_fault_sign=0;
+		u16_errK2_count = 0;   
+		u16_upK2_count=0;
+	}
+	
+	
+	//K3故障判断
+	if(u16_lockK3_count >=3)
+	{
+		un_bat_err.st_bat_err_bit.KM3_fault_sign=1;
+	}
+	else if( un_KM_bit.st_KM_bit.KM3_work_sign == K3_FEED_VALUE)		//K3反馈为常闭节点，所以驱动与反馈应相反 
+	{   
+		if(u16_errK3_count <= 20) 			//2秒
+		{
+			u16_errK3_count++; 
+		}
+		else
+		{
+			if(u16_upK3_count==0)
+			{
+				u16_lockK3_count++;
+			}
+			un_bat_err.st_bat_err_bit.KM3_fault_sign=1;
+			u16_upK3_count++;
+			u16_errK3_count = 20;              //2秒
+			if(u16_upK3_count>=50)
+			{
+				u16_upK3_count=50;
+			}
+		}
+	}
+	else
+	{
+		un_bat_err.st_bat_err_bit.KM3_fault_sign=0;
+		u16_errK3_count = 0;   
+		u16_upK3_count=0;
+	}
+	
+	
+	//K7故障判断
+	if(u16_lockK7_count >=3)
+	{
+		un_bat_err.st_bat_err_bit.KM7_fault_sign=1;
+	}
+	else if( un_KM_bit.st_KM_bit.KM7_work_sign != K7_FEED_VALUE)		 
+	{   
+		if(u16_errK7_count <= 20) 			//2秒
+		{
+			u16_errK7_count++; 
+		}
+		else
+		{
+			if(u16_upK7_count==0)
+			{
+				u16_lockK7_count++;
+			}
+			un_bat_err.st_bat_err_bit.KM7_fault_sign=1;
+			u16_upK7_count++;
+			u16_errK7_count = 20;              //2秒
+			if(u16_upK7_count>=50)
+			{
+				u16_upK7_count=50;
+			}
+		}
+	}
+	else
+	{
+		un_bat_err.st_bat_err_bit.KM7_fault_sign=0;
+		u16_errK7_count = 0;   
+		u16_upK7_count=0;
+	}
 	
 }
 /******************************************************************************************
-** 函数名称：mvb通讯故障       
+** 函数名称：CAN通讯故障       
 ** 函数描述：
 ** 输入参数：无
 ** 返回值  ：无
 *******************************************************************************************/
-static void  fmod_fault_mvb_com (void)
+static void  fmod_fault_CAN_com (void)
 {
 //	static uint8_t mvb_re_life = 0;
 //	static uint32_t  mvb_com_count = 0;  
@@ -903,58 +801,97 @@ static void  fmod_fault_mvb_com (void)
 //		}
 //	}
 }
-/******************************************************************************************
-** 函数名称：mvb通讯故障       
-** 函数描述：
-** 输入参数：无
-** 返回值  ：无
-*******************************************************************************************/
-static void  fmod_fault_rs485_com (void)
-{
-	static uint8_t rs485_re_life = 0;
-	static uint32_t  rs485_com_count = 0;  
-	
-	if(rs485_re_life != un_re485_data.st_data.u8_life)
-	{
-		rs485_re_life = un_re485_data.st_data.u8_life;
-	    if(rs485_com_count > 0)
-		{
-			rs485_com_count--;
-		}
-		else
-		{
-			un_bat_err.st_bat_err_bit.CANorMVB_com_err  = 0;
-		}
-	}
-	else
-	{
-		if(rs485_com_count < 30)	//3秒 
-		{
-			rs485_com_count++;
-		}
-		else
-		{
-			un_bat_err.st_bat_err_bit.CANorMVB_com_err = 1;
-			rs485_com_count = 6;
-		}
-	}
-}/******************************************************************************************
-** 函数名称：自检故障      
-** 函数描述：
-** 输入参数：无
-** 返回值  ：无
-*******************************************************************************************/
-void  fmod_self_test (void)
-{
-	if( st_KM_bit.KM1_work_sign != K1_FEED_VALUE||st_KM_bit.KM2_work_sign != K2_FEED_VALUE||
-		st_KM_bit.KM3_work_sign == K3_FEED_VALUE||st_KM_bit.KM7_work_sign != K7_FEED_VALUE)		 
-	{   
-		un_bat_err.st_bat_err_bit.self_check_err=1;
-	
-	}
-	else
-	{
-		un_bat_err.st_bat_err_bit.self_check_err=1;
-	}
-}
+///******************************************************************************************
+//** 函数名称：485通讯故障       
+//** 函数描述：
+//** 输入参数：无
+//** 返回值  ：无
+//*******************************************************************************************/
+//static void  fmod_fault_rs485_com (void)
+//{
+//	static uint8_t rs485_re_life = 0;
+//	static uint32_t  rs485_com_count = 0;  
+//	
+//	if(rs485_re_life != un_re485_data.st_data.u8_life)
+//	{
+//		rs485_re_life = un_re485_data.st_data.u8_life;
+//	    if(rs485_com_count > 0)
+//		{
+//			rs485_com_count--;
+//		}
+//		else
+//		{
+//			un_bat_err.st_bat_err_bit.CANorMVB_com_err  = 0;
+//		}
+//	}
+//	else
+//	{
+//		if(rs485_com_count < 30)	//3秒 
+//		{
+//			rs485_com_count++;
+//		}
+//		else
+//		{
+//			un_bat_err.st_bat_err_bit.CANorMVB_com_err = 1;
+//			rs485_com_count = 6;
+//		}
+//	}
 
+///******************************************************************************************
+//** 函数名称：电池短板故障       
+//** 函数描述：
+//** 输入参数：无
+//** 返回值  ：无
+//*******************************************************************************************/
+//static void  fmod_fault_bat_short_board (void)
+//{  
+//	static uint16_t  u16_err_count = 0;
+//	uint32_t i = 0;
+
+//	for(i = 0; i < 9; i++ )
+//	{   
+//		if( ((st_batcore_data.u16_batcore_volt[i] <  (st_bat_data.u16_bat_avg_volt -10) )) //小于平均值1V
+//            || (st_batcore_data.u16_batcore_volt[i] < 105))                              //低于10.5V
+//	    {		
+//			un_batcore_err.st_err.un_short_board[i/32].u16_all |= 1 << (i % 32);	
+//		}
+//		else
+//		{
+//			un_batcore_err.st_err.un_short_board[i/32].u16_all &= ~(1 << (i % 32));	
+//		}	
+//	}
+//	
+//    if( (un_batcore_err.st_err.un_short_board[0].u16_all >=1) )
+//   	{
+//		if(u16_err_count <= 20)  //2秒
+//		{
+//			u16_err_count++; 
+//		}
+//		else
+//		{
+//			un_bat_err.st_bat_err_bit.batcore_underV = 1;
+//            for(i = 0; i < 9; i++ )
+//            {
+//				if( (un_batcore_err.st_err.un_short_board[i/32].u16_all >>(i % 32)) ==1 )
+//                {
+//					st_bat_data.u16_err_bat_num = i;
+//				}
+
+//			}
+//			u16_err_count = 20;              
+//		}
+//	}   
+//	else
+//	{
+//	    if(u16_err_count > 0 )
+//		{
+//			u16_err_count--; 	
+//		}
+//		else
+//		{
+//			un_bat_err.st_bat_err_bit.batcore_underV = 0;
+//			st_bat_data.u16_err_bat_num = 0;
+//		}
+//	}   
+//	     
+//}

@@ -10,6 +10,7 @@
 变量定义
 ********************************************************************************************/
 extern  union	Bat_err_regs      un_bat_err;
+extern  union	Contactor_status_regs   un_KM_bit;
 /********************************************************************************************
 函数申明
 ********************************************************************************************/
@@ -27,8 +28,8 @@ void fmod_dtube_display(void)
 
 	showdata = 0x0008;                                                       //优先级低
 	
-	if(st_KM_bit.KM1_work_sign== 1)        			showdata = 0x00014; 	//优先级中
-	if(st_KM_bit.KM2_work_sign== 1)        			showdata = 0x00015; 	//优先级中
+	if(un_KM_bit.st_KM_bit.KM1_work_sign== 1)        			showdata = 0x00014; 	//优先级中
+	if(un_KM_bit.st_KM_bit.KM2_work_sign== 1)        			showdata = 0x00015; 	//优先级中
 	if(un_bat_err.st_bat_err_bit.PassiveEquilibrium== 1)	showdata = 0x00012;		//优先级中
 	
 	if(un_bat_err.st_bat_err_bit.KM1_fault_sign == 1)   			showdata = 0x0000;      //优先级高

@@ -41,12 +41,12 @@ union Re_eth_PC_data
 //.....................发送的ETH数据.....................
 struct Send_eth_message
 {   
-	//uint16_t   u16_life;                                  //2字节
+	
 	struct     Bat_data_message    st_bat_data;             //52字节
-	struct     Bat_err_bits        st_bat_err_bit;         //4个字节
-	struct     Bat_lock_bits       st_bat_lock_bit;       //2个字节
-	struct     Sys_Inout_bits       st_sys_Inout_bit;      //1个字节
-	struct     Contactor_status_bits    st_KM_status_bit;  //1个字节
+	union     Bat_err_regs        un_bat_err_bit;         //4个字节
+	union     Bat_lock_regs       un_bat_lock_bit;       //2个字节
+	union     Sys_Inout_regs       un_sys_Inout_bit;      //1个字节
+	union     Contactor_status_regs    un_KM_bit;  //1个字节
 
     struct     Batcore_data        st_batcore_data;           //48字节
 	

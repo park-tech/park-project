@@ -152,6 +152,8 @@ static void adc_sample(void)
 	//输出电流汇总
 	st_bat_data.fl_bat_dischI = (Iout1.u16_avg_value + Iout2.u16_avg_value + Iout3.u16_avg_value) * 0.1f;
 	
+	//外部充电机电压
+	st_bat_data.fl_charger_volt = Vin.u16_avg_value * 0.1f;
 	
 	
 	

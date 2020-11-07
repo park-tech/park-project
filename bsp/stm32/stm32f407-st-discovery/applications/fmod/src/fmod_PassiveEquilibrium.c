@@ -16,6 +16,7 @@
 ********************************************************************************************/
 
 static void fmod_sbox_choosePassiveEquilibrium (int bt_index);
+static uint16_t bit_to_index(uint16_t bit);
 
 /******************************************************************************************
 函数描述：被动均衡
@@ -24,20 +25,34 @@ static void fmod_sbox_choosePassiveEquilibrium (int bt_index);
 *******************************************************************************************/
 void fmod_PassiveEquilibrium(void)
 {   
-	
-	un_bat_err.st_bat_err_bit.PassiveEquilibrium=0;
-	
-	for(int i=0;i<TEST_BAT_NUM;i++)
+	uint16_t Passive_Equilibrium_bit= fmod_Passive_Equilibrium();
+	uint16_t bat_index=bit_to_index(Passive_Equilibrium_bit);
+	if(bat_index>=1)
 	{
-		
-		if(st_batcore_data.u16_batcore_volt[i]>st_bat_data.u16_bat_avg_volt+10)//当单体电压高于平均电压1V时启动被动均衡机制
+		fmod_sbox_choosePassiveEquilibrium(bat_index);
+	}
+}
+
+
+
+//........................将1-9位转换成对应的数字................................
+static uint16_t bit_to_index(uint16_t bit)
+{
+	static uint16_t index=0;
+	uint16_t bit_array[9]={0x0001,0x0002,0x0004,0x0008,0x0010,0x0020,0x0040,0x0080,0x0100};
+	for(uint16_t i=0;i<sizeof(bit_array)/sizeof(bit_array[0]);i++)
+	{
+		if(bit&&bit_array[i]==bit_array[i])
 		{
-			fmod_sbox_choosePassiveEquilibrium(i+1);
-			un_bat_err.st_bat_err_bit.PassiveEquilibrium=1;
+			index=i+1;
+		
 		}
 	
 	}
+	return index;
 }
+
+
 //........................选择单体电池进行放电................................
 static void fmod_sbox_choosePassiveEquilibrium(int bt_index)
 {

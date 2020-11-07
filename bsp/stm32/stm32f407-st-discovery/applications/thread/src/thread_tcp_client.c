@@ -405,41 +405,85 @@ static void se_eth_PC_update(void)
     un_seeth_PC_data.st_data.st_bat_data.u16_bat_volt = st_bat_data.fl_bat_volt * 10;
 	un_seeth_PC_data.st_data.st_bat_data.u16_bat_chI = st_bat_data.fl_bat_chI * 10;
     un_seeth_PC_data.st_data.st_bat_data.u16_bat_dischI = st_bat_data.fl_bat_dischI * 10;
-	
-	
-	
-    un_seeth_PC_data.st_data.st_bat_data.u16_bat_soc = st_bat_data.fl_bat_soc;
-    un_seeth_PC_data.st_data.st_bat_data.u16_bat_soh = st_bat_data.fl_bat_soh;
-    
+	un_seeth_PC_data.st_data.st_bat_data.u16_bat_Qc_max = st_bat_data.fl_bat_Qc_max*10;
+	un_seeth_PC_data.st_data.st_bat_data.u16_bat_Qnow = st_bat_data.fl_bat_Qnow*10;
+    un_seeth_PC_data.st_data.st_bat_data.u16_bat_soc = st_bat_data.fl_bat_soc*10;
+    un_seeth_PC_data.st_data.st_bat_data.u16_bat_soh = st_bat_data.fl_bat_soh*10;
     un_seeth_PC_data.st_data.st_bat_data.u16_bat_max_volt = st_bat_data. u16_bat_max_volt;
     un_seeth_PC_data.st_data.st_bat_data.u16_bat_min_volt = st_bat_data.u16_bat_min_volt;
     un_seeth_PC_data.st_data.st_bat_data.u16_bat_max_temp = (st_bat_data.fl_bat_max_temp + 55) *10;
     un_seeth_PC_data.st_data.st_bat_data.u16_bat_min_temp = (st_bat_data.fl_bat_min_temp + 55) *10;
-//	un_seeth_PC_data.st_data.st_bat_data.u8_bat_err[0] = un_bat_err.u16_all & 0X00FF ;
-//	un_seeth_PC_data.st_data.st_bat_data.u8_bat_err[1] =((un_bat_err.u16_all & 0XFF00) >> 8);
-//	un_seeth_PC_data.st_data.st_bat_data.u8_softversion[0] = 0x01;	 //V1.0
-//	un_seeth_PC_data.st_data.st_bat_data.u8_softversion[1] = 0x00; 
-//   
-//    for ( i = 0; i < TEST_BAT_NUM; i++)
-//    {
-//        un_seeth_PC_data.st_data.st_batcore_data.u16_batcore_volt[i] = st_batcore_data.u16_batcore_volt[i];
-//        un_seeth_PC_data.st_data.st_batcore_data.u16_batcore_temp[i] = st_batcore_data.u16_batcore_temp[i];
-//    }
-//    un_seeth_PC_data.st_data.un_batcore_err = un_batcore_err;
-//    
-//    get_rtc_time( &now_tm);
-//    un_seeth_PC_data.st_data.u8_uptime[0] = now_tm.tm_year - 100;
-//    un_seeth_PC_data.st_data.u8_uptime[1] = now_tm.tm_mon + 1;
-//    un_seeth_PC_data.st_data.u8_uptime[2] = now_tm.tm_mday;
-//    un_seeth_PC_data.st_data.u8_uptime[3] = now_tm.tm_hour;
-//    un_seeth_PC_data.st_data.u8_uptime[4] = now_tm.tm_min; 
-//    un_seeth_PC_data.st_data.u8_uptime[5] = now_tm.tm_sec;
+	
+	//......目前没需求........
+	un_seeth_PC_data.st_data.st_bat_data.u16_batcore_max_volt_index=0;
+	un_seeth_PC_data.st_data.st_bat_data.u16_batcore_min_volt_index=0;
+	un_seeth_PC_data.st_data.st_bat_data.u16_batcore_max_temp_index=0;
+	un_seeth_PC_data.st_data.st_bat_data.u16_batcore_min_temp_index=0;
+	un_seeth_PC_data.st_data.st_bat_data.u16_bat__Terr_index=0;
+	//.......................
+	
+	for(int i=0;i<6;i++)
+	{
+		un_seeth_PC_data.st_data.st_bat_data.resv[i]=0;
+	}
+	
+	un_seeth_PC_data.st_data.st_bat_data.u16_Charger_V=st_bat_data.fl_charger_volt * 10;
+	
+	
+	
+	//......目前没需求.......
+	un_seeth_PC_data.st_data.st_bat_data.u16_Bat_disch_I1=0;
+	un_seeth_PC_data.st_data.st_bat_data.u16_Bat_disch_I2=0;
+	un_seeth_PC_data.st_data.st_bat_data.u16_Bat_disch_I3=0;
+	
+	for(int j=0;j<4;j++)
+	{
+		un_seeth_PC_data.st_data.st_bat_data.resv0[j]=0;
+	}
+	//.......................
+	
+	un_seeth_PC_data.st_data.un_bat_err_bit=un_bat_err;
+	un_seeth_PC_data.st_data.un_bat_lock_bit=un_bat_lock;
+	un_seeth_PC_data.st_data.un_sys_Inout_bit=un_sys_Inout_bit;
+	un_seeth_PC_data.st_data.un_KM_bit=un_KM_bit;
+	
+    for (int  k = 0; k < 12; k++)
+    {
+		if(i>8)
+		{
+			un_seeth_PC_data.st_data.st_batcore_data.u16_batcore_volt[i] = 0;
+			un_seeth_PC_data.st_data.st_batcore_data.u16_batcore_temp[i] = 0;
+		
+		}
+		else
+		{
+		un_seeth_PC_data.st_data.st_batcore_data.u16_batcore_volt[i] = st_batcore_data.u16_batcore_volt[i];
+        un_seeth_PC_data.st_data.st_batcore_data.u16_batcore_temp[i] = st_batcore_data.u16_batcore_temp[i];
+    
+		}
+        
+	}	
+	
+	get_rtc_time( &now_tm);
+    un_seeth_PC_data.st_data.u8_uptime[0] = now_tm.tm_year - 100;
+    un_seeth_PC_data.st_data.u8_uptime[1] = now_tm.tm_mon + 1;
+    un_seeth_PC_data.st_data.u8_uptime[2] = now_tm.tm_mday;
+    un_seeth_PC_data.st_data.u8_uptime[3] = now_tm.tm_hour;
+    un_seeth_PC_data.st_data.u8_uptime[4] = now_tm.tm_min; 
+    un_seeth_PC_data.st_data.u8_uptime[5] = now_tm.tm_sec;
 
-//    un_seeth_PC_data.st_data.u8_bat_num = st_product_preset.u8_bat_num;
-//    un_seeth_PC_data.st_data.u8_car_num = st_product_preset.u8_car_num;
-//    un_seeth_PC_data.st_data.st_KM_bit = st_KM_bit;
-//    un_seeth_PC_data.st_data.u8_ch_overI = st_product_preset.u8_ch_overI;
-//    un_seeth_PC_data.st_data.u8_disch_overI = st_product_preset.u8_disch_overI;
-//    un_seeth_PC_data.st_data.u8_resv1 = 0x00;
+	
+    un_seeth_PC_data.st_data.u16_bat_num = st_product_preset.u8_bat_num;
+    un_seeth_PC_data.st_data.u16_car_num = st_product_preset.u8_bat_num;
+	un_seeth_PC_data.st_data.u16_product_num=  st_product_preset.u16_product_num;
+    un_seeth_PC_data.st_data.u16_ch_overI = st_product_preset.u8_ch_overI;
+    un_seeth_PC_data.st_data.u16_disch_overI = st_product_preset.u8_disch_overI;
+    for(int l=0;l<12;l++)
+	{
+		un_seeth_PC_data.st_data.u8_resv0[l]= 0x00;
+	}
+	
+	
+
 }
 

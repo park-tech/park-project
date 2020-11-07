@@ -543,14 +543,14 @@
               <FilePath>applications\basic\src\basic_uart.c</FilePath>
             </File>
             <File>
+              <FileName>fmod_wdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\fmod\src\fmod_wdg.c</FilePath>
+            </File>
+            <File>
               <FileName>fmod_com_rs485.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\fmod\src\fmod_com_rs485.c</FilePath>
-            </File>
-            <File>
-              <FileName>fmod_com_sbox.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>applications\fmod\src\fmod_com_sbox.c</FilePath>
             </File>
             <File>
               <FileName>fmod_data_process.c</FileName>
@@ -566,6 +566,11 @@
               <FileName>fmod_fault_detect.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\fmod\src\fmod_fault_detect.c</FilePath>
+            </File>
+            <File>
+              <FileName>fmod_PassiveEquilibrium.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\fmod\src\fmod_PassiveEquilibrium.c</FilePath>
             </File>
             <File>
               <FileName>fmod_store_fault.c</FileName>
@@ -616,16 +621,6 @@
               <FileName>thread_uart_rs485.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\thread\src\thread_uart_rs485.c</FilePath>
-            </File>
-            <File>
-              <FileName>fmod_wdg.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\applications\fmod\src\fmod_wdg.c</FilePath>
-            </File>
-            <File>
-              <FileName>fmod_PassiveEquilibrium.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\applications\fmod\src\fmod_PassiveEquilibrium.c</FilePath>
             </File>
           </Files>
         </Group>
