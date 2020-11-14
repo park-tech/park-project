@@ -100,7 +100,7 @@
 #endif
 
 //................................电池通用数据特征..................................
-#define Bat_Qb             4.5             // 标称容量4.5Ah
+#define Bat_Qb             8.0             // 标称容量4.5Ah
 #define OVER_TEMP          55               // 电池过温值
 #define UNDER_TEMP        -20               // 电池低温值
 #define Charge_full_V      (BC_Chfull_V * TEST_BAT_NUM ) //电池充满电压
@@ -137,7 +137,7 @@ struct productset_bits
 union productset_reg
 {
 	struct	 productset_bits  st_bit;
-	uint8_t  u16_all;   
+	uint16_t  u16_all;   
 };
 
 struct product_preset     //产品预设值 20B
@@ -170,6 +170,8 @@ struct Bat_data  //62
 	
 	float	     fl_bat_chI;	         //当前充电电流 
 	float	     fl_bat_dischI;          //当前放电电流
+	float	     fl_bat_dischI1;		//外部充电机电压 
+	float	     fl_bat_dischI2;		//外部充电机电压 
 	
 	uint16_t	 u16_bat_max_volt;		 //电池最高单体电压 	1mv
 	uint16_t	 u16_bat_min_volt;		 //电池最低单体电压 	1mv
@@ -183,6 +185,7 @@ struct Bat_data  //62
     uint16_t	 u16_bat_avg_volt;		 //电池平均单体电压 	1mv
 
 	uint16_t	 u16_err_bat_num;		 //故障电池序号
+	
   //uint16_t	 u16_resv;		         //电池平均内阻 	          
 };
 
@@ -203,15 +206,15 @@ union	 Bat_status_regs
 //系统输入输出位
 struct Sys_Inout_bits
 {   
-	uint16_t Wakeup:1;        	 			//唤醒信号 
-    uint16_t speed0:1;       				//零速信号
-	uint16_t EBCU:1;	 					//EBCU信号
-	uint16_t Outside_charger_status:1;	    //外部充电机信号
+	uint8_t Wakeup:1;        	 			//唤醒信号 
+    uint8_t speed0:1;       				//零速信号
+	uint8_t EBCU:1;	 					//EBCU信号
+	uint8_t Outside_charger_status:1;	    //外部充电机信号
 	
-	uint16_t resv:1;               //预留
-	uint16_t resv0:1;               //预留
-	uint16_t resv1:1;               //预留
-	uint16_t resv2:1;               //预留
+	uint8_t resv:1;               //预留
+	uint8_t resv0:1;               //预留
+	uint8_t resv1:1;               //预留
+	uint8_t resv2:1;               //预留
 };
 union	 Sys_Inout_regs
 {
@@ -324,7 +327,7 @@ struct Batcore_data
 	uint16_t     u16_batcore_temp[12];   //(T+55)*10   	
 };
 //.........................单体电池故障标识................................
-struct Batcore_err_bits          //电池过充，第一组：单体1-32
+struct Batcore_err_bits          //电池过充，第一组：单体1-16
 {  
     uint32_t err1:1;       
 	uint32_t err2:1;	     
@@ -358,13 +361,13 @@ struct Batcore_fault_regs
 	union Batcore_err_reg     un_overT[1];//0-31位表示 第1-32节单体电池过温状态
   //union Batcore_err_reg     un_overR[1];//0-31位表示 第1-32节单体电池内阻过高
 	union Batcore_err_reg     un_Terr[1];  //0-31位表示 第1-32节单体电池温度传感器故障,    
-	union Batcore_err_reg     un_short_board[1];  //0-31位表示 第1-32节单体电池短板故障,  	
+	//union Batcore_err_reg     un_short_board[1];  //0-31位表示 第1-32节单体电池短板故障,  	
 };
 
 union	Batcore_err_regs
 {
 	struct	     Batcore_fault_regs  st_err;
-	uint32_t	 u32_batcore_err[18];  // 18*4=72 byte	
+	uint16_t	 u16_batcore_err[4];  // 4*2=8 byte	
 };
 
 
@@ -482,11 +485,13 @@ struct history_store_data
 	
 	uint32_t     u32_sd_num;                         // 序号         SD存的信息序号	
 	struct       Bat_data     st_bat_data;           // 电池组的数据
-    char         batcore_volt_string[352];           // struct  Batcore_data      st_batcore_data电芯的数据
-	char		 batcore_temp_string[352];
-	char		 batcore_R_string[352];
-	union	     Bat_err_regs      un_bat_err;      // 2字节      电池组的故障
-	union        Batcore_err_regs  un_batcore_err;  // 72字节        电芯的故障
+    char         batcore_volt_string[52];           // struct  Batcore_data      st_batcore_data电芯的数据
+	
+	union	Bat_err_regs      	un_bat_err;      			// 4字节      电池组的故障
+	union	Bat_lock_regs    	un_bat_lock;				//锁死故障
+	union	Sys_Inout_regs   	un_sys_Inout_bit;			//系统输入输出
+	union	Contactor_status_regs   un_KM_bit;				//继电器接触器状态
+	
 	char		 i8_version[8];		                // 软件版本
 	char		 i8_timestring[20];	                // 上传时间
 };

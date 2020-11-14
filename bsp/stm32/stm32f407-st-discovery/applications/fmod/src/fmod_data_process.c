@@ -88,6 +88,8 @@ void fmod_parameter_update(void)
 	
     fmod_adc_data_update( );      // 更新最大、最低单体电压，温度等值
 	fmod_inout_data_update( );      // 更新数字量输入输出信号
+	
+	
 	fmod_updata_soh( ); //在浮充状态时会更新SOH	
 	fmod_updata_soc( );   
 } 

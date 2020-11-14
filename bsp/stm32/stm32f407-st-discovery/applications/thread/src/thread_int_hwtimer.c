@@ -149,6 +149,13 @@ static void adc_sample(void)
 	
 	//输入电流汇总
 	st_bat_data.fl_bat_chI = Iin.u16_avg_value * 0.1f;
+	
+	//输出电流1
+	st_bat_data.fl_bat_dischI1 = Iout1.u16_avg_value * 0.1f;
+	
+	//输出电流2
+	st_bat_data.fl_bat_dischI2 = Iout2.u16_avg_value * 0.1f;
+	
 	//输出电流汇总
 	st_bat_data.fl_bat_dischI = (Iout1.u16_avg_value + Iout2.u16_avg_value + Iout3.u16_avg_value) * 0.1f;
 	

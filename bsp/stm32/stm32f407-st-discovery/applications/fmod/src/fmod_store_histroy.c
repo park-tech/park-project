@@ -126,9 +126,9 @@ static void fmod_histroy_store_update(void)
 	fmod_histroy_batcore_updata( );
 	
 	st_histroy_wdata.un_bat_err.u32_all = un_bat_err.u32_all;
-	
-	st_histroy_wdata.un_batcore_err = un_batcore_err;
-
+	st_histroy_wdata.un_bat_lock.u16_all = un_bat_lock.u16_all;
+	st_histroy_wdata.un_sys_Inout_bit.u8_all = un_sys_Inout_bit.u8_all;
+	st_histroy_wdata.un_KM_bit.u8_all = un_KM_bit.u8_all;
 
 	strcpy(st_histroy_wdata.i8_version, st_product_info.i8_soft_version);
 	fmod_histroy_data_uptime( ); 	  //上传时间	
@@ -166,48 +166,30 @@ static char *fmod_make_histroy_jsonbody(void)
 		cJSON_Delete(pJsonRoot);
 		return NULL;
     }
-//	cJSON_AddItemToObject(pSubJson, "bat_volt", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_volt));
-//	cJSON_AddItemToObject(pSubJson, "bat_soc", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_soc));
-//	cJSON_AddItemToObject(pSubJson, "bat_soh", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_soh));
-//	cJSON_AddItemToObject(pSubJson, "bat_chI", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_chI));
-//	cJSON_AddItemToObject(pSubJson, "bat_dischI", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_dischI));
-//	cJSON_AddItemToObject(pSubJson, "bat_max_volt", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_max_volt));
-//	cJSON_AddItemToObject(pSubJson, "bat_min_volt", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_min_volt));
-//	cJSON_AddItemToObject(pSubJson, "bat_max_temp", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_max_temp));
-//	cJSON_AddItemToObject(pSubJson, "bat_min_temp", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_min_temp));
-//	//cJSON_AddItemToObject(pSubJson, "bat_max_R", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_max_R));
-//	//cJSON_AddItemToObject(pSubJson, "bat_min_R", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_min_R));
-//	cJSON_AddItemToObject(pSubJson, "bat_Qc_max", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_Qc_max));
-//	cJSON_AddItemToObject(pSubJson, "bat_Qnow", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_Qnow));	
-//	cJSON_AddItemToObject(pSubJson, "bat_avg_volt", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_avg_volt));
-//	//cJSON_AddItemToObject(pSubJson, "bat_avg_R", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_avg_R));
-//	cJSON_AddItemToObject(pSubJson, "err_bat_num", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_err_bat_num));
+	cJSON_AddItemToObject(pSubJson, "bat_volt", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_volt));
+	cJSON_AddItemToObject(pSubJson, "bat_chI", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_chI));
+	cJSON_AddItemToObject(pSubJson, "bat_dischI", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_dischI));
+	cJSON_AddItemToObject(pSubJson, "bat_Qc_max", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_Qc_max));
+	cJSON_AddItemToObject(pSubJson, "bat_Qnow", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_Qnow));	
+	cJSON_AddItemToObject(pSubJson, "bat_soc", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_soc));
+	cJSON_AddItemToObject(pSubJson, "bat_soh", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_soh));
+	cJSON_AddItemToObject(pSubJson, "bat_max_volt", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_max_volt));
+	cJSON_AddItemToObject(pSubJson, "bat_min_volt", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.u16_bat_min_volt));
+	cJSON_AddItemToObject(pSubJson, "bat_max_temp", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_max_temp));
+	cJSON_AddItemToObject(pSubJson, "bat_min_temp", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_min_temp));
+	cJSON_AddItemToObject(pSubJson, "charger_volt", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_charger_volt));
+	cJSON_AddItemToObject(pSubJson, "bat_dischI1", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_dischI1));
+	cJSON_AddItemToObject(pSubJson, "bat_dischI2", cJSON_CreateNumber(st_histroy_wdata.st_bat_data.fl_bat_dischI2));
+	
+	cJSON_AddItemToObject(pSubJson, "bc_volt", cJSON_CreateString(st_histroy_wdata.batcore_volt_string));  
 
-//	cJSON_AddItemToObject(pSubJson, "bc_volt", cJSON_CreateString(st_histroy_wdata.batcore_volt_string)); 
-//	cJSON_AddItemToObject(pSubJson, "bc_temp", cJSON_CreateString(st_histroy_wdata.batcore_temp_string)); 
-//	cJSON_AddItemToObject(pSubJson, "bc_R", cJSON_CreateString(st_histroy_wdata.batcore_R_string)); 
+	cJSON_AddItemToObject(pSubJson, "bat_err", cJSON_CreateNumber(st_histroy_wdata.un_bat_err.u32_all));
+	cJSON_AddItemToObject(pSubJson, "bat_lock", cJSON_CreateNumber(st_histroy_wdata.un_bat_lock.u16_all));
+	cJSON_AddItemToObject(pSubJson, "sys_Inout", cJSON_CreateNumber(st_histroy_wdata.un_sys_Inout_bit.u8_all));
+	cJSON_AddItemToObject(pSubJson, "KM_status", cJSON_CreateNumber(st_histroy_wdata.un_KM_bit.u8_all));
+	
 
-//	cJSON_AddItemToObject(pSubJson, "bat_err", cJSON_CreateNumber(st_histroy_wdata.un_bat_err.u16_all));
-
-//	cJSON_AddItemToObject(pSubJson, "bcA_overV", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_overV[0].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcB_overV", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_overV[1].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcC_overV", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_overV[2].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcA_underV", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_underV[0].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcB_underV", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_underV[1].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcC_underV", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_underV[2].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcA_overT", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_overT[0].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcB_overT", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_overT[1].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcC_overT", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_overT[2].u32_all));
-//	//cJSON_AddItemToObject(pSubJson, "bcA_overR", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_overR[0].u32_all));
-//	//cJSON_AddItemToObject(pSubJson, "bcB_overR", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_overR[1].u32_all));
-//	//cJSON_AddItemToObject(pSubJson, "bcC_overR", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_overR[2].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcA_Terr", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_Terr[0].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcB_Terr", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_Terr[1].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcC_Terr", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_Terr[2].u32_all));
-//    cJSON_AddItemToObject(pSubJson, "bcA_short", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_short_board[0].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcB_short", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_short_board[1].u32_all));
-//	cJSON_AddItemToObject(pSubJson, "bcC_short", cJSON_CreateNumber(st_histroy_wdata.un_batcore_err.st_err.un_short_board[2].u32_all));
-//	cJSON_AddItemToObject(pJsonRoot,  "gy2_bms_data", pSubJson);
+	cJSON_AddItemToObject(pJsonRoot,  "APS_bms_data", pSubJson);
 
 
     cJSON_AddItemToObject(pJsonRoot, "version", cJSON_CreateString(st_histroy_wdata.i8_version));
@@ -265,13 +247,13 @@ static void fmod_set_histroy_pathname(void)
 	//ret = stat(histroy_filename, &buf);       //读取文件的大小
 	basic_get_filesize(histroy_filename, &file_info) ;//读取文件的大小
 	//rt_kprintf("status file size = %d\n", file_info.size);   //字节数
-	if( file_info.size < (30 * 1024* 1024) )                
+	if( file_info.size < (12 * 1024* 1024) )                
 	{
 		//....................................确定文件名称........................
 		snprintf(histroy_filename, sizeof(histroy_filename), "histroy_data\\histroy_%04d-%02d-%02d.txt", 
 		un_histroy_rtime.st_data.st_tm[5].u8_year+1900, un_histroy_rtime.st_data.st_tm[5].u8_mon+1, un_histroy_rtime.st_data.st_tm[5].u8_day);			
 	}	
-	else      //文件大于30M 则删除最早的文件,建立新的文件时间
+	else      //文件大于12M 则删除最早的文件,建立新的文件时间
 	{	
 		if(un_histroy_wtime.st_data.st_tm[0].u8_year > 0)   //表示已经存储的次数已经满了6个了，到达最高个数应该删除最早的那一个文件了
 		{
@@ -363,7 +345,7 @@ static void fmod_histroy_batcore_updata(void)
     uint8_t i = 0;
 	char  batcore_data[6] = {0};
 
-    for(i = 0; i < 9; i++ ) 
+    for(i = 0; i < 12; i++ ) 
     {  
 	    sprintf(batcore_data, "%04x", st_batcore_data.u16_batcore_volt[i]);
 		st_histroy_wdata.batcore_volt_string[4*i]   = batcore_data[0];
@@ -371,24 +353,7 @@ static void fmod_histroy_batcore_updata(void)
 		st_histroy_wdata.batcore_volt_string[4*i+2] = batcore_data[2];
 		st_histroy_wdata.batcore_volt_string[4*i+3] = batcore_data[3];
     }
-	
-    for(i = 0; i < 9; i++ )
-    {  
-	    sprintf(batcore_data, "%04x", st_batcore_data.u16_batcore_temp[i]);
-		st_histroy_wdata.batcore_temp_string[4*i]   = batcore_data[0];
-		st_histroy_wdata.batcore_temp_string[4*i+1] = batcore_data[1];
-		st_histroy_wdata.batcore_temp_string[4*i+2] = batcore_data[2];
-		st_histroy_wdata.batcore_temp_string[4*i+3] = batcore_data[3];
-    }
 
-	for(i = 0; i < 9; i++ )
-	{  
-	//	sprintf(batcore_data, "%04x", st_batcore_data.u16_batcore_R[i]);
-		st_histroy_wdata.batcore_R_string[4*i]   = batcore_data[0];
-		st_histroy_wdata.batcore_R_string[4*i+1] = batcore_data[1];
-		st_histroy_wdata.batcore_R_string[4*i+2] = batcore_data[2];
-		st_histroy_wdata.batcore_R_string[4*i+3] = batcore_data[3];
-	}
 	
 }
 /********************************************************************************************

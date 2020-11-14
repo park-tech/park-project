@@ -169,7 +169,17 @@ static void fmod_prodinfo_store_updata(void)
 	//..................读取当前时间...........................
 	get_rtc_second(&real_time);
 	un_prodinfo_wdata.st_data.u32_time = real_time;	 //1970年至今的秒数
-
+	
+	
+	//校准值设定
+	un_prodinfo_wdata.st_data.u16_batcore_Volt1_Correct_Value=0;
+	un_prodinfo_wdata.st_data.u16_batcore_Volt2_Correct_Value=0;
+	un_prodinfo_wdata.st_data.u16_Charge_I_Correct_Value=0;
+	un_prodinfo_wdata.st_data.u16_disCharge_I1_Correct_Value=0;
+	un_prodinfo_wdata.st_data.u16_disCharge_I2_Correct_Value=0;
+	un_prodinfo_wdata.st_data.u16_resv=0;
+	
+	
 	un_prodinfo_wdata.st_data.u8_resv[0] = 0x00;
 	un_prodinfo_wdata.st_data.u8_resv[1] = 0x00;
 

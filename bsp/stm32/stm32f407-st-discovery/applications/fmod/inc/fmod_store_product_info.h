@@ -20,8 +20,15 @@ struct St_product_info_store
 
 	uint32_t   u32_bat_Qnow;		        //  电池当前容量 *10000
 	    
-	uint32_t   u32_time;                    //   
-
+	uint32_t   u32_time; 
+	//   
+	uint16_t   u16_batcore_Volt1_Correct_Value;		        //  单体电压校准值1
+	uint16_t   u16_batcore_Volt2_Correct_Value;		        //  单体电压校准值2
+	uint16_t   u16_Charge_I_Correct_Value;		        	//  充电电流校准值
+	uint16_t   u16_disCharge_I1_Correct_Value;		        //  放电电流校准值1
+	uint16_t   u16_disCharge_I2_Correct_Value;		        //  放电电流校准值2
+	uint16_t   u16_resv;		        					//  预留
+	
 	uint8_t    u8_resv[2];                  //    
 	uint8_t    u8_enddata[2];               //  
 };

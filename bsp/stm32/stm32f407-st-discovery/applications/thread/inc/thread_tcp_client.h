@@ -15,7 +15,7 @@
 #include "fmod_data_process.h"   
 
 
-#define SE_PCETH_LEN        628
+#define SE_PCETH_LEN        136
 #define RE_PCETH_LEN        32
 //..........................函数申明.......................................
 
@@ -64,7 +64,7 @@ struct Send_eth_message
 union  Se_eth_PC_data
 {
 	struct   Send_eth_message  st_data;
-    uint8_t  u8_data[112];        //send_eth_packdata
+    uint8_t  u8_data[136];        //send_eth_packdata
 };
 
 extern  union   Re_eth_PC_data   un_reeth_PC_data;
