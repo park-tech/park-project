@@ -622,6 +622,11 @@
               <FileType>1</FileType>
               <FilePath>applications\thread\src\thread_uart_rs485.c</FilePath>
             </File>
+            <File>
+              <FileName>thread_tcp_rev.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\thread\src\thread_tcp_rev.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
