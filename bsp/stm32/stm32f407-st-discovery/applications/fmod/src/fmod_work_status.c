@@ -159,11 +159,11 @@ void fmod_updata_soh(void)
 void fmod_relay_control()
 {
 
-	if(un_bat_err.st_bat_err_bit.bat_over_chI == 1)
+	if(un_bat_err1.st_bat_err_bit1.bat_over_chI == 1)
 	{
 		K1_LockFailure=1;
 	}
-	if(un_bat_err.st_bat_err_bit.batcore_overV == 1 ||  un_bat_err.st_bat_err_bit.bat_overT == 1   
+	if(un_bat_err1.st_bat_err_bit1.batcore_overV == 1 ||  un_bat_err1.st_bat_err_bit1.bat_overT == 1   
 		||K1_LockFailure == 1||un_sys_Inout_bit.st_Inout_bits.Outside_charger_status==0 )              
 	{
 		K1_START_PIN_OFF;
@@ -175,8 +175,8 @@ void fmod_relay_control()
 		un_KM_bit.st_KM_bit.KM1_work_sign=1;
 	}
 	
-	if((un_sys_Inout_bit.st_Inout_bits.speed0==1 && un_bat_err.st_bat_err_bit.CANorMVB_com_err == 1)||//断开K7分为2种情况：速度信号为0，无通讯信号，此时判定为车辆休眠，断开K7；
-		(un_sys_Inout_bit.st_Inout_bits.speed0==1 && un_bat_err.st_bat_err_bit.batcore_underV == 1  ))//为区别车辆休眠的工况，当速度信号为0，通讯中有允许断电的信号且电池电压不大于11V时，切除K7。                     
+	if((un_sys_Inout_bit.st_Inout_bits.speed0==1 && un_bat_err2.st_bat_err_bit2.CANorMVB_com_err == 1)||//断开K7分为2种情况：速度信号为0，无通讯信号，此时判定为车辆休眠，断开K7；
+		(un_sys_Inout_bit.st_Inout_bits.speed0==1 && un_bat_err1.st_bat_err_bit1.batcore_underV == 1  ))//为区别车辆休眠的工况，当速度信号为0，通讯中有允许断电的信号且电池电压不大于11V时，切除K7。                     
 	{
 		K7_START_PIN_OFF;
 		un_KM_bit.st_KM_bit.KM7_work_sign=0;
@@ -196,12 +196,12 @@ void fmod_relay_control()
 	}
 	
 	
-	if(un_sys_Inout_bit.st_Inout_bits.Outside_charger_status==0 && !(un_bat_err.st_bat_err_bit.batcore_overV||
-		un_bat_err.st_bat_err_bit.bat_over_chI||
-		un_bat_err.st_bat_err_bit.bat_overdischI||un_bat_err.st_bat_err_bit.bat_overV||
-		un_bat_err.st_bat_err_bit.bat_overT||	
-		un_bat_err.st_bat_err_bit.bat_temp_fault||
-		un_bat_err.st_bat_err_bit.bat_underV))//un_bat_err.st_bit.bat_underT
+	if(un_sys_Inout_bit.st_Inout_bits.Outside_charger_status==0 && !(un_bat_err1.st_bat_err_bit1.batcore_overV||
+		un_bat_err1.st_bat_err_bit1.bat_over_chI||
+		un_bat_err1.st_bat_err_bit1.bat_overdischI||un_bat_err1.st_bat_err_bit1.bat_overV||
+		un_bat_err1.st_bat_err_bit1.bat_overT||	
+		un_bat_err1.st_bat_err_bit1.bat_temp_fault||
+		un_bat_err1.st_bat_err_bit1.bat_underV))//un_bat_err.st_bit.bat_underT
 	{
 		K3_START_PIN_ON;
 		un_KM_bit.st_KM_bit.KM3_work_sign=1;			

@@ -219,11 +219,10 @@ static void  re_eth_PC_data(char *data )
     }
 
     endian_swaps(&un_swap_reeth_PC_data.st_data.u16_life);
-    //endian_swaps(&un_swap_reeth_PC_data.st_data.u16_resv);
+    endian_swaps(&un_swap_reeth_PC_data.st_data.u16_resv);
     endian_swaps(&un_swap_reeth_PC_data.st_data.st_product_preset.u16_product_num);
-    
     un_reeth_PC_data = un_swap_reeth_PC_data ;
-   st_product_preset = un_reeth_PC_data.st_data.st_product_preset;
+   //st_product_preset = un_reeth_PC_data.st_data.st_product_preset;
 
     re_eth_PC_data_time_set(); 
     re_eth_PC_data_product_preset( );
@@ -287,7 +286,7 @@ static void re_eth_PC_data_product_preset(void)
         }
 	}
 
-    if(1 == un_reeth_PC_data.st_data.st_product_preset.un_preset.st_bit.set_product_num_valid)
+    if(1 == un_reeth_PC_data.st_data.st_product_preset.un_preset.st_bit.set_bat_num_valid)
 	{ 
 		if(st_product_preset.u8_bat_num != un_reeth_PC_data.st_data.st_product_preset.u8_bat_num)
         { 
@@ -358,25 +357,47 @@ static void se_eth_PC_data(void)
 	
     un_swap_seeth_PC_data = un_seeth_PC_data;
 
-//    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_life);
+    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_life);
 
-//    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_volt);
-//    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_soc);
-//    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_soh);
-//    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_chI);
-//    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_dischI);
-//    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_max_volt);
-//    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_min_volt);
-//    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_max_temp);
-//    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_min_temp);
+    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_volt);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_chI);
+    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_dischI);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_Qc_max);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_Qnow);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_soc);
+    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_soh);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_max_volt);
+    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_min_volt);
+    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_max_temp);
+    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_min_temp);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_batcore_max_temp_index);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_batcore_max_volt_index);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_batcore_min_temp_index);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_batcore_min_volt_index);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_Terr_index);
+	
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_Charger_V);
+	
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_Bat_disch_I1);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_Bat_disch_I2);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_Bat_disch_I3);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.u16_bat_num);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.u16_car_num);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.u16_product_num);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.u16_ch_overI);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.u16_disch_overI);
+	
+    endian_swaps(&un_swap_seeth_PC_data.st_data.un_bat_err_bit1);
+    endian_swaps(&un_swap_seeth_PC_data.st_data.un_bat_err_bit2);
+    endian_swaps(&un_swap_seeth_PC_data.st_data.un_bat_lock_bit);
 
-//   
-//    for ( i = 0; i < TEST_BAT_NUM; i++)
-//    {
-//        endian_swaps(&un_swap_seeth_PC_data.st_data.st_batcore_data.u16_batcore_volt[i]);
-//        endian_swaps(&un_swap_seeth_PC_data.st_data.st_batcore_data.u16_batcore_temp[i]);
-//    }
-   // un_swap_seeth_PC_data.st_data.un_batcore_err = un_batcore_err;
+   
+    for ( i = 0; i < TEST_BAT_NUM; i++)
+    {
+        endian_swaps(&un_swap_seeth_PC_data.st_data.st_batcore_data.u16_batcore_volt[i]);
+        endian_swaps(&un_swap_seeth_PC_data.st_data.st_batcore_data.u16_batcore_temp[i]);
+    }
+   
  
 	
 	//.................发送数据................................................
@@ -419,7 +440,7 @@ static void se_eth_PC_update(void)
 	un_seeth_PC_data.st_data.st_bat_data.u16_batcore_min_volt_index=0;
 	un_seeth_PC_data.st_data.st_bat_data.u16_batcore_max_temp_index=0;
 	un_seeth_PC_data.st_data.st_bat_data.u16_batcore_min_temp_index=0;
-	un_seeth_PC_data.st_data.st_bat_data.u16_bat__Terr_index=0;
+	un_seeth_PC_data.st_data.st_bat_data.u16_bat_Terr_index=0;
 	//.......................
 	
 	for(int i=0;i<6;i++)
@@ -442,7 +463,8 @@ static void se_eth_PC_update(void)
 	}
 	//.......................
 	
-	un_seeth_PC_data.st_data.un_bat_err_bit=un_bat_err;
+	un_seeth_PC_data.st_data.un_bat_err_bit1=un_bat_err1;
+	un_seeth_PC_data.st_data.un_bat_err_bit2=un_bat_err2;
 	un_seeth_PC_data.st_data.un_bat_lock_bit=un_bat_lock;
 	un_seeth_PC_data.st_data.un_sys_Inout_bit=un_sys_Inout_bit;
 	un_seeth_PC_data.st_data.un_KM_bit=un_KM_bit;
@@ -472,10 +494,9 @@ static void se_eth_PC_update(void)
     un_seeth_PC_data.st_data.u8_uptime[4] = now_tm.tm_min; 
     un_seeth_PC_data.st_data.u8_uptime[5] = now_tm.tm_sec;
 
-	
-    un_seeth_PC_data.st_data.u16_bat_num = st_product_preset.u8_bat_num;
-    un_seeth_PC_data.st_data.u16_car_num = st_product_preset.u8_bat_num;
-	un_seeth_PC_data.st_data.u16_product_num=  st_product_preset.u16_product_num;
+    un_seeth_PC_data.st_data.u16_bat_num = st_product_info.u8_bat_num;
+    un_seeth_PC_data.st_data.u16_car_num = st_product_info.u8_car_num;
+	un_seeth_PC_data.st_data.u16_product_num=  st_product_info.u16_product_num;
     un_seeth_PC_data.st_data.u16_ch_overI = st_product_preset.u8_ch_overI;
     un_seeth_PC_data.st_data.u16_disch_overI = st_product_preset.u8_disch_overI;
     for(int l=0;l<12;l++)

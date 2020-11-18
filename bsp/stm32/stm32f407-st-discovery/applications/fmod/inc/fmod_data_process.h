@@ -272,54 +272,61 @@ union	 Bat_lock_regs
 };
 
 //系统故障位
-struct Bat_err_bits
+struct Bat_err_bits1
 {   
-	uint32_t bat_overV:1;        //电池组过充  
-    uint32_t bat_underV:1;       //电池组过放      
-	uint32_t bat_over_chI:1;	 //电池充电过流
-	uint32_t bat_overdischI:1; 	 //电池放电过流
+	uint16_t bat_overV:1;        //电池组过充  
+    uint16_t bat_underV:1;       //电池组过放      
+	uint16_t bat_over_chI:1;	 //电池充电过流
+	uint16_t bat_overdischI:1; 	 //电池放电过流
 
-	uint32_t bat_underSOC_warn:1;	 //电池S0C低压预警
-	uint32_t bat_overT:1;        //电池过温    高于55度 1s
-	uint32_t bat_underT:1;	     //电池低温
-	uint32_t bat_I_fault:1;	     //电流传感器故障
+	uint16_t bat_underSOC_warn:1;	 //电池S0C低压预警
+	uint16_t bat_overT:1;        //电池过温    高于55度 1s
+	uint16_t bat_underT:1;	     //电池低温
+	uint16_t bat_I_fault:1;	     //电流传感器故障
 
-	uint32_t batcore_overV:1;	 //电池单体电池过充
-	uint32_t batcore_underV:1;	 //电池单体电池过放
-	uint32_t batcore_overT:1;	 //单体（模组）电池过温故障
-	uint32_t batcore_V_fault:1;	 //单体（模组）电压采样线断开故障
+	uint16_t batcore_overV:1;	 //电池单体电池过充
+	uint16_t batcore_underV:1;	 //电池单体电池过放
+	uint16_t batcore_overT:1;	 //单体（模组）电池过温故障
+	uint16_t batcore_V_fault:1;	 //单体（模组）电压采样线断开故障
 
-	uint32_t bat_temp_fault:1;	 //温度传感器故障
-	uint32_t batcore_over_difV:1;	 //单体（模组）电池压差故障
-    uint32_t batcore_TEqui_fault:1;	     //电池内阻过高
-	uint32_t PassiveEquilibrium:1;              //被动均衡
-
-	uint32_t self_check_err:1;   //自检故障
-	uint32_t SYSin_com_err:1;     //内部通讯故障
-	uint32_t CANorMVB_com_err:1; 	  //CAN/MVB通讯故障
-	uint32_t ETH_com_err:1; 	  //ETH通讯故障
-	
-	uint32_t  KM1_fault_sign:1;   //KM1故障
-	uint32_t  KM2_fault_sign:1;   //KM2故障
-	uint32_t  KM3_fault_sign:1;   //KM3故障
-	uint32_t  KM7_fault_sign:1;   //KM7故障
-
-	uint32_t resv0:1;              //预留
-	uint32_t resv1:1;              //预留
-	uint32_t resv2:1;              //预留
-	uint32_t resv3:1;              //预留
-
-	uint32_t resv4:1;              //预留
-	uint32_t resv5:1;              //预留
-	uint32_t resv6:1;              //预留
-	uint32_t SYS_fault:1;          //系统故障
+	uint16_t bat_temp_fault:1;	 //温度传感器故障
+	uint16_t batcore_over_difV:1;	 //单体（模组）电池压差故障
+    uint16_t batcore_TEqui_fault:1;	     //电池内阻过高
+	uint16_t PassiveEquilibrium:1;              //被动均衡
 };
-
-union	 Bat_err_regs
+union	 Bat_err_regs1
 {
-	struct	 Bat_err_bits  st_bat_err_bit;
-	uint32_t  u32_all;   
+	struct	 Bat_err_bits1  st_bat_err_bit1;
+	uint16_t  u16_all;   
 };
+struct Bat_err_bits2
+{ 
+	uint16_t self_check_err:1;   //自检故障
+	uint16_t SYSin_com_err:1;     //内部通讯故障
+	uint16_t CANorMVB_com_err:1; 	  //CAN/MVB通讯故障
+	uint16_t ETH_com_err:1; 	  //ETH通讯故障
+	
+	uint16_t  KM1_fault_sign:1;   //KM1故障
+	uint16_t  KM2_fault_sign:1;   //KM2故障
+	uint16_t  KM3_fault_sign:1;   //KM3故障
+	uint16_t  KM7_fault_sign:1;   //KM7故障
+
+	uint16_t resv0:1;              //预留
+	uint16_t resv1:1;              //预留
+	uint16_t resv2:1;              //预留
+	uint16_t resv3:1;              //预留
+
+	uint16_t resv4:1;              //预留
+	uint16_t resv5:1;              //预留
+	uint16_t resv6:1;              //预留
+	uint16_t SYS_fault:1;          //系统故障
+};
+union	 Bat_err_regs2
+{
+	struct	 Bat_err_bits2  st_bat_err_bit2;
+	uint16_t  u16_all;   
+};
+
 //.............................单体电池信息................................ 
 struct Batcore_data
 {
@@ -398,7 +405,7 @@ struct Bat_data_message   //bat_data为f类型，以太网传输时需16进制�
 	uint16_t	 u16_batcore_min_volt_index; //最低电压单体（模组）编号
 	uint16_t	 u16_batcore_max_temp_index; //最高温度单体（模组）编号
 	uint16_t	 u16_batcore_min_temp_index; //最低温度单体（模组）编号
-	uint16_t	 u16_bat__Terr_index;    //单体（模组）温度传感器故障编号，与上面几个不同，每一个位对应一个故障
+	uint16_t	 u16_bat_Terr_index;    //单体（模组）温度传感器故障编号，与上面几个不同，每一个位对应一个故障
 
 	uint8_t	     resv[6];
 
@@ -487,7 +494,8 @@ struct history_store_data
 	struct       Bat_data     st_bat_data;           // 电池组的数据
     char         batcore_volt_string[52];           // struct  Batcore_data      st_batcore_data电芯的数据
 	
-	union	Bat_err_regs      	un_bat_err;      			// 4字节      电池组的故障
+	union	Bat_err_regs1      	un_bat_err1;      			// 2字节      电池组的故障1
+	union	Bat_err_regs2      	un_bat_err2;      			// 2字节      电池组的故障2
 	union	Bat_lock_regs    	un_bat_lock;				//锁死故障
 	union	Sys_Inout_regs   	un_sys_Inout_bit;			//系统输入输出
 	union	Contactor_status_regs   un_KM_bit;				//继电器接触器状态
@@ -524,8 +532,9 @@ extern  struct  product_preset    st_product_preset;
 extern  struct  Bat_data          st_bat_data; 
 
 
-extern  union	Bat_err_regs      un_bat_err;
- 
+extern  union	Bat_err_regs1      un_bat_err1;
+extern  union	Bat_err_regs2      un_bat_err2;
+
 extern  union	Bat_lock_regs    un_bat_lock;
 
 extern  union	Bat_status_regs   un_bat_status ;

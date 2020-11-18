@@ -11,7 +11,7 @@
 ********************************************************************************************/
 struct  Product_info  st_product_info;
 struct  product_preset st_product_preset;
-struct  Bat_err_bits   st_bat_err_bit;
+//struct  Bat_err_bits   st_bat_err_bit;
 struct  Contactor_status_bits   st_KM_bit;
 //struct  Sys_Inout_bits   st_Inout_bits;
 struct  Bat_data      st_bat_data;  

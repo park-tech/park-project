@@ -11,7 +11,7 @@
 
 
 #define  PRODINFO_NUM          1000       // 总共数据条数
-#define  PRODINFO_DATA_LEN     24         // 每1组数据的字节长度
+#define  PRODINFO_DATA_LEN     36        // 每1组数据的字节长度
 #define  PRODINFO_STORE_PATH   "prodinfo_store.hex"        // 故障记录存储路径
 /********************************************************************************************
 变量的定义e

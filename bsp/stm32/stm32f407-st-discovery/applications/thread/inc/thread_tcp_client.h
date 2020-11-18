@@ -43,7 +43,8 @@ struct Send_eth_message
 {   
 	
 	struct     Bat_data_message    st_bat_data;             //52字节
-	union     Bat_err_regs        un_bat_err_bit;         //4个字节
+	union     Bat_err_regs1        un_bat_err_bit1;         //2个字节
+	union     Bat_err_regs2        un_bat_err_bit2;         //2个字节
 	union     Bat_lock_regs       un_bat_lock_bit;       //2个字节
 	union     Sys_Inout_regs       un_sys_Inout_bit;      //1个字节
 	union     Contactor_status_regs    un_KM_bit;  //1个字节

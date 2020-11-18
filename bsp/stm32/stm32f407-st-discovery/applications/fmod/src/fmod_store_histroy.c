@@ -125,7 +125,8 @@ static void fmod_histroy_store_update(void)
 
 	fmod_histroy_batcore_updata( );
 	
-	st_histroy_wdata.un_bat_err.u32_all = un_bat_err.u32_all;
+	st_histroy_wdata.un_bat_err1.u16_all = un_bat_err1.u16_all;
+	st_histroy_wdata.un_bat_err2.u16_all = un_bat_err2.u16_all;
 	st_histroy_wdata.un_bat_lock.u16_all = un_bat_lock.u16_all;
 	st_histroy_wdata.un_sys_Inout_bit.u8_all = un_sys_Inout_bit.u8_all;
 	st_histroy_wdata.un_KM_bit.u8_all = un_KM_bit.u8_all;
@@ -183,7 +184,8 @@ static char *fmod_make_histroy_jsonbody(void)
 	
 	cJSON_AddItemToObject(pSubJson, "bc_volt", cJSON_CreateString(st_histroy_wdata.batcore_volt_string));  
 
-	cJSON_AddItemToObject(pSubJson, "bat_err", cJSON_CreateNumber(st_histroy_wdata.un_bat_err.u32_all));
+	cJSON_AddItemToObject(pSubJson, "bat_err1", cJSON_CreateNumber(st_histroy_wdata.un_bat_err1.u16_all));
+	cJSON_AddItemToObject(pSubJson, "bat_err2", cJSON_CreateNumber(st_histroy_wdata.un_bat_err2.u16_all));
 	cJSON_AddItemToObject(pSubJson, "bat_lock", cJSON_CreateNumber(st_histroy_wdata.un_bat_lock.u16_all));
 	cJSON_AddItemToObject(pSubJson, "sys_Inout", cJSON_CreateNumber(st_histroy_wdata.un_sys_Inout_bit.u8_all));
 	cJSON_AddItemToObject(pSubJson, "KM_status", cJSON_CreateNumber(st_histroy_wdata.un_KM_bit.u8_all));

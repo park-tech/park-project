@@ -35,7 +35,7 @@ struct St_product_info_store
 union  Product_info_store
 {
 	struct  St_product_info_store   st_data;
-	uint8_t u8_data[24];
+	uint8_t u8_data[36];
 };
 
 extern void  fmod_prodinfo_firsttime_read(void);
