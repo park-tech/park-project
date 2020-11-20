@@ -15,8 +15,8 @@ uint32_t ADCchannelindex = 0;
 struct Movefilter Iin;			  //输入电流
 struct Movefilter Iout1;		  //负载电流1
 struct Movefilter Iout2;		  //负载电流2
-struct Movefilter Iout3;		  //负载电流3
-struct Movefilter Vin;			  //输入电压
+struct Movefilter Vin2;		  		//输入电压2
+struct Movefilter Vin1;			  //输入电压1
 struct Movefilter cell_temp[9];	  //单体电池温度
 struct Movefilter cell_vol_b0[9]; //单体电池电压——正
 struct Movefilter cell_vol_b1[9]; //单体电池电压——负
@@ -32,7 +32,7 @@ static int16_t Movefilter(struct Movefilter *MovAvgVar, uint16_t Size);
 static float fmod_bat_effect(float bat_i, float tempb);
 static void fmod_sbox_chooseVolt(int bt_index);
 static void fmod_sbox_chooseTemp(int bt_index);
-static double fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt);
+static float fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt);
 
 /**************************************************************************************************
 ** 函数名称：
@@ -139,29 +139,32 @@ static void adc_sample(void)
 	Iout2.u16_get_value = bsp_adchannel_Iout2();
 	Iout2.u16_avg_value = Movefilter(&Iout2, MOV_FILT_SIZE) * bat_Iout2_KP;
 	
-	//输出负载3电流采样
-	Iout3.u16_get_value = bsp_adchannel_Iout3();
-	Iout3.u16_avg_value = Movefilter(&Iout3, MOV_FILT_SIZE) * bat_Iout3_KP;
+	//输入电压2采样
+	Vin2.u16_get_value = bsp_adchannel_Vin2();
+	Vin2.u16_avg_value = Movefilter(&Vin2, MOV_FILT_SIZE) * bat_Vin2_KP;
 	
-	//输入电压采样
-	Vin.u16_get_value = bsp_adchannel_Vin();
-	Vin.u16_avg_value = Movefilter(&Vin, MOV_FILT_SIZE) * bat_Vin_KP;
+	//输入电压1采样
+	Vin1.u16_get_value = bsp_adchannel_Vin1();
+	Vin1.u16_avg_value = Movefilter(&Vin1, MOV_FILT_SIZE) * bat_Vin1_KP;
 	
 	//输入电流汇总
-	st_bat_data.fl_bat_chI = Iin.u16_avg_value * 0.1f;
+	st_bat_data.fl_bat_chI = Iin.u16_avg_value * 0.001f;
+	if(st_bat_data.fl_bat_chI <= 0.4f) st_bat_data.fl_bat_chI = 0;
 	
 	//输出电流1
-	st_bat_data.fl_bat_dischI1 = Iout1.u16_avg_value * 0.1f;
-	
+	st_bat_data.fl_bat_dischI1 = Iout1.u16_avg_value * 0.01f;
+	if(st_bat_data.fl_bat_dischI1 <= 0.4f) st_bat_data.fl_bat_dischI1 = 0;
 	//输出电流2
-	st_bat_data.fl_bat_dischI2 = Iout2.u16_avg_value * 0.1f;
-	
+	st_bat_data.fl_bat_dischI2 = Iout2.u16_avg_value * 0.01f;
+	if(st_bat_data.fl_bat_dischI2 <= 0.4f) st_bat_data.fl_bat_dischI2 = 0;
 	//输出电流汇总
-	st_bat_data.fl_bat_dischI = (Iout1.u16_avg_value + Iout2.u16_avg_value + Iout3.u16_avg_value) * 0.1f;
+	st_bat_data.fl_bat_dischI = (st_bat_data.fl_bat_dischI1 +st_bat_data.fl_bat_dischI2) ;
+	if(st_bat_data.fl_bat_dischI <= 0.8f) st_bat_data.fl_bat_dischI = 0;
 	
-	//外部充电机电压
-	st_bat_data.fl_charger_volt = Vin.u16_avg_value * 0.1f;
-	
+	//外部充电机电压1
+	st_bat_data.fl_charger_volt1 = Vin1.u16_avg_value * 0.01f;
+	//外部充电机电压2
+	st_bat_data.fl_charger_volt2 = Vin2.u16_avg_value * 0.01f;
 	
 	
 }
@@ -175,7 +178,7 @@ static void cell_adc_sample(void)
 {
 //GPIO初始化配置
 //90ms全部采完
-
+	
 	cell_temp[ADCchannelindex].u16_get_value = bsp_adchannel_cell_temp();
 	cell_temp[ADCchannelindex].u16_avg_value = Movefilter(&cell_temp[ADCchannelindex], MOV_FILT_SIZE) * batcell_Temp_KP;
 
@@ -203,14 +206,12 @@ static void cell_adc_sample(void)
 	
 	}
 	
-	else
-	{
-		fmod_sbox_chooseVolt(1+ADCchannelindex);
-		fmod_sbox_chooseTemp(1+ADCchannelindex);
+
+	fmod_sbox_chooseVolt(1+ADCchannelindex);
+	fmod_sbox_chooseTemp(1+ADCchannelindex);
 	
-	}
+	
 		
-	
 	
 	
 }
@@ -259,7 +260,7 @@ static void bat_Qnow_updata(void)
 	static float fl_bat_all_I = 0;	   //当前总电流
 	static float fl_bat_lastall_I = 0; //上次总电流
 	double Q_unit = 0;
-	if(POWER_STATUS_VALUE==0)
+	if(un_KM_bit.st_KM_bit.KM2_work_sign ==1)
 	{
 		fl_bat_all_I = st_bat_data.fl_bat_chI - st_bat_data.fl_bat_dischI;	//当前总电流
 	}
@@ -609,11 +610,11 @@ static void fmod_sbox_chooseTemp(int bt_index)
 	}
 }
 
-static double fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt)
+static float fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt)
 {
-	double real_bt_Temp_Volt = bt_Temp_Volt / 1000.000;
-	double R_NTC = (real_bt_Temp_Volt * 20000) / (3.3 - real_bt_Temp_Volt);
-	double temp = 1 / (log(R_NTC / 10000) / 3960 + 1 / 298.15) - 273.15;
-	double temp1 = ((temp+55 ) * 10);
+	float real_bt_Temp_Volt = bt_Temp_Volt / 1000.000;
+	float R_NTC = (real_bt_Temp_Volt * 20000) / (3.3 - real_bt_Temp_Volt);
+	float temp = 1 / (log(R_NTC / 10000) / 3960 + 1 / 298.15) - 273.15;
+	float temp1 = ((temp+55 ) * 10);
 	return temp1;
 }

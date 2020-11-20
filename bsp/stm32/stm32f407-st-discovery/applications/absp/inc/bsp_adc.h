@@ -9,8 +9,8 @@
  extern uint16_t bsp_adchannel_Iin(void);
  extern uint16_t bsp_adchannel_Iout1(void);
  extern uint16_t bsp_adchannel_Iout2(void);
- extern uint16_t bsp_adchannel_Iout3(void);
- extern uint16_t bsp_adchannel_Vin(void);
+ extern uint16_t bsp_adchannel_Vin2(void);
+ extern uint16_t bsp_adchannel_Vin1(void);
  extern uint16_t bsp_adchannel_cell_temp(void);
  extern uint16_t bsp_adchannel_cell_vol_b0(void);
  extern uint16_t bsp_adchannel_cell_vol_b1(void);

@@ -177,7 +177,8 @@ static char *fmod_make_fault_jsonbody(void)
 	cJSON_AddItemToObject(pSubJson, "bat_min_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_min_volt));
 	cJSON_AddItemToObject(pSubJson, "bat_max_temp", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_max_temp));
 	cJSON_AddItemToObject(pSubJson, "bat_min_temp", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_min_temp));
-	cJSON_AddItemToObject(pSubJson, "charger_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_charger_volt));
+	cJSON_AddItemToObject(pSubJson, "charger_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_charger_volt1));
+	cJSON_AddItemToObject(pSubJson, "charger_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_charger_volt2));
 	cJSON_AddItemToObject(pSubJson, "bat_dischI1", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_dischI1));
 	cJSON_AddItemToObject(pSubJson, "bat_dischI2", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_dischI2));
 	

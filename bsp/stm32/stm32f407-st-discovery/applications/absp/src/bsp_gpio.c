@@ -13,16 +13,15 @@ static void bsp_gpio_out_initstate_set(void) ;
 void bsp_gpio_init(void) 
 { 
     //.............输入配置............................
-    rt_pin_mode(POWER_STATUS_PIN, PIN_MODE_INPUT);
-    rt_pin_mode(WAKEUP_STATUS_PIN, PIN_MODE_INPUT);
+    rt_pin_mode(SLEEP_STATUS_PIN, PIN_MODE_INPUT);
     rt_pin_mode(SPEED0_STATUS_PIN, PIN_MODE_INPUT);
-    rt_pin_mode(EBCU_STATUS_PIN, PIN_MODE_INPUT);
+    rt_pin_mode(DC_Charger_STATUS_PIN, PIN_MODE_INPUT);
     //rt_pin_mode(CHARGE_STATUS_PIN, PIN_MODE_INPUT);
 	
     rt_pin_mode(K1_FEED_PIN , PIN_MODE_INPUT);
     rt_pin_mode(K2_FEED_PIN, PIN_MODE_INPUT);
     rt_pin_mode(K7_FEED_PIN, PIN_MODE_INPUT);
-    rt_pin_mode(K3_FEED_PIN, PIN_MODE_INPUT);
+    //rt_pin_mode(K3_FEED_PIN, PIN_MODE_INPUT);
     
     rt_pin_mode(CARID_A_FEED_PIN, PIN_MODE_INPUT);
     rt_pin_mode(CARID_B_FEED_PIN, PIN_MODE_INPUT);
@@ -54,7 +53,8 @@ void bsp_gpio_init(void)
 		rt_pin_mode(K1_START_PIN, PIN_MODE_OUTPUT);
 		rt_pin_mode(K2_START_PIN, PIN_MODE_OUTPUT);
 		rt_pin_mode(K7_START_PIN, PIN_MODE_OUTPUT);
-		rt_pin_mode(K3_START_PIN, PIN_MODE_OUTPUT);
+		rt_pin_mode(Sys_fault_PIN, PIN_MODE_OUTPUT);
+    
     
     bsp_gpio_out_initstate_set( );
 }
@@ -100,7 +100,7 @@ static void bsp_gpio_out_initstate_set(void)
 	K1_START_PIN_OFF;
 	K2_START_PIN_OFF;
 	K7_START_PIN_ON;
-	K3_START_PIN_OFF;
+	Sys_fault_PIN_OFF;
 }
 
 

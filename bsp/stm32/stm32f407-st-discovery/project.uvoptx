@@ -152,52 +152,52 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>st_batcore_data</ItemText>
+          <ItemText>un_bat_err</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>st_bat_data</ItemText>
+          <ItemText>st_KM_bit</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>un_bat_err</ItemText>
+          <ItemText>un_batcore_err</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>st_KM_bit</ItemText>
+          <ItemText>st_KM_status</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>un_batcore_err</ItemText>
+          <ItemText>un_seeth_PC_data</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>st_KM_status</ItemText>
+          <ItemText>un_swap_seeth_PC_data</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>un_seeth_PC_data</ItemText>
+          <ItemText>un_swap_reeth_PC_data</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>un_swap_seeth_PC_data</ItemText>
+          <ItemText>un_reeth_PC_data</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>un_swap_reeth_PC_data</ItemText>
+          <ItemText>st_bat_data</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>un_reeth_PC_data</ItemText>
+          <ItemText>st_batcore_data</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

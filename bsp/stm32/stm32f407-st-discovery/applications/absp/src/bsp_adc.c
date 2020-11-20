@@ -49,7 +49,7 @@ uint16_t bsp_adchannel_Iout2(void)
 ** 输入参数：
 ** 返回值  ：无
 ******************************************************************************************/
-uint16_t bsp_adchannel_Iout3(void)
+uint16_t bsp_adchannel_Vin2(void)
 {
 	uint16_t volt;
 	
@@ -62,7 +62,7 @@ uint16_t bsp_adchannel_Iout3(void)
 ** 输入参数：
 ** 返回值  ：无
 ******************************************************************************************/
-uint16_t bsp_adchannel_Vin(void)
+uint16_t bsp_adchannel_Vin1(void)
 {
 	uint16_t volt;
 	

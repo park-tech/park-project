@@ -155,16 +155,16 @@ struct product_preset     //产品预设值 20B
 
 	uint8_t   u8_ch_overI;            //充电过流值，只是调试时适用，重启后恢复原来数值
 	uint8_t   u8_disch_overI;         //放电过流值，只是调试时适用，重启后恢复原来数值
-	
-	uint8_t   u8_resv[4];
+	uint8_t   u8_charger_underV;       //充电机电压欠压值
+	uint8_t   u8_resv[3];
 };
 
 //.............................电池信息................................ 
 struct Bat_data  //62
 {
 	float	     fl_bat_volt;			 //电池电压 	
-	float	     fl_charger_volt;			 //外部充电机电压 
-	
+	float	     fl_charger_volt1;			 //外部充电机电压1 
+	float	     fl_charger_volt2;			 //外部充电机电压2 
 	float        fl_bat_soc;             //电池剩余容量 100倍 
 	float        fl_bat_soh;             //电池健康状态 100倍   	
 	
@@ -206,12 +206,12 @@ union	 Bat_status_regs
 //系统输入输出位
 struct Sys_Inout_bits
 {   
-	uint8_t Wakeup:1;        	 			//唤醒信号 
-    uint8_t speed0:1;       				//零速信号
-	uint8_t EBCU:1;	 					//EBCU信号
-	uint8_t Outside_charger_status:1;	    //外部充电机信号
+	uint8_t In_Sleep:1;        	 			//睡眠信号
+    uint8_t In_speed0:1;       				//零速信号
+	uint8_t In_DC_Charger_fault:1;	 					//DC电源故障
+	uint8_t In_resv:1;	    //外部充电机信号
 	
-	uint8_t resv:1;               //预留
+	uint8_t Out_Sys_fault:1;               //预留
 	uint8_t resv0:1;               //预留
 	uint8_t resv1:1;               //预留
 	uint8_t resv2:1;               //预留
@@ -226,7 +226,7 @@ struct Contactor_status_bits
 {
 	uint8_t  KM1_work_sign:1;
 	uint8_t  KM2_work_sign:1;
-	uint8_t  KM3_work_sign:1;
+	uint8_t  resv:1;
 	uint8_t  KM7_work_sign:1;
 	
 	uint8_t  resv0:1;
@@ -308,10 +308,10 @@ struct Bat_err_bits2
 	
 	uint16_t  KM1_fault_sign:1;   //KM1故障
 	uint16_t  KM2_fault_sign:1;   //KM2故障
-	uint16_t  KM3_fault_sign:1;   //KM3故障
+	uint16_t  resv:1;   			//预留
 	uint16_t  KM7_fault_sign:1;   //KM7故障
 
-	uint16_t resv0:1;              //预留
+	uint16_t  charger_underV:1;     //外部充电机欠压
 	uint16_t resv1:1;              //预留
 	uint16_t resv2:1;              //预留
 	uint16_t resv3:1;              //预留
@@ -409,10 +409,10 @@ struct Bat_data_message   //bat_data为f类型，以太网传输时需16进制�
 
 	uint8_t	     resv[6];
 
-    uint16_t	 u16_Charger_V;    //车辆充电机电压
+    uint16_t	 u16_Charger_V1;    //车辆充电机电压1
 	uint16_t	 u16_Bat_disch_I1;    //负载1电流
 	uint16_t	 u16_Bat_disch_I2;    //负载2电流
-	uint16_t	 u16_Bat_disch_I3;    //负载3电流
+	 uint16_t	 u16_Charger_V2;    //车辆充电机电压2
 
 	uint8_t	     resv0[4];
 

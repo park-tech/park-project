@@ -31,11 +31,11 @@
 #define  MOV_FILT_SIZE_MAX       100	// 滑动滤波器的小缓冲区大
 #define  MOV_FILT_SIZE           20	    // 滑动滤波器实际长度
 
-#define  bat_Iin_KP              1.20F     //输入电流数模转换的比例值
+#define  bat_Iin_KP              12.0F     //输入电流数模转换的比例值
 #define  bat_Iout1_KP            4.00F      //输出电流1数模转换的比例值
 #define  bat_Iout2_KP            4.00F      //输出电流2采样数模转换的比例值
-#define  bat_Iout3_KP            1.2F       //输出电流3数模转换的比例值
-#define  bat_Vin_KP              10.00F     //输入电压采样数模转换的比例值
+#define  bat_Vin1_KP             10.00F      //输入电压1采样数模转换的比例值
+#define  bat_Vin2_KP              10.00F     //输入电压2采样数模转换的比例值
 #define  batcell_Vin_KP          5.0F     //单体电池输入电压采样数模转换的比例值
 #define  batcell_Temp_KP         1.00F     //单体电池温度采样数模转换的比例值
 

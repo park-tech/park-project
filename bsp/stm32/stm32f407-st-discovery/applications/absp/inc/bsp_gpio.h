@@ -11,16 +11,15 @@
 *********************************************************************************************************/
 //..............................................输入IO脚宏定义.................................
 
-//#define CHARGE_STATUS_PIN               GET_PIN(E, 2)     //充电器状态信号
-#define WAKEUP_STATUS_PIN              GET_PIN(G, 15)     //wakeup状态信号
+#define SLEEP_STATUS_PIN               GET_PIN(G, 15)     //wakeup状态信号
 #define SPEED0_STATUS_PIN              GET_PIN(G, 12)     //零速状态信号
-#define EBCU_STATUS_PIN                GET_PIN(G, 10)     //EBCU状态信号
-#define POWER_STATUS_PIN              GET_PIN(E, 0)     //充电机状态信号
+#define DC_Charger_STATUS_PIN          GET_PIN(G, 10)     //DC电源状态信号
+//#define POWER_STATUS_PIN              GET_PIN(E, 0)     //充电机状态信号
 
 #define K1_FEED_PIN                    GET_PIN(E, 1)     //K1反馈节点信号
 #define K2_FEED_PIN                    GET_PIN(A, 4)     //K2反馈节点信号
 #define K7_FEED_PIN                    GET_PIN(E, 2)     //K7反馈节点信号
-#define K3_FEED_PIN                    GET_PIN(B, 7)     //K3反馈节点信号
+//#define K3_FEED_PIN                    GET_PIN(B, 7)     //K3反馈节点信号
 
 #define CARID_A_FEED_PIN               GET_PIN(B, 5)      //车号A设置
 #define CARID_B_FEED_PIN               GET_PIN(C, 3)      //车号B设置
@@ -52,21 +51,20 @@
 #define K1_START_PIN                   GET_PIN(F, 13)     //K1驱动信号
 #define K2_START_PIN                   GET_PIN(F, 12)     //K2驱动信号
 #define K7_START_PIN                   GET_PIN(F, 15)     //K7驱动信号
-#define K3_START_PIN                   GET_PIN(F, 14)     //K3驱动信号
+#define Sys_fault_PIN                   GET_PIN(F, 14)     //硬线输出系统故障信号
 
 
 
 //.............................................输入反馈值宏定义...............................
-//#define CHARGE_STATUS_VALUE               rt_pin_read(CHARGE_STATUS_PIN)     //充电器状态信号
-#define WAKEUP_STATUS_VALUE               rt_pin_read(WAKEUP_STATUS_PIN)     //wakeup状态信号
+#define SLEEP_STATUS_VALUE               rt_pin_read(SLEEP_STATUS_PIN)     //wakeup状态信号
 #define SPEED0_STATUS_VALUE               rt_pin_read(SPEED0_STATUS_PIN)     //零速状态信号
-#define EBCU_STATUS_VALUE                 rt_pin_read(EBCU_STATUS_PIN)         //EBCU状态信号
-#define POWER_STATUS_VALUE                rt_pin_read(POWER_STATUS_PIN)       //充电机状态信号反馈
+#define DC_Charger_STATUS_VALUE                 rt_pin_read(DC_Charger_STATUS_PIN)         //DC电源状态信号
+//#define POWER_STATUS_VALUE                rt_pin_read(POWER_STATUS_PIN)       //充电机状态信号反馈
 
 #define K1_FEED_VALUE                    rt_pin_read(K1_FEED_PIN)          //K1反馈
 #define K2_FEED_VALUE                    rt_pin_read(K2_FEED_PIN)          //K2反馈
 #define K7_FEED_VALUE                    rt_pin_read(K7_FEED_PIN)          //K7反馈
-#define K3_FEED_VALUE                    rt_pin_read(K3_FEED_PIN)          //K3反馈
+//#define K3_FEED_VALUE                    rt_pin_read(K3_FEED_PIN)          //K3反馈
 
 #define CARID_A_FEED_VALUE               rt_pin_read(CARID_A_FEED_PIN)      //车号A设置
 #define CARID_B_FEED_VALUE               rt_pin_read(CARID_B_FEED_PIN)      //车号B设置
@@ -137,8 +135,8 @@
 #define K7_START_PIN_ON                  rt_pin_write(K7_START_PIN, PIN_HIGH);      //K7线圈驱动
 #define K7_START_PIN_OFF                 rt_pin_write(K7_START_PIN, PIN_LOW);
 
-#define K3_START_PIN_ON                  rt_pin_write(K3_START_PIN, PIN_HIGH);      //K3线圈驱动
-#define K3_START_PIN_OFF                 rt_pin_write(K3_START_PIN, PIN_LOW);
+#define Sys_fault_PIN_ON                  rt_pin_write(Sys_fault_PIN, PIN_HIGH);      //系统故障硬线输出
+#define Sys_fault_PIN_OFF                 rt_pin_write(Sys_fault_PIN, PIN_LOW);
 
 extern void bsp_gpio_init(void) ;
 #endif

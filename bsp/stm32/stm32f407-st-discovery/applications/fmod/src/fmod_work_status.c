@@ -10,13 +10,16 @@
 /********************************************************************************************
 变量定义
 ********************************************************************************************/
-//struct  Contactor_status_bits  st_KM_status = {0};
+
 union	Bat_status_regs        un_bat_status ;
 
 union   Contactor_status_regs     un_KM_bit;
-static BOOL  K1_LockFailure=0;
-int int_over_chI=0;
-                   
+uint16_t  u16_In_sleep_count1 = 0;
+uint16_t  u16_K7_delay_count1 = 0;  
+uint16_t  u16_In_sleep_count2 = 0;
+uint16_t  u16_K7_delay_count2 = 0;  
+uint16_t  u16_min_count2 = 0;  //用于计时24h
+
 /********************************************************************************************
 函数申明
 ********************************************************************************************/
@@ -159,64 +162,107 @@ void fmod_updata_soh(void)
 void fmod_relay_control()
 {
 
-	if(un_bat_err1.st_bat_err_bit1.bat_over_chI == 1)
-	{
-		K1_LockFailure=1;
-	}
-	if(un_bat_err1.st_bat_err_bit1.batcore_overV == 1 ||  un_bat_err1.st_bat_err_bit1.bat_overT == 1   
-		||K1_LockFailure == 1||un_sys_Inout_bit.st_Inout_bits.Outside_charger_status==0 )              
+	if(un_bat_lock.st_bat_lock_bit.bat_overT_lock ||un_bat_lock.st_bat_lock_bit.bat_over_chI_lock)
 	{
 		K1_START_PIN_OFF;
 		un_KM_bit.st_KM_bit.KM1_work_sign=0;
+	
 	}
 	else
-	{	
-		K1_START_PIN_ON;
-		un_KM_bit.st_KM_bit.KM1_work_sign=1;
-	}
-	
-	if((un_sys_Inout_bit.st_Inout_bits.speed0==1 && un_bat_err2.st_bat_err_bit2.CANorMVB_com_err == 1)||//断开K7分为2种情况：速度信号为0，无通讯信号，此时判定为车辆休眠，断开K7；
-		(un_sys_Inout_bit.st_Inout_bits.speed0==1 && un_bat_err1.st_bat_err_bit1.batcore_underV == 1  ))//为区别车辆休眠的工况，当速度信号为0，通讯中有允许断电的信号且电池电压不大于11V时，切除K7。                     
 	{
-		K7_START_PIN_OFF;
-		un_KM_bit.st_KM_bit.KM7_work_sign=0;
-	}
-	else{	
-		K7_START_PIN_ON;
-		un_KM_bit.st_KM_bit.KM7_work_sign=1;
-	}
-	if(un_sys_Inout_bit.st_Inout_bits.Outside_charger_status==0)
-	{
-		K2_START_PIN_ON; 
-		un_KM_bit.st_KM_bit.KM2_work_sign=1;
-	}		
-	else{
-		K2_START_PIN_OFF;
-		un_KM_bit.st_KM_bit.KM2_work_sign=0;		
-	}
-	
-	
-	if(un_sys_Inout_bit.st_Inout_bits.Outside_charger_status==0 && !(un_bat_err1.st_bat_err_bit1.batcore_overV||
-		un_bat_err1.st_bat_err_bit1.bat_over_chI||
-		un_bat_err1.st_bat_err_bit1.bat_overdischI||un_bat_err1.st_bat_err_bit1.bat_overV||
-		un_bat_err1.st_bat_err_bit1.bat_overT||	
-		un_bat_err1.st_bat_err_bit1.bat_temp_fault||
-		un_bat_err1.st_bat_err_bit1.bat_underV))//un_bat_err.st_bit.bat_underT
-	{
-		K3_START_PIN_ON;
-		un_KM_bit.st_KM_bit.KM3_work_sign=1;			
+		if(un_bat_err1.st_bat_err_bit1.batcore_overV == 1 ||  un_bat_err1.st_bat_err_bit1.bat_overT == 1
+			||  un_bat_err1.st_bat_err_bit1.bat_over_chI == 1)
+		{
 		
-	}
-	else{
-	
+			K1_START_PIN_OFF;
+			un_KM_bit.st_KM_bit.KM1_work_sign=0;
 		
-		K3_START_PIN_OFF;
-	    un_KM_bit.st_KM_bit.KM3_work_sign=0;
-  		
+		}
+		else
+		{
+			K1_START_PIN_ON;
+			un_KM_bit.st_KM_bit.KM1_work_sign=1;
+		}
+	
 	}
 	
 	
 	
 	
 	
+	
+	if(un_bat_err2.st_bat_err_bit2.charger_underV==0)        //外部充电机电压大于限值时
+	{
+		K2_START_PIN_OFF;										//断开K2
+		un_KM_bit.st_KM_bit.KM2_work_sign=0;
+		u16_In_sleep_count2 = 0;								//外部充电机电压低于限值的计时器清零
+		u16_K7_delay_count2 = 0;								//外部充电机电压低于限值的计时器清零
+		
+		if(un_sys_Inout_bit.st_Inout_bits.In_Sleep==1)
+		{
+			if(u16_In_sleep_count1 <= 600) //1min
+			{
+				u16_In_sleep_count1++; 
+				K7_START_PIN_ON;
+				un_KM_bit.st_KM_bit.KM7_work_sign=1;
+			}
+			else
+			{
+				u16_In_sleep_count1=600;
+				if(u16_K7_delay_count1 <=600)
+				{
+					u16_K7_delay_count1++;
+					K7_START_PIN_ON;
+					un_KM_bit.st_KM_bit.KM7_work_sign=1;
+				}
+				else
+				{
+					K7_START_PIN_OFF;
+					un_KM_bit.st_KM_bit.KM7_work_sign=0;
+					u16_K7_delay_count1=600;
+				}
+			}
+		}
+		else
+		{	
+			K7_START_PIN_ON;
+			un_KM_bit.st_KM_bit.KM7_work_sign=1;
+			u16_In_sleep_count1=0;
+			u16_K7_delay_count1=0;
+		}
+	}
+	
+	else	
+	{
+		u16_In_sleep_count1 = 0;								//外部充电机电压高于限值的计时器清零
+		u16_K7_delay_count1 = 0;								//外部充电机电压高于限值的计时器清零
+		
+	
+		if(u16_min_count2 < 1440)                                  //24小时
+		{
+			K2_START_PIN_ON;										
+			un_KM_bit.st_KM_bit.KM2_work_sign=1;
+			K7_START_PIN_ON;
+			un_KM_bit.st_KM_bit.KM7_work_sign=1;
+			
+			if(u16_In_sleep_count2>=600)
+			{
+				u16_min_count2++;
+				u16_In_sleep_count2=0;
+			}
+			u16_In_sleep_count2++;
+		}
+		else
+		{
+			u16_min_count2=1440;
+			K2_START_PIN_OFF;										
+			un_KM_bit.st_KM_bit.KM2_work_sign=0;
+			K7_START_PIN_OFF;
+			un_KM_bit.st_KM_bit.KM7_work_sign=0;
+			
+		}			
+	
+	}
+
+
 }

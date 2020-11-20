@@ -67,6 +67,7 @@ void fmod_variable_init(void)
 	
 	st_product_preset.u8_ch_overI=0x02;
 	st_product_preset.u8_disch_overI=0x96;
+	st_product_preset.u8_charger_underV=0x54;
     un_bat_status.st_bit.bat_first_work = 1;     //初始化都当做首次启动
 
    // strcpy(st_2g_send_data.i8_timestring, timestr);  //设定初始上传时间			
@@ -142,7 +143,7 @@ void fmod_parameter_update(void)
 	}
 
 
-	st_bat_data.fl_bat_volt =u16_bat_volt;
+	st_bat_data.fl_bat_volt =u16_bat_volt/10.0f;
 	st_bat_data.u16_bat_max_volt=u16_bat_max_volt_temp;
 	st_bat_data.u16_bat_min_volt=u16_bat_min_volt_temp;
 	st_bat_data.fl_bat_max_temp=fl_bat_max_temp_temp;
@@ -160,40 +161,40 @@ void fmod_parameter_update(void)
  static void fmod_inout_data_update(void)
  {	
 	
-	if(1==WAKEUP_STATUS_VALUE)
+	if(1==SLEEP_STATUS_VALUE)
 	{
-		un_sys_Inout_bit.st_Inout_bits.Wakeup=1;
+		un_sys_Inout_bit.st_Inout_bits.In_Sleep=1;
 	}
 	else
 	{
-		un_sys_Inout_bit.st_Inout_bits.Wakeup=0;
+		un_sys_Inout_bit.st_Inout_bits.In_Sleep=0;
 	
 	}
 	if(1==SPEED0_STATUS_VALUE)
 	{
-		un_sys_Inout_bit.st_Inout_bits.speed0=1;
+		un_sys_Inout_bit.st_Inout_bits.In_speed0=1;
 	}
 	else
 	{
-		un_sys_Inout_bit.st_Inout_bits.speed0=0;
+		un_sys_Inout_bit.st_Inout_bits.In_speed0=0;
 	
 	}
-	if(1==EBCU_STATUS_VALUE)
+	if(1==DC_Charger_STATUS_VALUE)
 	{
-		un_sys_Inout_bit.st_Inout_bits.EBCU=1;
+		un_sys_Inout_bit.st_Inout_bits.In_DC_Charger_fault=1;
 	}
 	else
 	{
-		un_sys_Inout_bit.st_Inout_bits.EBCU=0;
+		un_sys_Inout_bit.st_Inout_bits.In_DC_Charger_fault=0;
 	
 	}
-	if(1==POWER_STATUS_VALUE)
+	if((un_bat_err1.u16_all > 0)||(un_bat_err2.u16_all > 0))
 	{
-		un_sys_Inout_bit.st_Inout_bits.Outside_charger_status=1;
+		un_sys_Inout_bit.st_Inout_bits.Out_Sys_fault=1;
 	}
 	else
 	{
-		un_sys_Inout_bit.st_Inout_bits.Outside_charger_status=0;
+		un_sys_Inout_bit.st_Inout_bits.Out_Sys_fault=0;
 	
 	}
 
