@@ -68,7 +68,36 @@ void fmod_variable_init(void)
 	st_product_preset.u8_ch_overI=0x02;
 	st_product_preset.u8_disch_overI=0x96;
 	st_product_preset.u8_charger_underV=0x54;
-    un_bat_status.st_bit.bat_first_work = 1;     //初始化都当做首次启动
+    
+	if((st_product_preset.u8_Charge_I_adjust_Value > 220)||(st_product_preset.u8_Charge_I_adjust_Value < 180))
+	{
+		st_product_preset.u8_Charge_I_adjust_Value = 200;
+	}
+	if((st_product_preset.u8_disCharge_I1_adjust_Value > 220)||(st_product_preset.u8_disCharge_I1_adjust_Value < 180))
+	{
+		st_product_preset.u8_disCharge_I1_adjust_Value = 200;
+	}
+	if((st_product_preset.u8_disCharge_I2_adjust_Value > 220)||(st_product_preset.u8_disCharge_I2_adjust_Value < 180))
+	{
+		st_product_preset.u8_disCharge_I2_adjust_Value = 200;
+	}
+	if((st_product_preset.u8_Outcharger_V1_adjust_Value > 220)||(st_product_preset.u8_Outcharger_V1_adjust_Value < 180))
+	{
+		st_product_preset.u8_Outcharger_V1_adjust_Value = 200;
+	}
+	if((st_product_preset.u8_Outcharger_V2_adjust_Value > 220)||(st_product_preset.u8_Outcharger_V2_adjust_Value < 180))
+	{
+		st_product_preset.u8_Outcharger_V2_adjust_Value = 200;
+	}
+	if((st_product_preset.u16_batcore_Volt1_adjust_Value > 1200)||(st_product_preset.u16_batcore_Volt1_adjust_Value < 800))
+	{
+		st_product_preset.u16_batcore_Volt1_adjust_Value = 1000;
+	}
+	if((st_product_preset.u16_batcore_Volt2_adjust_Value > 1200)||(st_product_preset.u16_batcore_Volt2_adjust_Value < 800))
+	{
+		st_product_preset.u16_batcore_Volt2_adjust_Value = 1000;
+	}
+	un_bat_status.st_bit.bat_first_work = 1;     //初始化都当做首次启动
 
    // strcpy(st_2g_send_data.i8_timestring, timestr);  //设定初始上传时间			
 }
@@ -128,28 +157,29 @@ void fmod_parameter_update(void)
 			u16_bat_min_volt_temp=st_batcore_data.u16_batcore_volt[i];
 		}
 		
-		//电池最高温度
-		if(fl_bat_max_temp_temp<st_batcore_data.u16_batcore_temp[i])
-		{
-			fl_bat_max_temp_temp=st_batcore_data.u16_batcore_temp[i];
-		}
-		
-		//电池最低温度
-		if(fl_bat_min_temp_temp>st_batcore_data.u16_batcore_temp[i])
-		{
-			fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[i];
-		
-		}
+//		//电池最高温度
+//		if(fl_bat_max_temp_temp<st_batcore_data.u16_batcore_temp[i])
+//		{
+//			fl_bat_max_temp_temp=st_batcore_data.u16_batcore_temp[i];
+//		}
+//		
+//		//电池最低温度
+//		if(fl_bat_min_temp_temp>st_batcore_data.u16_batcore_temp[i])
+//		{
+//			fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[i];
+//		
+//		}
 	}
 
 
 	st_bat_data.fl_bat_volt =u16_bat_volt/10.0f;
 	st_bat_data.u16_bat_max_volt=u16_bat_max_volt_temp;
 	st_bat_data.u16_bat_min_volt=u16_bat_min_volt_temp;
-	st_bat_data.fl_bat_max_temp=fl_bat_max_temp_temp;
-	st_bat_data.fl_bat_min_temp=fl_bat_min_temp_temp;
-	
-	st_bat_data.u16_bat_avg_volt=st_bat_data.fl_bat_volt/TEST_BAT_NUM;
+//	st_bat_data.fl_bat_max_temp=fl_bat_max_temp_temp;
+//	st_bat_data.fl_bat_min_temp=fl_bat_min_temp_temp;
+	st_bat_data.fl_bat_max_temp=st_batcore_data.u16_batcore_temp[0];
+	st_bat_data.fl_bat_min_temp=st_batcore_data.u16_batcore_temp[0];
+	st_bat_data.u16_bat_avg_volt=st_bat_data.fl_bat_volt/TEST_BAT_NUM*10.0f;
 
  }
 /** * @ : **********************************************************************

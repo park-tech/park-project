@@ -132,6 +132,19 @@ struct productset_bits
 	uint16_t set_soh_valid :1;          //电池SOH设置有效	
 	uint16_t set_ch_overI_valid:1;      //电池过充电电流过大值设置有效
 	uint16_t set_disch_overI_valid:1;   //电池放电电流过大值设置有效
+	uint16_t   set_Charge_I_adjust_valid:1;		        	//  充电电流校准值有效
+	uint16_t   set_disCharge_I1_adjust_valid:1;		        //  放电电流校准值1有效
+	uint16_t   set_disCharge_I2_adjust_valid:1;	        //  放电电流校准值2有效
+	uint16_t   set_Outcharger_V1_adjust_valid:1;		        //  外部充电机电压1校准值有效
+	uint16_t   set_Outcharger_V2_adjust_valid:1;		        //   外部充电机电压2校准值有效
+	uint16_t   set_batcore_Volt1_adjust_valid:1;		        //  单体电压校准值1有效
+	uint16_t   set_batcore_Volt2_adjust_valid:1;		        //  单体电压校准值2有效
+	
+	
+	
+	
+	
+	
 };
 
 union productset_reg
@@ -156,7 +169,15 @@ struct product_preset     //产品预设值 20B
 	uint8_t   u8_ch_overI;            //充电过流值，只是调试时适用，重启后恢复原来数值
 	uint8_t   u8_disch_overI;         //放电过流值，只是调试时适用，重启后恢复原来数值
 	uint8_t   u8_charger_underV;       //充电机电压欠压值
-	uint8_t   u8_resv[3];
+	
+	uint8_t   u8_Charge_I_adjust_Value;		        	//  充电电流校准值
+	uint8_t   u8_disCharge_I1_adjust_Value;		        //  放电电流校准值1
+	uint8_t   u8_disCharge_I2_adjust_Value;	        //  放电电流校准值2
+	uint8_t   u8_Outcharger_V1_adjust_Value;		        //  外部充电机电压1校准值
+	uint8_t   u8_Outcharger_V2_adjust_Value;		        //   外部充电机电压2校准值
+	uint16_t   u16_batcore_Volt1_adjust_Value;		        //  单体电压校准值1
+	uint16_t   u16_batcore_Volt2_adjust_Value;		        //  单体电压校准值2
+	uint8_t	  u8_resv[3];
 };
 
 //.............................电池信息................................ 

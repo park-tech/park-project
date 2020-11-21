@@ -99,7 +99,7 @@ static void bsp_gpio_out_initstate_set(void)
 	
 	K1_START_PIN_OFF;
 	K2_START_PIN_OFF;
-	K7_START_PIN_ON;
+	K7_START_PIN_OFF;
 	Sys_fault_PIN_OFF;
 }
 

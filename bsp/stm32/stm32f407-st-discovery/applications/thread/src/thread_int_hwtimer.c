@@ -7,11 +7,21 @@
 /********************************************************************************************
 宏定义
 ********************************************************************************************/
-uint32_t u32_timer_tick = 0;
-uint32_t ADCchannelindex = 0;
+
+#define CH_I_ADJUST  200.0f
+#define DISCH_I1_ADJUST  200.0f
+#define DISCH_I2_ADJUST  200.0f
+#define OUT_V1_ADJUST  200.0f
+#define OU1_V2_ADJUST  200.0f
+#define ODDCORE_V_ADJUST  1000.0f
+#define EVENCORE_V_ADJUST  1000.0f
+
 /********************************************************************************************
 变量定义
 ********************************************************************************************/
+
+uint32_t u32_timer_tick = 0;
+uint32_t ADCchannelindex = 0;
 struct Movefilter Iin;			  //输入电流
 struct Movefilter Iout1;		  //负载电流1
 struct Movefilter Iout2;		  //负载电流2
@@ -129,23 +139,25 @@ static void adc_sample(void)
 	
 	//输入电流采样
 	Iin.u16_get_value = bsp_adchannel_Iin();
-	Iin.u16_avg_value = Movefilter(&Iin, MOV_FILT_SIZE) * bat_Iin_KP;
+	Iin.u16_avg_value = Movefilter(&Iin, MOV_FILT_SIZE) * bat_Iin_KP*(st_product_preset.u8_Charge_I_adjust_Value/CH_I_ADJUST);
 	
 	//输出负载1电流采样
 	Iout1.u16_get_value = bsp_adchannel_Iout1();
-	Iout1.u16_avg_value = Movefilter(&Iout1, MOV_FILT_SIZE) * bat_Iout1_KP;
+	Iout1.u16_avg_value = Movefilter(&Iout1, MOV_FILT_SIZE) * bat_Iout1_KP*(st_product_preset.u8_disCharge_I1_adjust_Value/DISCH_I1_ADJUST);
 	
 	//输出负载2电流采样
 	Iout2.u16_get_value = bsp_adchannel_Iout2();
-	Iout2.u16_avg_value = Movefilter(&Iout2, MOV_FILT_SIZE) * bat_Iout2_KP;
-	
-	//输入电压2采样
-	Vin2.u16_get_value = bsp_adchannel_Vin2();
-	Vin2.u16_avg_value = Movefilter(&Vin2, MOV_FILT_SIZE) * bat_Vin2_KP;
+	Iout2.u16_avg_value = Movefilter(&Iout2, MOV_FILT_SIZE) * bat_Iout2_KP*(st_product_preset.u8_disCharge_I2_adjust_Value/DISCH_I2_ADJUST);
 	
 	//输入电压1采样
 	Vin1.u16_get_value = bsp_adchannel_Vin1();
-	Vin1.u16_avg_value = Movefilter(&Vin1, MOV_FILT_SIZE) * bat_Vin1_KP;
+	Vin1.u16_avg_value = Movefilter(&Vin1, MOV_FILT_SIZE) * bat_Vin1_KP*(st_product_preset.u8_Outcharger_V1_adjust_Value/OUT_V1_ADJUST);
+	
+	//输入电压2采样
+	Vin2.u16_get_value = bsp_adchannel_Vin2();
+	Vin2.u16_avg_value = Movefilter(&Vin2, MOV_FILT_SIZE) * bat_Vin2_KP*(st_product_preset.u8_Outcharger_V2_adjust_Value/OU1_V2_ADJUST);
+	
+	
 	
 	//输入电流汇总
 	st_bat_data.fl_bat_chI = Iin.u16_avg_value * 0.001f;
@@ -183,10 +195,10 @@ static void cell_adc_sample(void)
 	cell_temp[ADCchannelindex].u16_avg_value = Movefilter(&cell_temp[ADCchannelindex], MOV_FILT_SIZE) * batcell_Temp_KP;
 
 	cell_vol_b0[ADCchannelindex].u16_get_value = bsp_adchannel_cell_vol_b0();
-	cell_vol_b0[ADCchannelindex].u16_avg_value = Movefilter(&cell_vol_b0[ADCchannelindex], MOV_FILT_SIZE) * batcell_Vin_KP;
+	cell_vol_b0[ADCchannelindex].u16_avg_value = Movefilter(&cell_vol_b0[ADCchannelindex], MOV_FILT_SIZE) * batcell_Vin_KP*(st_product_preset.u16_batcore_Volt1_adjust_Value/EVENCORE_V_ADJUST);
 
 	cell_vol_b1[ADCchannelindex].u16_get_value = bsp_adchannel_cell_vol_b1();
-	cell_vol_b1[ADCchannelindex].u16_avg_value = Movefilter(&cell_vol_b1[ADCchannelindex], MOV_FILT_SIZE) * batcell_Vin_KP;
+	cell_vol_b1[ADCchannelindex].u16_avg_value = Movefilter(&cell_vol_b1[ADCchannelindex], MOV_FILT_SIZE) * batcell_Vin_KP*(st_product_preset.u16_batcore_Volt2_adjust_Value/ODDCORE_V_ADJUST);
 
 	if (ADCchannelindex % 2==0)
 	{

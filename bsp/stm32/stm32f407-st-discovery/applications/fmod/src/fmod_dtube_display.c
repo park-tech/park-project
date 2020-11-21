@@ -35,16 +35,11 @@ void fmod_dtube_display(void)
 	
 	if(un_bat_err2.st_bat_err_bit2.KM1_fault_sign == 1)   			showdata = 0x0000;      //优先级高
 	if(un_bat_err2.st_bat_err_bit2.KM2_fault_sign == 1)   			showdata = 0x0001;
-	//if(un_bat_err.st_bat_err_bit.KM3_fault_sign == 1)   			showdata = 0x0002;
-	if(un_bat_err2.st_bat_err_bit2.KM7_fault_sign == 1)   			showdata = 0x0003;
-	if(un_bat_err1.st_bat_err_bit1.batcore_overV == 1)    	showdata = 0x0004;  	
-	if(un_bat_err1.st_bat_err_bit1.batcore_underV == 1)   	showdata = 0x0005; 	
-	if(un_bat_err1.st_bat_err_bit1.bat_over_chI == 1)     	showdata = 0x0006;  
-	//if(un_bat_err.st_bat_err_bit.bat_overdischI == 1)   	showdata = 0x0007;
-	//if(un_bat_err.st_bat_err_bit.bat_overT == 1)        	showdata = 0x0009; 
-	//if(un_bat_err.st_bat_err_bit.bat_underT == 1)       	showdata = 0x00010; 
-	//if(un_bat_err.st_bat_err_bit.bat_short_board== 1)   	showdata = 0x00011; 
-	if(un_bat_err2.st_bat_err_bit2.self_check_err== 1)    	showdata = 0x00013;
+	if(un_bat_err2.st_bat_err_bit2.KM7_fault_sign == 1)   			showdata = 0x0002;
+	if(un_bat_err1.st_bat_err_bit1.batcore_overV == 1)    	showdata = 0x0003;  	
+	if(un_bat_err1.st_bat_err_bit1.batcore_underV == 1)   	showdata = 0x0004; 	
+	if(un_bat_err1.st_bat_err_bit1.bat_over_chI == 1)     	showdata = 0x0005;  
+	if(un_bat_err2.st_bat_err_bit2.self_check_err== 1)    	showdata = 0x0006;
 	
 	
 	
@@ -79,7 +74,7 @@ void fmod_dtube_display(void)
 		case 0x0012 :   
 			g_Gui_show_pic("C");    break;    //被动均衡
 		case 0x0013 :   
-			g_Gui_show_pic("d");    break;    //自检故障
+			g_Gui_show_pic("D");    break;    //自检故障
 		case 0x0014 :   
 			g_Gui_show_pic("E");    break;    //充电状态
 		case 0x0015 :   

@@ -161,7 +161,7 @@ void fmod_updata_soh(void)
 *********************************************************************************************************///
 void fmod_relay_control()
 {
-
+	//K1充电继电器控制
 	if(un_bat_lock.st_bat_lock_bit.bat_overT_lock ||un_bat_lock.st_bat_lock_bit.bat_over_chI_lock)
 	{
 		K1_START_PIN_OFF;
@@ -188,7 +188,7 @@ void fmod_relay_control()
 	
 	
 	
-	
+	//K2输出继电器和K7板子供电继电器控制
 	
 	
 	if(un_bat_err2.st_bat_err_bit2.charger_underV==0)        //外部充电机电压大于限值时
@@ -238,7 +238,7 @@ void fmod_relay_control()
 		u16_K7_delay_count1 = 0;								//外部充电机电压高于限值的计时器清零
 		
 	
-		if(u16_min_count2 < 1440)                                  //24小时
+		if(u16_min_count2 < 2)                                  //24小时
 		{
 			K2_START_PIN_ON;										
 			un_KM_bit.st_KM_bit.KM2_work_sign=1;
@@ -254,7 +254,7 @@ void fmod_relay_control()
 		}
 		else
 		{
-			u16_min_count2=1440;
+			u16_min_count2=2;
 			K2_START_PIN_OFF;										
 			un_KM_bit.st_KM_bit.KM2_work_sign=0;
 			K7_START_PIN_OFF;
@@ -262,6 +262,19 @@ void fmod_relay_control()
 			
 		}			
 	
+	}
+	
+	
+	
+	
+	//硬线输出故障信号控制
+	if(un_sys_Inout_bit.st_Inout_bits.Out_Sys_fault==1)
+	{
+		Sys_fault_PIN_OFF;
+	}
+	else
+	{
+		Sys_fault_PIN_ON;
 	}
 
 

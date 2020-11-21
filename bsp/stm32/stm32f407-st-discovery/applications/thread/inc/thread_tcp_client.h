@@ -26,8 +26,7 @@ struct Re_eth_message
 {   
     uint16_t  u16_life;
     uint16_t  u16_resv;
-	struct   product_preset  st_product_preset;   //20字节  预设置的数据
-    uint8_t  u8_data[8];
+	struct   product_preset  st_product_preset;   //预设置的数据
 
 };
 

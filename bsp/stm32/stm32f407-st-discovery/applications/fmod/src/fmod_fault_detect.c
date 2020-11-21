@@ -661,14 +661,16 @@ void  fmod_self_test (void)
 		}
 		rt_thread_mdelay(100);
 	}
-	
-	K1_START_PIN_OFF;
-	un_KM_bit.st_KM_bit.KM1_work_sign=0;
-	K2_START_PIN_OFF;
-	un_KM_bit.st_KM_bit.KM2_work_sign=0;
-	K7_START_PIN_OFF;
-	un_KM_bit.st_KM_bit.KM7_work_sign=0;
-	
+	for(int j=0;j<20;j++)
+	{
+		K1_START_PIN_OFF;
+		un_KM_bit.st_KM_bit.KM1_work_sign=0;
+		K2_START_PIN_OFF;
+		un_KM_bit.st_KM_bit.KM2_work_sign=0;
+		K7_START_PIN_OFF;
+		un_KM_bit.st_KM_bit.KM7_work_sign=0;
+		rt_thread_mdelay(100);
+	}
 	
 }
 /******************************************************************************************

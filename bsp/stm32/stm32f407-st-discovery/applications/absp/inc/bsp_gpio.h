@@ -51,7 +51,7 @@
 #define K1_START_PIN                   GET_PIN(F, 13)     //K1驱动信号
 #define K2_START_PIN                   GET_PIN(F, 12)     //K2驱动信号
 #define K7_START_PIN                   GET_PIN(F, 15)     //K7驱动信号
-#define Sys_fault_PIN                   GET_PIN(F, 14)     //硬线输出系统故障信号
+#define Sys_fault_PIN                   GET_PIN(E, 11)     //硬线输出系统故障信号
 
 
 
