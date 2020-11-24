@@ -190,7 +190,7 @@ static void cell_adc_sample(void)
 {
 //GPIO初始化配置
 //90ms全部采完
-	
+	//ADCchannelindex=0;
 	cell_temp[ADCchannelindex].u16_get_value = bsp_adchannel_cell_temp();
 	cell_temp[ADCchannelindex].u16_avg_value = Movefilter(&cell_temp[ADCchannelindex], MOV_FILT_SIZE) * batcell_Temp_KP;
 
@@ -314,25 +314,29 @@ static float fmod_bat_effect(float bat_i, float tempb)
 	{
 		current_k = 1;
 	}
-	if (bat_IC > 0.05f && bat_IC <= 0.2f)
-		current_k = 100 / (-133.3f * bat_IC + 106.6f);//取25度0.05C到0.2C段
-	if (bat_IC > 0.2f && bat_IC <= 1)
-		current_k = 100 / (-37.5 * bat_IC + 87.5f);//取25度0.2C到1C段
+	if (bat_IC > 0.05f && bat_IC <= 0.093f)
+		current_k = 100 / (-162.8f * bat_IC + 108.14f);//取25度0.05C到0.093C段
+	if (bat_IC > 0.093f && bat_IC <= 0.2f)
+		current_k = 100 / (-89.5f * bat_IC + 101.3f);//取25度0.093C到0.2C段
+	if (bat_IC > 0.2f && bat_IC <= 0.628f)
+		current_k = 100 / (-47.5 * bat_IC + 92.6f);//取25度0.2C到0.628C段
+	if (bat_IC > 0.628f && bat_IC <= 1.0f)
+		current_k = 100 / (-15.6 * bat_IC + 72.6f);//取25度0.628C到1C段
 	if (bat_IC > 1)
-		current_k = 100 / (-10.0* bat_IC + 60.0f);//取25度1C到3C段
+		current_k = 100 / (-14.0* bat_IC + 71.0f);//取25度1C到2C段
 
 	if (tempb <= -20)
-		temp_k = 100 / 58.0f;
+		temp_k = 100 / 68.0f;
 	if ((tempb > -20) && (tempb <= 0))
-		temp_k = 100 / (1.2f * tempb + 82.0f); //与25度时100容量为100时对应的比值
+		temp_k = 100 / (0.85f * tempb + 85.0f); //与25度时100容量为100时对应的比值
 	if ((tempb > 0) && (tempb <= 20))
-		temp_k = 100 / (0.75*tempb + 82);
+		temp_k = 100 / (0.65*tempb + 85);
 	if ((tempb > 20) && (tempb <= 30))
-		temp_k = 100 / (0.5f * tempb + 87);
+		temp_k = 100 / (0.4f * tempb + 90);
 	if ((tempb > 30) && (tempb <= 50))
-		temp_k = 100 / (0.3f * tempb + 93);
+		temp_k = 100 / (0.1f * tempb + 99);
 	if (tempb > 50)
-		temp_k = 100 / 108;
+		temp_k = 100 / 104;
 	bat_k = current_k * temp_k;
 
 	//rt_printf("current_k=%.4f temp_k=%.4f bat_k=%.4f\n", current_k,temp_k,bat_k);
@@ -628,5 +632,13 @@ static float fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt)
 	float R_NTC = (real_bt_Temp_Volt * 20000) / (3.3 - real_bt_Temp_Volt);
 	float temp = 1 / (log(R_NTC / 10000) / 3960 + 1 / 298.15) - 273.15;
 	float temp1 = ((temp+55 ) * 10);
+	if(temp1<0)
+	{
+		temp1=0;
+	}
+	if(temp1>2550)
+	{
+		temp1=2550;
+	}
 	return temp1;
 }

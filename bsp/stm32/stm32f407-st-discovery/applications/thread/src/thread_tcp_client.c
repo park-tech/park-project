@@ -220,9 +220,12 @@ static void  re_eth_PC_data(char *data )
 
     endian_swaps(&un_swap_reeth_PC_data.st_data.u16_life);
     endian_swaps(&un_swap_reeth_PC_data.st_data.u16_resv);
+	
     endian_swaps(&un_swap_reeth_PC_data.st_data.st_product_preset.u16_product_num);
+	endian_swaps(&un_swap_reeth_PC_data.st_data.st_product_preset.u16_batcore_Volt1_adjust_Value);
+	endian_swaps(&un_swap_reeth_PC_data.st_data.st_product_preset.u16_batcore_Volt2_adjust_Value);
     un_reeth_PC_data = un_swap_reeth_PC_data ;
-   //st_product_preset = un_reeth_PC_data.st_data.st_product_preset;
+   
 
     re_eth_PC_data_time_set(); 
     re_eth_PC_data_product_preset( );
@@ -423,9 +426,9 @@ static void se_eth_PC_data(void)
 	endian_swaps(&un_swap_seeth_PC_data.st_data.u16_ch_overI);
 	endian_swaps(&un_swap_seeth_PC_data.st_data.u16_disch_overI);
 	
-    endian_swaps(&un_swap_seeth_PC_data.st_data.un_bat_err_bit1);
-    endian_swaps(&un_swap_seeth_PC_data.st_data.un_bat_err_bit2);
-    endian_swaps(&un_swap_seeth_PC_data.st_data.un_bat_lock_bit);
+//    endian_swaps(&un_swap_seeth_PC_data.st_data.un_bat_err_bit1);
+//    endian_swaps(&un_swap_seeth_PC_data.st_data.un_bat_err_bit2);
+//    endian_swaps(&un_swap_seeth_PC_data.st_data.un_bat_lock_bit);
 
    
     for ( i = 0; i < TEST_BAT_NUM; i++)

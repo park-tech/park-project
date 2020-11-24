@@ -247,8 +247,8 @@ struct Contactor_status_bits
 {
 	uint8_t  KM1_work_sign:1;
 	uint8_t  KM2_work_sign:1;
-	uint8_t  resv:1;
 	uint8_t  KM7_work_sign:1;
+	uint8_t  resv:1;
 	
 	uint8_t  resv0:1;
 	uint8_t  resv1:1;
@@ -329,11 +329,11 @@ struct Bat_err_bits2
 	
 	uint16_t  KM1_fault_sign:1;   //KM1故障
 	uint16_t  KM2_fault_sign:1;   //KM2故障
-	uint16_t  resv:1;   			//预留
 	uint16_t  KM7_fault_sign:1;   //KM7故障
-
 	uint16_t  charger_underV:1;     //外部充电机欠压
-	uint16_t resv1:1;              //预留
+	
+	uint16_t DCpower_fault:1;              //内部充电器故障
+	uint16_t  resv:1;   			//预留
 	uint16_t resv2:1;              //预留
 	uint16_t resv3:1;              //预留
 
@@ -583,7 +583,7 @@ extern  time_t  real_sec;                          //从70年1月1号开始的�
 extern void fmod_device_init(void);
 extern void fmod_variable_init(void);
 extern void fmod_parameter_update(void);
-
+extern void fmod_adjust_value_judge(void);
 
 void endian_swaps(void* data);
 void endian_swapl(void* data);

@@ -69,7 +69,21 @@ void fmod_variable_init(void)
 	st_product_preset.u8_disch_overI=0x96;
 	st_product_preset.u8_charger_underV=0x54;
     
-	if((st_product_preset.u8_Charge_I_adjust_Value > 220)||(st_product_preset.u8_Charge_I_adjust_Value < 180))
+
+	un_bat_status.st_bit.bat_first_work = 1;     //初始化都当做首次启动
+
+   // strcpy(st_2g_send_data.i8_timestring, timestr);  //设定初始上传时间			
+}
+
+/** * @ : *************************************************************************
+ * @name: 
+* @describe: 校验值检验，若异常则恢复初始值
+ * @param : 
+ * @return: 
+ * @  : ***************************************************************************/
+void fmod_adjust_value_judge(void)
+{
+    if((st_product_preset.u8_Charge_I_adjust_Value > 220)||(st_product_preset.u8_Charge_I_adjust_Value < 180))
 	{
 		st_product_preset.u8_Charge_I_adjust_Value = 200;
 	}
@@ -97,10 +111,12 @@ void fmod_variable_init(void)
 	{
 		st_product_preset.u16_batcore_Volt2_adjust_Value = 1000;
 	}
-	un_bat_status.st_bit.bat_first_work = 1;     //初始化都当做首次启动
-
-   // strcpy(st_2g_send_data.i8_timestring, timestr);  //设定初始上传时间			
-}
+}	
+	
+	
+	
+	
+	
 /** * @ : *****************************************************************************
  * @name: 
  * @describe: 参数赋值更新
@@ -211,21 +227,23 @@ void fmod_parameter_update(void)
 	}
 	if(1==DC_Charger_STATUS_VALUE)
 	{
-		un_sys_Inout_bit.st_Inout_bits.In_DC_Charger_fault=1;
+		un_sys_Inout_bit.st_Inout_bits.In_DC_Charger_fault=0;
+		
 	}
 	else
 	{
-		un_sys_Inout_bit.st_Inout_bits.In_DC_Charger_fault=0;
+		un_sys_Inout_bit.st_Inout_bits.In_DC_Charger_fault=1;
 	
 	}
-	if((un_bat_err1.u16_all > 0)||(un_bat_err2.u16_all > 0))
+	if((un_bat_err1.u16_all > 0)||((un_bat_err2.u16_all) & 0x7FFF))
 	{
 		un_sys_Inout_bit.st_Inout_bits.Out_Sys_fault=1;
+		un_bat_err2.st_bat_err_bit2.SYS_fault=1;
 	}
 	else
 	{
 		un_sys_Inout_bit.st_Inout_bits.Out_Sys_fault=0;
-	
+		un_bat_err2.st_bat_err_bit2.SYS_fault=0;
 	}
 
  }

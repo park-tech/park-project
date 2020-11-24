@@ -19,7 +19,9 @@ uint16_t  u16_K7_delay_count1 = 0;
 uint16_t  u16_In_sleep_count2 = 0;
 uint16_t  u16_K7_delay_count2 = 0;  
 uint16_t  u16_min_count2 = 0;  //用于计时24h
-
+uint16_t  u16_DCChar_count=0;//DC电源重启间隔时间
+uint16_t  u16_DCChar_lock_count=0;//DC电源锁死次数
+uint16_t  u16_DCwork_count=0;//DC电源吸合时间
 /********************************************************************************************
 函数申明
 ********************************************************************************************/
@@ -162,7 +164,8 @@ void fmod_updata_soh(void)
 void fmod_relay_control()
 {
 	//K1充电继电器控制
-	if(un_bat_lock.st_bat_lock_bit.bat_overT_lock ||un_bat_lock.st_bat_lock_bit.bat_over_chI_lock)
+	if(un_bat_lock.st_bat_lock_bit.bat_overT_lock ||un_bat_lock.st_bat_lock_bit.bat_over_chI_lock
+		||u16_DCChar_lock_count>=3)
 	{
 		K1_START_PIN_OFF;
 		un_KM_bit.st_KM_bit.KM1_work_sign=0;
@@ -173,11 +176,42 @@ void fmod_relay_control()
 		if(un_bat_err1.st_bat_err_bit1.batcore_overV == 1 ||  un_bat_err1.st_bat_err_bit1.bat_overT == 1
 			||  un_bat_err1.st_bat_err_bit1.bat_over_chI == 1)
 		{
+			
 		
 			K1_START_PIN_OFF;
 			un_KM_bit.st_KM_bit.KM1_work_sign=0;
 		
 		}
+//		else if(un_bat_err2.st_bat_err_bit2.DCpower_fault==1)
+//		{
+//			
+//			if(u16_DCChar_count<5*10)  
+//			{
+//				K1_START_PIN_OFF;
+//				un_KM_bit.st_KM_bit.KM1_work_sign=0;
+//				u16_DCChar_count++;
+//			}
+//			else
+//			{
+//				if(u16_DCwork_count<1.5*10)  
+//				{
+//					u16_DCwork_count++;
+//					K1_START_PIN_ON;
+//					un_KM_bit.st_KM_bit.KM1_work_sign=1;
+//				}
+//				else
+//				{
+//					u16_DCwork_count=0;
+//					u16_DCChar_count=0;
+//					u16_DCChar_lock_count++;//DC电源故障之后间隔2秒启动一次K1，锁死计数加1，等到3次之后锁死不启动K1
+//				
+//				}
+//				
+//				
+//				
+//			}
+//			
+//		}
 		else
 		{
 			K1_START_PIN_ON;
@@ -197,6 +231,7 @@ void fmod_relay_control()
 		un_KM_bit.st_KM_bit.KM2_work_sign=0;
 		u16_In_sleep_count2 = 0;								//外部充电机电压低于限值的计时器清零
 		u16_K7_delay_count2 = 0;								//外部充电机电压低于限值的计时器清零
+		u16_min_count2=0;
 		
 		if(un_sys_Inout_bit.st_Inout_bits.In_Sleep==1)
 		{
@@ -220,6 +255,9 @@ void fmod_relay_control()
 					K7_START_PIN_OFF;
 					un_KM_bit.st_KM_bit.KM7_work_sign=0;
 					u16_K7_delay_count1=600;
+					//K1也应该断开
+					K1_START_PIN_OFF;
+					un_KM_bit.st_KM_bit.KM1_work_sign=0;
 				}
 			}
 		}
@@ -232,13 +270,15 @@ void fmod_relay_control()
 		}
 	}
 	
-	else	
+	else	                                                   //外部充电机电压低于限值时
 	{
 		u16_In_sleep_count1 = 0;								//外部充电机电压高于限值的计时器清零
 		u16_K7_delay_count1 = 0;								//外部充电机电压高于限值的计时器清零
-		
+		//K1也应该断开
+		K1_START_PIN_OFF;
+		un_KM_bit.st_KM_bit.KM1_work_sign=0;
 	
-		if(u16_min_count2 < 2)                                  //24小时
+		if(u16_min_count2 < 5)                                  //24小时
 		{
 			K2_START_PIN_ON;										
 			un_KM_bit.st_KM_bit.KM2_work_sign=1;
@@ -254,11 +294,12 @@ void fmod_relay_control()
 		}
 		else
 		{
-			u16_min_count2=2;
+			u16_min_count2=5;
 			K2_START_PIN_OFF;										
 			un_KM_bit.st_KM_bit.KM2_work_sign=0;
 			K7_START_PIN_OFF;
 			un_KM_bit.st_KM_bit.KM7_work_sign=0;
+			
 			
 		}			
 	

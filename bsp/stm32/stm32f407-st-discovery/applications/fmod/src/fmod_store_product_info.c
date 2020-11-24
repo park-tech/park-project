@@ -140,6 +140,7 @@ static void fmod_prodinfo_read_lastdata(uint16_t len, uint32_t times)
 		st_bat_data.fl_bat_Qc_max = (float)un_prodinfo_rdata.st_data.u16_bat_Qc_max * 0.1f ; //存储的数据是实际值10倍
 		st_bat_data.fl_bat_Qnow = un_prodinfo_rdata.st_data.u32_bat_Qnow *0.0001f;            //存储的数据是实际值10000倍			
 	
+		
 		st_product_preset.u8_Charge_I_adjust_Value = un_prodinfo_rdata.st_data.u8_Charge_I_adjust_Value;
 		st_product_preset.u8_disCharge_I1_adjust_Value = un_prodinfo_rdata.st_data.u8_disCharge_I1_adjust_Value;
 		st_product_preset.u8_disCharge_I2_adjust_Value = un_prodinfo_rdata.st_data.u8_disCharge_I2_adjust_Value;
@@ -188,12 +189,13 @@ static void fmod_prodinfo_store_updata(void)
 	un_prodinfo_wdata.st_data.u8_Outcharger_V2_adjust_Value=st_product_preset.u8_Outcharger_V2_adjust_Value ;
 	un_prodinfo_wdata.st_data.u16_batcore_Volt1_adjust_Value=st_product_preset.u16_batcore_Volt1_adjust_Value ;
 	un_prodinfo_wdata.st_data.u16_batcore_Volt2_adjust_Value=st_product_preset.u16_batcore_Volt2_adjust_Value ;
-	un_prodinfo_wdata.st_data.u16_resv=0;
+	un_prodinfo_wdata.st_data.u8_resv0=0x00;
 	
 	
 	un_prodinfo_wdata.st_data.u8_resv[0] = 0x00;
 	un_prodinfo_wdata.st_data.u8_resv[1] = 0x00;
 	un_prodinfo_wdata.st_data.u8_resv[2] = 0x00;
+	un_prodinfo_wdata.st_data.u8_resv[3] = 0x00;
 	un_prodinfo_wdata.st_data.u8_enddata[0] = 0XAC;
 	un_prodinfo_wdata.st_data.u8_enddata[1] = 0XCC;
 }

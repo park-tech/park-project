@@ -18,7 +18,7 @@ extern union	Contactor_status_regs   un_KM_bit;
 /********************************************************************************************
 函数申明
 ********************************************************************************************/
-
+static void fmod_fault_DCpower_fault(void);			
 static void fmod_fault_bat_overV(void);			
 static void fmod_fault_bat_underV(void);
 static void fmod_fault_bat_underV_warn(void);
@@ -40,6 +40,9 @@ static void fmod_fault_relay(void);
 *******************************************************************************************/
 void fmod_fault_detect(void)
 {   
+	//........................内部DC电源故障................................
+	fmod_fault_DCpower_fault();		
+	
  //........................接触器故障................................
     fmod_fault_relay();
 
@@ -78,6 +81,39 @@ void fmod_fault_detect(void)
 }
 
 
+
+/******************************************************************************************
+** 函数名称：内部DC电源故障    
+** 函数描述：
+** 输入参数：无
+** 返回值  ：无
+*******************************************************************************************/
+static void  fmod_fault_DCpower_fault (void)
+{
+	static uint16_t  u16_err_count = 0;
+
+
+	if(un_sys_Inout_bit.st_Inout_bits.In_DC_Charger_fault==1)		 
+	{   
+		if(u16_err_count <= 20) //1秒
+		{
+			u16_err_count++; 
+		}
+		else
+		{
+			un_bat_err2.st_bat_err_bit2.DCpower_fault = 1;
+			u16_err_count = 20;              //1秒
+		}
+	}
+
+
+	else
+	{
+		un_bat_err2.st_bat_err_bit2.DCpower_fault = 0;
+	}	
+
+
+}
 
 /******************************************************************************************
 ** 函数名称：电池过充       
@@ -528,9 +564,18 @@ static void  fmod_fault_sensor_T (void)
 	
 	un_batcore_err.st_err.un_Terr[0].u16_all = 0x0000;
 	
-	for(i = 0; i < 9; i++ )
-	{   
-		if((st_batcore_data.u16_batcore_temp[i] >  (120 + 55)*10) || (st_batcore_data.u16_batcore_temp[i] < (-45 + 55)*10))
+//	for(i = 0; i < 9; i++ )
+//	{   
+//		if((st_batcore_data.u16_batcore_temp[i] >  (120 + 55)*10) || (st_batcore_data.u16_batcore_temp[i] < (-45 + 55)*10))
+//        {		
+//			un_batcore_err.st_err.un_Terr[i/16].u16_all |= 1 << (i % 16);	
+//		}
+//		else
+//		{
+//			un_batcore_err.st_err.un_Terr[i/16].u16_all &= ~(1 << (i % 16));	
+//		}
+//	}
+		if((st_batcore_data.u16_batcore_temp[0] >  (120 + 55)*10) || (st_batcore_data.u16_batcore_temp[0] < (-45 + 55)*10))
         {		
 			un_batcore_err.st_err.un_Terr[i/16].u16_all |= 1 << (i % 16);	
 		}
@@ -538,7 +583,6 @@ static void  fmod_fault_sensor_T (void)
 		{
 			un_batcore_err.st_err.un_Terr[i/16].u16_all &= ~(1 << (i % 16));	
 		}
-	}
 	
     if( (un_batcore_err.st_err.un_Terr[0].u16_all >=1))
    	{
@@ -714,7 +758,7 @@ static void  fmod_fault_relay (void)
 				u16_lockK1_count++;
 			}
 			un_bat_err2.st_bat_err_bit2.KM1_fault_sign=1;
-			u16_upK7_count++;
+			u16_upK1_count++;
 			u16_errK1_count = 20;              //2秒
 			if(u16_upK1_count>=50)
 			{
