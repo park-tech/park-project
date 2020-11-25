@@ -15,6 +15,7 @@
 函数申明
 ********************************************************************************************/
 
+static uint16_t fmod_Passive_Equilibrium(void);
 static void fmod_sbox_choosePassiveEquilibrium (int bt_index);
 static uint16_t bit_to_index(uint16_t bit);
 
@@ -170,4 +171,64 @@ static void fmod_sbox_choosePassiveEquilibrium(int bt_index)
 		break;
 	}
 }
+/******************************************************************************************
+** 函数名称：被动均衡检测
+** 函数描述：当单体电压高于平均电压1v时，判定为被动均衡
+** 输入参数：无
+** 返回值  ：无
+*******************************************************************************************/
+static uint16_t fmod_Passive_Equilibrium(void)
+{
+	static uint16_t  u16_err_count = 0;
+	uint16_t Passive_Equilibrium_bit= 0x0000;
+	
+	for(uint16_t i = 0; i < 9; i++ )
+	{   
+		
+		if(st_batcore_data.u16_batcore_volt[i]>st_bat_data.u16_batcore_avg_volt+1000)
+		{	
+			Passive_Equilibrium_bit|= 1 << (i % 16);			
+		}
+		else
+		{
+			Passive_Equilibrium_bit &= ~(1 << (i % 16));	
+		}
+		
+	}
+	 if( (Passive_Equilibrium_bit >=1))
+   	{
+		if(u16_err_count <= 20)  //1秒
+		{
+			u16_err_count++; 
+		}
+		else
+		{
+			un_sys_status.st_bit.PassiveEquilibrium_sign=1;
+			u16_err_count = 20;              
+		}
+	}   
+	else
+	{
+	    if(u16_err_count > 0 )
+		{
+			u16_err_count--; 	
+		}
+		else
+		{
+			un_sys_status.st_bit.PassiveEquilibrium_sign=0;
+		}
+	}
+	
+	
+	if(1==un_sys_status.st_bit.PassiveEquilibrium_sign)	
+	{
+		return Passive_Equilibrium_bit; 
+	}
+	else
+	{
+		return 0; 
+	}
+    
+
+}	
 

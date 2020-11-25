@@ -13,7 +13,7 @@
 
 union	Bat_status_regs        un_bat_status ;
 
-union   Contactor_status_regs     un_KM_bit;
+union   Sys_status_regs     un_sys_status;
 uint16_t  u16_In_sleep_count1 = 0;
 uint16_t  u16_K7_delay_count1 = 0;  
 uint16_t  u16_In_sleep_count2 = 0;
@@ -164,22 +164,22 @@ void fmod_updata_soh(void)
 void fmod_relay_control()
 {
 	//K1充电继电器控制
-	if(un_bat_lock.st_bat_lock_bit.bat_overT_lock ||un_bat_lock.st_bat_lock_bit.bat_over_chI_lock
+	if(un_bat_lock.st_bit.bat_overT_lock ||un_bat_lock.st_bit.bat_over_chI_lock
 		||u16_DCChar_lock_count>=3)
 	{
 		K1_START_PIN_OFF;
-		un_KM_bit.st_KM_bit.KM1_work_sign=0;
+		un_sys_status.st_bit.charge_KM_work_sign=0;
 	
 	}
 	else
 	{
-		if(un_bat_err1.st_bat_err_bit1.batcore_overV == 1 ||  un_bat_err1.st_bat_err_bit1.bat_overT == 1
-			||  un_bat_err1.st_bat_err_bit1.bat_over_chI == 1)
+		if(un_bat_err1.st_bit.batcore_overV_err == 1 ||  un_bat_err1.st_bit.bat_overT_err == 1
+			||  un_bat_err1.st_bit.bat_over_chI_err == 1)
 		{
 			
 		
 			K1_START_PIN_OFF;
-			un_KM_bit.st_KM_bit.KM1_work_sign=0;
+			un_sys_status.st_bit.charge_KM_work_sign=0;
 		
 		}
 //		else if(un_bat_err2.st_bat_err_bit2.DCpower_fault==1)
@@ -188,7 +188,7 @@ void fmod_relay_control()
 //			if(u16_DCChar_count<5*10)  
 //			{
 //				K1_START_PIN_OFF;
-//				un_KM_bit.st_KM_bit.KM1_work_sign=0;
+//				un_KM_bit.st_KM_bit.charge_KM_work_sign=0;
 //				u16_DCChar_count++;
 //			}
 //			else
@@ -197,7 +197,7 @@ void fmod_relay_control()
 //				{
 //					u16_DCwork_count++;
 //					K1_START_PIN_ON;
-//					un_KM_bit.st_KM_bit.KM1_work_sign=1;
+//					un_KM_bit.st_KM_bit.charge_KM_work_sign=1;
 //				}
 //				else
 //				{
@@ -215,7 +215,7 @@ void fmod_relay_control()
 		else
 		{
 			K1_START_PIN_ON;
-			un_KM_bit.st_KM_bit.KM1_work_sign=1;
+			un_sys_status.st_bit.charge_KM_work_sign=1;
 		}
 	
 	}
@@ -225,21 +225,21 @@ void fmod_relay_control()
 	//K2输出继电器和K7板子供电继电器控制
 	
 	
-	if(un_bat_err2.st_bat_err_bit2.charger_underV==0)        //外部充电机电压大于限值时
+	if(un_bat_err2.st_bit.charger_underV_err==0)        //外部充电机电压大于限值时
 	{
 		K2_START_PIN_OFF;										//断开K2
-		un_KM_bit.st_KM_bit.KM2_work_sign=0;
+		un_sys_status.st_bit.disch_KM_sign=0;
 		u16_In_sleep_count2 = 0;								//外部充电机电压低于限值的计时器清零
 		u16_K7_delay_count2 = 0;								//外部充电机电压低于限值的计时器清零
 		u16_min_count2=0;
 		
-		if(un_sys_Inout_bit.st_Inout_bits.In_Sleep==1)
+		if(un_sys_Inout.st_bit.In_Sleep==1)
 		{
 			if(u16_In_sleep_count1 <= 600) //1min
 			{
 				u16_In_sleep_count1++; 
 				K7_START_PIN_ON;
-				un_KM_bit.st_KM_bit.KM7_work_sign=1;
+				un_sys_status.st_bit.power_KM_work_sign=1;
 			}
 			else
 			{
@@ -248,23 +248,23 @@ void fmod_relay_control()
 				{
 					u16_K7_delay_count1++;
 					K7_START_PIN_ON;
-					un_KM_bit.st_KM_bit.KM7_work_sign=1;
+					un_sys_status.st_bit.power_KM_work_sign=1;
 				}
 				else
 				{
 					K7_START_PIN_OFF;
-					un_KM_bit.st_KM_bit.KM7_work_sign=0;
+					un_sys_status.st_bit.power_KM_work_sign=0;
 					u16_K7_delay_count1=600;
 					//K1也应该断开
 					K1_START_PIN_OFF;
-					un_KM_bit.st_KM_bit.KM1_work_sign=0;
+					un_sys_status.st_bit.charge_KM_work_sign=0;
 				}
 			}
 		}
 		else
 		{	
 			K7_START_PIN_ON;
-			un_KM_bit.st_KM_bit.KM7_work_sign=1;
+			un_sys_status.st_bit.power_KM_work_sign=1;
 			u16_In_sleep_count1=0;
 			u16_K7_delay_count1=0;
 		}
@@ -276,14 +276,14 @@ void fmod_relay_control()
 		u16_K7_delay_count1 = 0;								//外部充电机电压高于限值的计时器清零
 		//K1也应该断开
 		K1_START_PIN_OFF;
-		un_KM_bit.st_KM_bit.KM1_work_sign=0;
+		un_sys_status.st_bit.charge_KM_work_sign=0;
 	
 		if(u16_min_count2 < 5)                                  //24小时
 		{
 			K2_START_PIN_ON;										
-			un_KM_bit.st_KM_bit.KM2_work_sign=1;
+			un_sys_status.st_bit.disch_KM_sign=1;
 			K7_START_PIN_ON;
-			un_KM_bit.st_KM_bit.KM7_work_sign=1;
+			un_sys_status.st_bit.power_KM_work_sign=1;
 			
 			if(u16_In_sleep_count2>=600)
 			{
@@ -296,9 +296,9 @@ void fmod_relay_control()
 		{
 			u16_min_count2=5;
 			K2_START_PIN_OFF;										
-			un_KM_bit.st_KM_bit.KM2_work_sign=0;
+			un_sys_status.st_bit.disch_KM_sign=0;
 			K7_START_PIN_OFF;
-			un_KM_bit.st_KM_bit.KM7_work_sign=0;
+			un_sys_status.st_bit.power_KM_work_sign=0;
 			
 			
 		}			
@@ -309,7 +309,7 @@ void fmod_relay_control()
 	
 	
 	//硬线输出故障信号控制
-	if(un_sys_Inout_bit.st_Inout_bits.Out_Sys_fault==1)
+	if(un_sys_Inout.st_bit.Out_Sys_fault==1)
 	{
 		Sys_fault_PIN_OFF;
 	}

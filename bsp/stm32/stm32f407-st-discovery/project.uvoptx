@@ -120,6 +120,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
+          <Name>猬獁琸?琸?/%</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -188,6 +189,26 @@
           <count>7</count>
           <WinNumber>1</WinNumber>
           <ItemText>un_seeth_PC_data</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>st_product_preset</ItemText>
+        </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Re_eth_PC_data</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>un_swap_reeth_PC_data</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>un_reeth_PC_data</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

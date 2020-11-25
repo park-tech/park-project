@@ -124,8 +124,8 @@ static void fmod_fault_store_update(void)
 	st_fault_wdata.un_bat_err1.u16_all = un_bat_err1.u16_all;
 	st_fault_wdata.un_bat_err2.u16_all = un_bat_err2.u16_all;
 	st_fault_wdata.un_bat_lock.u16_all = un_bat_lock.u16_all;
-	st_fault_wdata.un_sys_Inout_bit.u8_all = un_sys_Inout_bit.u8_all;
-	st_fault_wdata.un_KM_bit.u8_all = un_KM_bit.u8_all;
+	st_fault_wdata.un_sys_Inout.u8_all = un_sys_Inout.u8_all;
+	st_fault_wdata.un_sys_status.u8_all = un_sys_status.u8_all;
 
 
 
@@ -173,8 +173,8 @@ static char *fmod_make_fault_jsonbody(void)
 	cJSON_AddItemToObject(pSubJson, "bat_Qnow", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_Qnow));	
 	cJSON_AddItemToObject(pSubJson, "bat_soc", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_soc));
 	cJSON_AddItemToObject(pSubJson, "bat_soh", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_soh));
-	cJSON_AddItemToObject(pSubJson, "bat_max_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_max_volt));
-	cJSON_AddItemToObject(pSubJson, "bat_min_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_bat_min_volt));
+	cJSON_AddItemToObject(pSubJson, "batcore_max_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_batcore_max_volt));
+	cJSON_AddItemToObject(pSubJson, "batcore_min_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.u16_batcore_min_volt));
 	cJSON_AddItemToObject(pSubJson, "bat_max_temp", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_max_temp));
 	cJSON_AddItemToObject(pSubJson, "bat_min_temp", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_bat_min_temp));
 	cJSON_AddItemToObject(pSubJson, "charger_volt", cJSON_CreateNumber(st_fault_wdata.st_bat_data.fl_charger_volt1));
@@ -187,8 +187,8 @@ static char *fmod_make_fault_jsonbody(void)
 	cJSON_AddItemToObject(pSubJson, "bat_err1", cJSON_CreateNumber(st_fault_wdata.un_bat_err1.u16_all));
 	cJSON_AddItemToObject(pSubJson, "bat_err2", cJSON_CreateNumber(st_fault_wdata.un_bat_err2.u16_all));
 	cJSON_AddItemToObject(pSubJson, "bat_lock", cJSON_CreateNumber(st_fault_wdata.un_bat_lock.u16_all));
-	cJSON_AddItemToObject(pSubJson, "sys_Inout", cJSON_CreateNumber(st_fault_wdata.un_sys_Inout_bit.u8_all));
-	cJSON_AddItemToObject(pSubJson, "KM_status", cJSON_CreateNumber(st_fault_wdata.un_KM_bit.u8_all));
+	cJSON_AddItemToObject(pSubJson, "sys_Inout", cJSON_CreateNumber(st_fault_wdata.un_sys_Inout.u8_all));
+	cJSON_AddItemToObject(pSubJson, "sys_status", cJSON_CreateNumber(st_fault_wdata.un_sys_status.u8_all));
 	
 
 	cJSON_AddItemToObject(pJsonRoot,  "APS_bms_data", pSubJson);

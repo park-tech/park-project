@@ -12,12 +12,12 @@
 struct  Product_info  st_product_info;
 struct  product_preset st_product_preset;
 //struct  Bat_err_bits   st_bat_err_bit;
-struct  Contactor_status_bits   st_KM_bit;
+//struct  Sys_status_bits   st_sys_bit;
 //struct  Sys_Inout_bits   st_Inout_bits;
 struct  Bat_data      st_bat_data;  
 struct  Batcore_data  st_batcore_data;
 
-union   Sys_Inout_regs     un_sys_Inout_bit;
+union   Sys_Inout_regs     un_sys_Inout;
 //extern  struct rt_messagequeue adc_rx_mq; 
 
 /********************************************************************************************
@@ -149,7 +149,7 @@ void fmod_parameter_update(void)
  static void fmod_adc_data_update(void)
  {	
 	
-	uint16_t u16_bat_volt=0;
+	uint32_t u32_bat_volt=0;
 	uint16_t u16_bat_min_volt_temp=st_batcore_data.u16_batcore_volt[0];   //电池最低电压初始化
 	uint16_t u16_bat_max_volt_temp=st_batcore_data.u16_batcore_volt[0];   //电池最高电压初始化
 	uint16_t fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最低温度初始化
@@ -158,7 +158,7 @@ void fmod_parameter_update(void)
 	for(uint16_t i=0;i<TEST_BAT_NUM;i++)
 	{
 		//电池总电压
-		u16_bat_volt += st_batcore_data.u16_batcore_volt[i];
+		u32_bat_volt += st_batcore_data.u16_batcore_volt[i];
 		
 		//电池最高电压
 		if(u16_bat_max_volt_temp<st_batcore_data.u16_batcore_volt[i])
@@ -188,14 +188,12 @@ void fmod_parameter_update(void)
 	}
 
 
-	st_bat_data.fl_bat_volt =u16_bat_volt/10.0f;
-	st_bat_data.u16_bat_max_volt=u16_bat_max_volt_temp;
-	st_bat_data.u16_bat_min_volt=u16_bat_min_volt_temp;
-//	st_bat_data.fl_bat_max_temp=fl_bat_max_temp_temp;
-//	st_bat_data.fl_bat_min_temp=fl_bat_min_temp_temp;
+	st_bat_data.fl_bat_volt =u32_bat_volt/1000.0f;
+	st_bat_data.u16_batcore_max_volt=u16_bat_max_volt_temp;
+	st_bat_data.u16_batcore_min_volt=u16_bat_min_volt_temp;
 	st_bat_data.fl_bat_max_temp=st_batcore_data.u16_batcore_temp[0];
 	st_bat_data.fl_bat_min_temp=st_batcore_data.u16_batcore_temp[0];
-	st_bat_data.u16_bat_avg_volt=st_bat_data.fl_bat_volt/TEST_BAT_NUM*10.0f;
+	st_bat_data.u16_batcore_avg_volt=u32_bat_volt/TEST_BAT_NUM;
 
  }
 /** * @ : **********************************************************************
@@ -209,41 +207,41 @@ void fmod_parameter_update(void)
 	
 	if(1==SLEEP_STATUS_VALUE)
 	{
-		un_sys_Inout_bit.st_Inout_bits.In_Sleep=1;
+		un_sys_Inout.st_bit.In_Sleep=1;
 	}
 	else
 	{
-		un_sys_Inout_bit.st_Inout_bits.In_Sleep=0;
+		un_sys_Inout.st_bit.In_Sleep=0;
 	
 	}
 	if(1==SPEED0_STATUS_VALUE)
 	{
-		un_sys_Inout_bit.st_Inout_bits.In_speed0=1;
+		un_sys_Inout.st_bit.In_speed0=1;
 	}
 	else
 	{
-		un_sys_Inout_bit.st_Inout_bits.In_speed0=0;
+		un_sys_Inout.st_bit.In_speed0=0;
 	
 	}
 	if(1==DC_Charger_STATUS_VALUE)
 	{
-		un_sys_Inout_bit.st_Inout_bits.In_DC_Charger_fault=0;
+		un_sys_Inout.st_bit.In_DC_Charger_fault=0;
 		
 	}
 	else
 	{
-		un_sys_Inout_bit.st_Inout_bits.In_DC_Charger_fault=1;
+		un_sys_Inout.st_bit.In_DC_Charger_fault=1;
 	
 	}
 	if((un_bat_err1.u16_all > 0)||((un_bat_err2.u16_all) & 0x7FFF))
 	{
-		un_sys_Inout_bit.st_Inout_bits.Out_Sys_fault=1;
-		un_bat_err2.st_bat_err_bit2.SYS_fault=1;
+		un_sys_Inout.st_bit.Out_Sys_fault=1;
+		un_bat_err2.st_bit.SYS_err=1;
 	}
 	else
 	{
-		un_sys_Inout_bit.st_Inout_bits.Out_Sys_fault=0;
-		un_bat_err2.st_bat_err_bit2.SYS_fault=0;
+		un_sys_Inout.st_bit.Out_Sys_fault=0;
+		un_bat_err2.st_bit.SYS_err=0;
 	}
 
  }

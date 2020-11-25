@@ -79,17 +79,17 @@ static void fmod_send_485_update(void)
 	un_se485_data.st_data.u8_life = u8_485_send_life;
     un_se485_data.st_data.err_bat_num = 0X00;
 
-	un_se485_data.st_data.u16_bat_volt = st_bat_data.fl_bat_volt * 10;
-	un_se485_data.st_data.u8_bat_soc = st_bat_data.fl_bat_soc; 
-	un_se485_data.st_data.u8_bat_soh= st_bat_data.fl_bat_soh;
-	un_se485_data.st_data.u16_bat_chI = st_bat_data.fl_bat_chI * 10;
-	un_se485_data.st_data.u16_bat_dischI = st_bat_data.fl_bat_dischI * 10;
-	un_se485_data.st_data.u16_bat_max_volt = st_bat_data.u16_bat_max_volt;
-	un_se485_data.st_data.u16_bat_min_volt = st_bat_data.u16_bat_min_volt;
-	un_se485_data.st_data.u16_bat_max_temp = (st_bat_data.fl_bat_max_temp + 55) *10;
-    un_se485_data.st_data.u16_bat_min_temp = (st_bat_data.fl_bat_min_temp + 55) *10;
+//	un_se485_data.st_data.u16_bat_volt = st_bat_data.fl_bat_volt * 10;
+//	un_se485_data.st_data.u8_bat_soc = st_bat_data.fl_bat_soc; 
+//	un_se485_data.st_data.u8_bat_soh= st_bat_data.fl_bat_soh;
+//	un_se485_data.st_data.u16_bat_chI = st_bat_data.fl_bat_chI * 10;
+//	un_se485_data.st_data.u16_bat_dischI = st_bat_data.fl_bat_dischI * 10;
+//	un_se485_data.st_data.u16_batcore_max_volt = st_bat_data.u16_batcore_max_volt;
+//	un_se485_data.st_data.u16_batcore_min_volt = st_bat_data.u16_batcore_min_volt;
+//	un_se485_data.st_data.u16_bat_max_temp = (st_bat_data.fl_bat_max_temp + 55) *10;
+//    un_se485_data.st_data.u16_bat_min_temp = (st_bat_data.fl_bat_min_temp + 55) *10;
 
-	un_se485_data.st_data.u16_bat_avg_volt = st_bat_data.u16_bat_avg_volt;
+//	un_se485_data.st_data.u16_batcore_avg_volt = st_bat_data.u16_batcore_avg_volt;
 //	un_se485_data.st_data.u8_bat_err[0] = un_bat_err.u32_all & 0X00FF ;
 //	un_se485_data.st_data.u8_bat_err[1] = ((un_bat_err.u32_all & 0XFF00) >> 8);
 	un_se485_data.st_data.u8_softversion[0] = 0x01;	                                 //V1.0

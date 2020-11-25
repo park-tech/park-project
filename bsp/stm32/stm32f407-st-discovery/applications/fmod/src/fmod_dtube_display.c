@@ -11,7 +11,7 @@
 ********************************************************************************************/
 extern  union	Bat_err_regs1      un_bat_err1;
 extern  union	Bat_err_regs2      un_bat_err2;
-extern  union	Contactor_status_regs   un_KM_bit;
+extern  union	Sys_status_regs   un_sys_status;
 /********************************************************************************************
 函数申明
 ********************************************************************************************/
@@ -29,17 +29,17 @@ void fmod_dtube_display(void)
 
 	showdata = 0x0008;                                                       //优先级低
 	
-	if(un_KM_bit.st_KM_bit.KM1_work_sign== 1)        			showdata = 0x00014; 	//优先级中
-	if(un_KM_bit.st_KM_bit.KM2_work_sign== 1)        			showdata = 0x00015; 	//优先级中
-	if(un_bat_err1.st_bat_err_bit1.PassiveEquilibrium== 1)	showdata = 0x00012;		//优先级中
+	if(un_sys_status.st_bit.charge_KM_work_sign== 1)        			showdata = 0x00014; 	//优先级中
+	if(un_sys_status.st_bit.disch_KM_sign== 1)        			showdata = 0x00015; 	//优先级中
+	if(un_sys_status.st_bit.PassiveEquilibrium_sign== 1)	showdata = 0x00012;		//优先级中
 	
-	if(un_bat_err2.st_bat_err_bit2.KM1_fault_sign == 1)   			showdata = 0x0000;      //优先级高
-	if(un_bat_err2.st_bat_err_bit2.KM2_fault_sign == 1)   			showdata = 0x0001;
-	if(un_bat_err2.st_bat_err_bit2.KM7_fault_sign == 1)   			showdata = 0x0002;
-	if(un_bat_err1.st_bat_err_bit1.batcore_overV == 1)    	showdata = 0x0003;  	
-	if(un_bat_err1.st_bat_err_bit1.batcore_underV == 1)   	showdata = 0x0004; 	
-	if(un_bat_err1.st_bat_err_bit1.bat_over_chI == 1)     	showdata = 0x0005;  
-	if(un_bat_err2.st_bat_err_bit2.self_check_err== 1)    	showdata = 0x0006;
+	if(un_bat_err2.st_bit.Charge_KM_err== 1)   			showdata = 0x0000;      //优先级高
+	if(un_bat_err2.st_bit.Disch_KM_err== 1)   			showdata = 0x0001;
+	if(un_bat_err2.st_bit.Power_KM_err == 1)   			showdata = 0x0002;
+	if(un_bat_err1.st_bit.batcore_overV_err == 1)    	showdata = 0x0003;  	
+	if(un_bat_err1.st_bit.batcore_underV_err == 1)   	showdata = 0x0004; 	
+	if(un_bat_err1.st_bit.bat_over_chI_err == 1)     	showdata = 0x0005;  
+	if(un_bat_err2.st_bit.self_check_err== 1)    	showdata = 0x0006;
 	
 	
 	

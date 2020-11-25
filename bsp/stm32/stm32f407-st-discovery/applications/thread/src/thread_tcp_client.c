@@ -405,8 +405,8 @@ static void se_eth_PC_data(void)
 	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_Qnow);
 	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_soc);
     endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_soh);
-	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_max_volt);
-    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_min_volt);
+	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_batcore_max_volt);
+    endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_batcore_min_volt);
     endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_max_temp);
     endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_bat_min_temp);
 	endian_swaps(&un_swap_seeth_PC_data.st_data.st_bat_data.u16_batcore_max_temp_index);
@@ -469,8 +469,8 @@ static void se_eth_PC_update(void)
 	un_seeth_PC_data.st_data.st_bat_data.u16_bat_Qnow = st_bat_data.fl_bat_Qnow*10;
     un_seeth_PC_data.st_data.st_bat_data.u16_bat_soc = st_bat_data.fl_bat_soc*10;
     un_seeth_PC_data.st_data.st_bat_data.u16_bat_soh = st_bat_data.fl_bat_soh*10;
-    un_seeth_PC_data.st_data.st_bat_data.u16_bat_max_volt = st_bat_data. u16_bat_max_volt;
-    un_seeth_PC_data.st_data.st_bat_data.u16_bat_min_volt = st_bat_data.u16_bat_min_volt;
+    un_seeth_PC_data.st_data.st_bat_data.u16_batcore_max_volt = st_bat_data. u16_batcore_max_volt;
+    un_seeth_PC_data.st_data.st_bat_data.u16_batcore_min_volt = st_bat_data.u16_batcore_min_volt;
     un_seeth_PC_data.st_data.st_bat_data.u16_bat_max_temp = st_bat_data.fl_bat_max_temp ;
     un_seeth_PC_data.st_data.st_bat_data.u16_bat_min_temp = st_bat_data.fl_bat_min_temp ;
 	
@@ -505,8 +505,8 @@ static void se_eth_PC_update(void)
 	un_seeth_PC_data.st_data.un_bat_err_bit1=un_bat_err1;
 	un_seeth_PC_data.st_data.un_bat_err_bit2=un_bat_err2;
 	un_seeth_PC_data.st_data.un_bat_lock_bit=un_bat_lock;
-	un_seeth_PC_data.st_data.un_sys_Inout_bit=un_sys_Inout_bit;
-	un_seeth_PC_data.st_data.un_KM_bit=un_KM_bit;
+	un_seeth_PC_data.st_data.un_sys_Inout=un_sys_Inout;
+	un_seeth_PC_data.st_data.un_sys_status=un_sys_status;
 	
     for (int  k = 0; k < 12; k++)
     {

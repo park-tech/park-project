@@ -202,11 +202,11 @@ static void cell_adc_sample(void)
 
 	if (ADCchannelindex % 2==0)
 	{
-		st_batcore_data.u16_batcore_volt[ADCchannelindex] = cell_vol_b1[ADCchannelindex].u16_avg_value*0.01f ;
+		st_batcore_data.u16_batcore_volt[ADCchannelindex] = cell_vol_b1[ADCchannelindex].u16_avg_value ;
 	}
 	else
 	{
-		st_batcore_data.u16_batcore_volt[ADCchannelindex] = cell_vol_b0[ADCchannelindex].u16_avg_value*0.01f ;
+		st_batcore_data.u16_batcore_volt[ADCchannelindex] = cell_vol_b0[ADCchannelindex].u16_avg_value ;
 	}
 	st_batcore_data.u16_batcore_temp[ADCchannelindex] = fmod_sbox_Temp_Convert(cell_temp[ADCchannelindex].u16_avg_value);
 	
@@ -272,7 +272,7 @@ static void bat_Qnow_updata(void)
 	static float fl_bat_all_I = 0;	   //当前总电流
 	static float fl_bat_lastall_I = 0; //上次总电流
 	double Q_unit = 0;
-	if(un_KM_bit.st_KM_bit.KM2_work_sign ==1)
+	if(un_sys_status.st_bit.disch_KM_sign ==1)
 	{
 		fl_bat_all_I = st_bat_data.fl_bat_chI - st_bat_data.fl_bat_dischI;	//当前总电流
 	}
