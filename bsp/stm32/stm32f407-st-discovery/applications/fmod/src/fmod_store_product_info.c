@@ -86,7 +86,7 @@ static uint32_t fmod_prodinfo_find_last_addr(uint16_t len)
     uint16_t i = 0, last_times = 0;          
 	uint32_t real_time = 0;         //实时的时间
     uint32_t get_maxtime = 0;		//保存的最大时间
-	uint16_t j = 0;
+	//uint16_t j = 0;
 	//..................读取当前时间...........................
 	get_rtc_second(&real_time);
 

@@ -22,7 +22,7 @@ extern  union	 Sys_Inout_regs   un_sys_Inout;
 static void fmod_fault_DCpower_fault(void);			
 static void fmod_fault_bat_overV(void);			
 static void fmod_fault_bat_underV(void);
-static void fmod_fault_bat_underV_warn(void);
+//static void fmod_fault_bat_underV_warn(void);
 static void fmod_fault_bat_over_chI(void);
 static void fmod_fault_bat_overdischI(void);
 static void fmod_fault_bat_overT(void);
@@ -675,15 +675,15 @@ static void  fmod_fault_relay (void)
 {
 	static uint16_t  u16_errK1_count = 0;
 	static uint16_t  u16_errK2_count = 0;
-	static uint16_t  u16_errK3_count = 0;
+	//static uint16_t  u16_errK3_count = 0;
 	static uint16_t  u16_errK7_count = 0;
 	static uint16_t  u16_lockK1_count = 0;
 	static uint16_t  u16_lockK2_count = 0;
-	static uint16_t  u16_lockK3_count = 0;
+	//static uint16_t  u16_lockK3_count = 0;
 	static uint16_t  u16_lockK7_count = 0;
 	static uint16_t  u16_upK1_count = 0;
 	static uint16_t  u16_upK2_count = 0;
-	static uint16_t  u16_upK3_count = 0;
+	//static uint16_t  u16_upK3_count = 0;
 	static uint16_t  u16_upK7_count = 0;
 	
 	

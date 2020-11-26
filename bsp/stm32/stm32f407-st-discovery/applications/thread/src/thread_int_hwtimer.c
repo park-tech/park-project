@@ -330,7 +330,7 @@ static float fmod_bat_effect(float bat_i, float tempb)
 	if ((tempb > -20) && (tempb <= 0))
 		temp_k = 100 / (0.85f * tempb + 85.0f); //与25度时100容量为100时对应的比值
 	if ((tempb > 0) && (tempb <= 20))
-		temp_k = 100 / (0.65*tempb + 85);
+		temp_k = 100 / (0.65f*tempb + 85);
 	if ((tempb > 20) && (tempb <= 30))
 		temp_k = 100 / (0.4f * tempb + 90);
 	if ((tempb > 30) && (tempb <= 50))
@@ -628,9 +628,9 @@ static void fmod_sbox_chooseTemp(int bt_index)
 
 static float fmod_sbox_Temp_Convert(uint16_t bt_Temp_Volt)
 {
-	float real_bt_Temp_Volt = bt_Temp_Volt / 1000.000;
-	float R_NTC = (real_bt_Temp_Volt * 20000) / (3.3 - real_bt_Temp_Volt);
-	float temp = 1 / (log(R_NTC / 10000) / 3960 + 1 / 298.15) - 273.15;
+	float real_bt_Temp_Volt = bt_Temp_Volt / 1000.000f;
+	float R_NTC = (real_bt_Temp_Volt * 20000) / (3.3f - real_bt_Temp_Volt);
+	float temp = 1 / (log(R_NTC / 10000) / 3960 + 1 / 298.15f) - 273.15f;
 	float temp1 = ((temp+55 ) * 10);
 	if(temp1<0)
 	{

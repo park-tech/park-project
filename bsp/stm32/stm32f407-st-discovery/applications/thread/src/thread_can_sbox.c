@@ -210,7 +210,7 @@ static void can1_se_update(void)
 static void can1_rx_data(struct rt_can_msg  *rxmsg)
 {	
     //static uint8_t can1_se_mq_buf[SUM_BAT_NUM_MAX][8] = {0}; //需发送的消息队列
-	static uint8_t re_count = 0;
+	//static uint8_t re_count = 0;
     uint8_t i = 0, j = 0;
     
     

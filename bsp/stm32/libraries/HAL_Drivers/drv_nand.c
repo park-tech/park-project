@@ -10,6 +10,10 @@
 #include "board.h"
 #include "drv_nand.h"
 #include "File_Config.h"
+#include <string.h>
+
+//#pragma diag_suppress 69
+#pragma diag_suppress 177
 
 #define NAND_DEBUG    rt_kprintf
 
@@ -257,7 +261,7 @@ rt_uint8_t FSMC_NAND_ReadPage(rt_uint8_t *_pBuffer, rt_uint32_t _ulPageNo, rt_ui
 rt_uint8_t FSMC_NAND_WritePage(rt_uint8_t *_pBuffer, rt_uint32_t _ulPageNo, rt_uint16_t _usAddrInPage, rt_uint16_t NumByteToRead)
 {
 	rt_uint32_t i;
-  rt_uint8_t ucStatus;
+    rt_uint8_t ucStatus;
 
 	NAND_CMD_AREA = NAND_WRITE0;
   //∑¢ÀÕµÿ÷∑
@@ -601,7 +605,7 @@ access_fail:
 	NAND_DEBUG("------------------------------------------------------------------\r\n");
 }
 
-static void Formatflash(void)
+void Formatflash(void)
 {
 	rt_uint8_t result;
 

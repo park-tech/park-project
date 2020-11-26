@@ -14,16 +14,16 @@
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
-          <Device>STM32F407ZGTx</Device>
+          <Device>STM32F407VGTx</Device>
           <Vendor>STMicroelectronics</Vendor>
           <PackID>Keil.STM32F4xx_DFP.2.14.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IRAM2(0x10000000,0x00010000) IROM(0x08000000,0x00100000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F4xx_1024 -FS08000000 -FL0100000 -FP0($$Device:STM32F407ZGTx$CMSIS\Flash\STM32F4xx_1024.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F4xx_1024 -FS08000000 -FL0100000 -FP0($$Device:STM32F407VGTx$CMSIS\Flash\STM32F4xx_1024.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
-          <RegisterFile>$$Device:STM32F407ZGTx$Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h</RegisterFile>
+          <RegisterFile>$$Device:STM32F407VGTx$Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -33,7 +33,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:STM32F407ZGTx$CMSIS\SVD\STM32F40x.svd</SFDFile>
+          <SFDFile>$$Device:STM32F407VGTx$CMSIS\SVD\STM32F40x.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -110,11 +110,11 @@
         </CommonProperty>
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
-          <SimDllArguments> -REMAP -MPU</SimDllArguments>
+          <SimDllArguments>-MPU -REMAP</SimDllArguments>
           <SimDlgDll>DCM.DLL</SimDlgDll>
           <SimDlgDllArguments>-pCM4</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
-          <TargetDllArguments> -MPU</TargetDllArguments>
+          <TargetDllArguments>-MPU</TargetDllArguments>
           <TargetDlgDll>TCM.DLL</TargetDlgDll>
           <TargetDlgDllArguments>-pCM4</TargetDlgDllArguments>
         </DllOption>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -193,7 +193,7 @@
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
             <RoSelD>3</RoSelD>
-            <RwSelD>4</RwSelD>
+            <RwSelD>3</RwSelD>
             <CodeSel>0</CodeSel>
             <OptFeed>0</OptFeed>
             <NoZi1>0</NoZi1>
@@ -312,7 +312,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>2</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER, STM32F407xx, RT_USING_ARM_LIBC</Define>
               <Undefine></Undefine>
-              <IncludePath>.;..\..\..\include;applications\fmod\inc;applications\thread\inc;applications\basic\inc;applications\absp\inc;board;board\CubeMX_Config\Inc;..\libraries\HAL_Drivers;..\libraries\HAL_Drivers\config;packages\cJSON-v1.0.2;..\..\..\libcpu\arm\common;..\..\..\libcpu\arm\cortex-m4;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\spi;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\usb\usbdevice;..\..\..\components\finsh;..\..\..\components\gui;..\..\..\components\libc\compilers\armlibc;..\..\..\components\libc\compilers\common;..\..\..\components\net\at\include;..\..\..\components\rl-arm\RL-RTX\inc;..\..\..\components\rl-arm\Config;..\..\..\components\rl-arm\RL-FlashFS;..\..\..\components\rl-arm\RL-FlashFS\inc;..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Inc;..\libraries\STM32F4xx_HAL\CMSIS\Device\ST\STM32F4xx\Include;..\libraries\STM32F4xx_HAL\CMSIS\Include</IncludePath>
+              <IncludePath>.;..\..\..\include;applications\fmod\inc;applications\thread\inc;applications\basic\inc;applications\absp\inc;board;board\CubeMX_Config\Inc;..\libraries\HAL_Drivers;..\libraries\HAL_Drivers\config;packages\cJSON-v1.0.2;..\..\..\libcpu\arm\common;..\..\..\libcpu\arm\cortex-m4;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\spi;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\include;..\..\..\components\drivers\usb\usbdevice;..\..\..\components\finsh;..\..\..\components\gui;..\..\..\components\libc\compilers\armlibc;..\..\..\components\libc\compilers\common;..\..\..\components\net\at\include;..\..\..\components\rl-arm\RL-RTX\inc;..\..\..\components\rl-arm\Config;..\..\..\components\rl-arm\RL-FlashFS;..\..\..\components\rl-arm\RL-FlashFS\inc;..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Inc;..\libraries\STM32F4xx_HAL\CMSIS\Device\ST\STM32F4xx\Include;..\libraries\STM32F4xx_HAL\CMSIS\Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -473,6 +473,11 @@
               <FilePath>applications\absp\src\bsp_adc.c</FilePath>
             </File>
             <File>
+              <FileName>bsp_bkpreg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\absp\src\bsp_bkpreg.c</FilePath>
+            </File>
+            <File>
               <FileName>bsp_can.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\absp\src\bsp_can.c</FilePath>
@@ -543,9 +548,9 @@
               <FilePath>applications\basic\src\basic_uart.c</FilePath>
             </File>
             <File>
-              <FileName>fmod_wdg.c</FileName>
+              <FileName>fmod_PassiveEquilibrium.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\applications\fmod\src\fmod_wdg.c</FilePath>
+              <FilePath>applications\fmod\src\fmod_PassiveEquilibrium.c</FilePath>
             </File>
             <File>
               <FileName>fmod_com_rs485.c</FileName>
@@ -568,11 +573,6 @@
               <FilePath>applications\fmod\src\fmod_fault_detect.c</FilePath>
             </File>
             <File>
-              <FileName>fmod_PassiveEquilibrium.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\applications\fmod\src\fmod_PassiveEquilibrium.c</FilePath>
-            </File>
-            <File>
               <FileName>fmod_store_fault.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\fmod\src\fmod_store_fault.c</FilePath>
@@ -588,9 +588,19 @@
               <FilePath>applications\fmod\src\fmod_store_product_info.c</FilePath>
             </File>
             <File>
+              <FileName>fmod_wdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\fmod\src\fmod_wdg.c</FilePath>
+            </File>
+            <File>
               <FileName>fmod_work_status.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\fmod\src\fmod_work_status.c</FilePath>
+            </File>
+            <File>
+              <FileName>thread_can_sbox.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\thread\src\thread_can_sbox.c</FilePath>
             </File>
             <File>
               <FileName>thread_int_gpio_exti.c</FileName>
@@ -613,19 +623,24 @@
               <FilePath>applications\thread\src\thread_tcp_client.c</FilePath>
             </File>
             <File>
-              <FileName>thread_can_sbox.c</FileName>
+              <FileName>thread_tcp_ota.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\applications\thread\src\thread_can_sbox.c</FilePath>
+              <FilePath>applications\thread\src\thread_tcp_ota.c</FilePath>
+            </File>
+            <File>
+              <FileName>thread_tcp_rev.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\thread\src\thread_tcp_rev.c</FilePath>
+            </File>
+            <File>
+              <FileName>thread_uart_mvb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\thread\src\thread_uart_mvb.c</FilePath>
             </File>
             <File>
               <FileName>thread_uart_rs485.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\thread\src\thread_uart_rs485.c</FilePath>
-            </File>
-            <File>
-              <FileName>thread_tcp_rev.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\applications\thread\src\thread_tcp_rev.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -686,6 +701,11 @@
               <FileName>drv_rtc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\libraries\HAL_Drivers\drv_rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\HAL_Drivers\drv_wdt.c</FilePath>
             </File>
             <File>
               <FileName>drv_usbd_fs.c</FileName>
@@ -910,6 +930,11 @@
               <FileName>workqueue.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\components\drivers\src\workqueue.c</FilePath>
+            </File>
+            <File>
+              <FileName>watchdog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\components\drivers\watchdog\watchdog.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1250,6 +1275,16 @@
               <FileName>stm32f4xx_hal_rtc_ex.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_iwdg.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_wwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F4xx_HAL\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_wwdg.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hal_nand.c</FileName>

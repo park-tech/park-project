@@ -126,8 +126,8 @@ void fmod_adjust_value_judge(void)
 
 void fmod_parameter_update(void)
 {   
-	static uint8_t  run_count = 0 ;
-	uint32_t  now_sec= 0;
+	//static uint8_t  run_count = 0 ;
+	//uint32_t  now_sec= 0;
 	
 	
 	//.......................电池电流电压温度参数更新............................. 
@@ -152,8 +152,8 @@ void fmod_parameter_update(void)
 	uint32_t u32_bat_volt=0;
 	uint16_t u16_bat_min_volt_temp=st_batcore_data.u16_batcore_volt[0];   //电池最低电压初始化
 	uint16_t u16_bat_max_volt_temp=st_batcore_data.u16_batcore_volt[0];   //电池最高电压初始化
-	uint16_t fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最低温度初始化
-	uint16_t fl_bat_max_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最高温度初始化
+	//uint16_t fl_bat_min_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最低温度初始化
+	//uint16_t fl_bat_max_temp_temp=st_batcore_data.u16_batcore_temp[0];//电池最高温度初始化
 	
 	for(uint16_t i=0;i<TEST_BAT_NUM;i++)
 	{

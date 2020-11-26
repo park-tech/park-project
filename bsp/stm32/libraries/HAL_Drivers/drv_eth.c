@@ -13,6 +13,9 @@
 #include "board.h"
 #include "drv_config.h"
 #include "drv_eth.h"
+#include <string.h>
+#pragma diag_suppress 177
+
 
 #ifdef RT_USING_LWIP
 #include <netif/ethernetif.h>
@@ -64,7 +67,7 @@ static char tcpnet_rx_thread_stack[1024];
 static rt_uint32_t ETH_GetRxPktSize(ETH_DMADescTypeDef *DMARxDesc);
 static void tcpnet_rx_thread_entry(void* parameter);
 #endif
-
+extern struct rt_semaphore link_down_sem;   //–≈∫≈¡ø
 static ETH_DMADescTypeDef *DMARxDscrTab, *DMATxDscrTab;
 static rt_uint8_t *Rx_Buff, *Tx_Buff;
 // CCMRAM rt_uint8_t Rx_Buff[ETH_RXBUFNB*ETH_MAX_PACKET_SIZE];
@@ -566,6 +569,7 @@ static void eth_phy_isr(void *args)
         if (link_status == 1)
         {
             link_status = 0;
+            rt_sem_release(&link_down_sem);
             LOG_I("link down");
             /* send link down. */
             eth_device_linkchange(&stm32_eth_device.parent, RT_FALSE);
@@ -734,6 +738,7 @@ static void phy_monitor_thread_entry(void *parameter)
             } /* link up. */
             else
             {
+                rt_sem_release(&link_down_sem);
                 LOG_I("link down");
                 /* send link down. */
 #ifdef RT_USING_LWIP

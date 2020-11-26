@@ -111,7 +111,7 @@ void fmod_updata_soh(void)
 			if(st_bat_data.fl_bat_Qc_max <= (Bat_Qb * 0.5)) st_bat_data.fl_bat_Qc_max = Bat_Qb * 0.5; //检测的最低容量为标称容量的0.5	
 			
 			fl_bat_ago_soh = st_bat_data.fl_bat_soh;                          //记录更新之前的SOH
-			st_bat_data.fl_bat_soh = 100 * st_bat_data.fl_bat_Qc_max / Bat_Qb; //计算新的SOH 
+			st_bat_data.fl_bat_soh = 100.0f * st_bat_data.fl_bat_Qc_max / Bat_Qb; //计算新的SOH 
 			
 			if(st_bat_data.fl_bat_soh >= fl_bat_ago_soh + 0.1f)
 			{

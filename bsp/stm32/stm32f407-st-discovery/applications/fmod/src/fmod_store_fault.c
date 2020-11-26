@@ -38,7 +38,7 @@ void fmod_fault_store(void)
 { 
 	static uint8_t  fault_count = 0;
 	char *jsonBody = NULL;
-	uint32_t len=0;
+	//uint32_t len=0;
 
 	if(nandflash_mount_flag) //挂载成功
 	{

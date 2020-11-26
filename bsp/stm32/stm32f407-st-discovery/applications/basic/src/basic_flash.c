@@ -7,12 +7,15 @@
 ** 定义变量
 ********************************************************************************************/
 #define NAND_DEBUG    rt_kprintf
-
-
+extern void NAND_EraseChip(void);
+extern void Formatflash(void);
 static rt_uint8_t defaultDisk = Nand_Flash;
-static void Mount_Disk(rt_uint8_t disk_name);
+//static void Mount_Disk(rt_uint8_t disk_name);
 
 uint8_t nandflash_mount_flag = 0;
+uint8_t ftp_open_flag = 0;
+
+
 static const char * ReVal_Table[]= 
 	
 {
@@ -29,52 +32,38 @@ extern void DotFormat(uint64_t _ullVal, char *_sp) ;
 ** 内容
 ********************************************************************************************/
 //extern struct rt_mutex ftp_open_mutex;
-rt_mutex_t ftp_open_mutex = RT_NULL;
+
 /***********************************************************************************
 ** 函数名称：
 ** 函数描述：判断nand0 是否挂载成功
 ** 输入参数：
 ** 返回值	：无
 ************************************************************************************/
-rt_err_t basic_nandflash_mount_status(void)
+int basic_nandflash_mount_status(void)
 {	
 	rt_uint8_t result;
 		
-	ftp_open_mutex = rt_mutex_create("dmutex", RT_IPC_FLAG_FIFO);
-    if (ftp_open_mutex == RT_NULL)
-    {
-        rt_kprintf("create dmutex mutex failed.\n");
-        return RT_ERROR;
-    }
-
-	result = rt_mutex_take(ftp_open_mutex, 1000);//获取互斥量，超时5000ms
-	if(result != RT_EOK)
-	{
-		NAND_DEBUG("take ftp_open_mutex fail\r\n","Mount success");
-		return 0;
-	}
-
 	result = finit("N0:");
 	if(result != NULL)
 	{
+		//NAND_EraseChip( );
+		Formatflash( );			
+		
+		
 		NAND_DEBUG("Failed to mount file system (%s)\r\n", ReVal_Table[result]);
 		NAND_DEBUG("nandflash mount failed!");
-		
-		rt_mutex_release(ftp_open_mutex);
 		nandflash_mount_flag = 0;
-
 		result = funinit("N0:");
 		if(result != NULL) NAND_DEBUG("uMount failed\r\n");
 		else  NAND_DEBUG("uMount success\r\n");		
 		
-		return RT_ERROR;
+		return 0;
 	}
 	else
 	{
 		NAND_DEBUG("Mount success (%s)\r\n", ReVal_Table[result]);
 		nandflash_mount_flag = 1;
-		rt_mutex_release(ftp_open_mutex);
-		return RT_EOK;
+		return 1;
 	}
 	
 }INIT_APP_EXPORT(basic_nandflash_mount_status);
@@ -92,27 +81,12 @@ uint8_t *basic_read_filedata(char *pathname, uint8_t *u8_data, uint8_t len, uint
 	char filepath[60]= {0};
 	FILE *fd;
 	rt_uint32_t bw;
-	rt_uint8_t result;
 	
-	result = rt_mutex_take(ftp_open_mutex, 5);//获取互斥量，超时5ms
-	if(result != RT_EOK)
+	
+	if(ftp_open_flag ==1)
 	{
-		NAND_DEBUG("take ftp_open_mutex fail\r\n","Mount success");
 		return 0;
 	}
-
-//  result = finit("N0:");
-//	if(result != NULL)
-//	{
-//		NAND_DEBUG("Failed to mount file system (%s)\r\n", ReVal_Table[result]);
-//		NAND_DEBUG("nandflash mount failed!");
-//		
-//		rt_mutex_release(ftp_open_mutex);
-//		result = funinit("N0:");
-//		if(result != NULL) NAND_DEBUG("uMount failed\r\n");
-//		else  NAND_DEBUG("uMount success\r\n");		
-//		return 0;
-//	}
 	
 	sprintf(filepath, "N0:\\%s", pathname);
 	//rt_kprintf("%s\n", filepath);
@@ -125,8 +99,6 @@ uint8_t *basic_read_filedata(char *pathname, uint8_t *u8_data, uint8_t len, uint
 	if(fd == NULL) 
 	{
 		 rt_kprintf("open %s read error!\n", filepath);
-		 fclose(fd);
-		 rt_mutex_release(ftp_open_mutex);
 		 return 0;
 	}
 
@@ -136,7 +108,6 @@ uint8_t *basic_read_filedata(char *pathname, uint8_t *u8_data, uint8_t len, uint
 	{
 		rt_kprintf("%s seek failed!\n", filepath);
 		fclose(fd);
-		rt_mutex_release(ftp_open_mutex);
 		return 0;
 	}
 	/* 读数据 */
@@ -146,11 +117,9 @@ uint8_t *basic_read_filedata(char *pathname, uint8_t *u8_data, uint8_t len, uint
 	{ 
 		//rt_kprintf("%s read failed!\n", filepath);
 		fclose(fd);
-		rt_mutex_release(ftp_open_mutex);
 		return 0;
 	}
 	fclose(fd);
-	rt_mutex_release(ftp_open_mutex);
 	return u8_data;	
 }
  
@@ -167,12 +136,10 @@ rt_err_t basic_write_filedata(char *pathname, uint8_t *u8_data,  uint8_t len, ui
 	memset(filepath,0x0,60);
 	FILE *fd;
 	rt_uint32_t bw;
-	rt_uint8_t result;
+	
 
-    result = rt_mutex_take(ftp_open_mutex, 5);//获取互斥量，超时5ms
-	if(result != RT_EOK)
+    if(ftp_open_flag ==1)
 	{
-		NAND_DEBUG("take ftp_open_mutex fail\r\n","Mount success");
 		return 0;
 	}
 
@@ -186,8 +153,6 @@ rt_err_t basic_write_filedata(char *pathname, uint8_t *u8_data,  uint8_t len, ui
 	if(fd== NULL)
 	{
 		 rt_kprintf("open %s write error!\n", pathname);
-		 fclose(fd);
-		 rt_mutex_release(ftp_open_mutex);
 		 return RT_ERROR;
 	}	
 
@@ -196,7 +161,6 @@ rt_err_t basic_write_filedata(char *pathname, uint8_t *u8_data,  uint8_t len, ui
 	{
 		rt_kprintf("%s seek failed!\n", filepath);
 		fclose(fd);
-		rt_mutex_release(ftp_open_mutex);
 		return RT_ERROR;
 	}
 	/* 写数据 */
@@ -205,13 +169,11 @@ rt_err_t basic_write_filedata(char *pathname, uint8_t *u8_data,  uint8_t len, ui
 	{ 
 		rt_kprintf("%s write failed!\n", filepath);
 		fclose(fd);
-		rt_mutex_release(ftp_open_mutex);
 		return RT_ERROR;
 	}
 
 	fflush(fd);
 	fclose(fd);
-	rt_mutex_release(ftp_open_mutex);
 	return RT_EOK;	
 		
 }
@@ -226,30 +188,59 @@ rt_err_t basic_add_filedata(char *pathname, char *ptr, uint32_t len, uint8_t bsi
 {
 	FILE *fp;    //文件指针，fopen标准库文件
 	char filepath[60] = {0};
-    rt_uint8_t result;
+  
 
 	//memset(filepath, 0x0, 60);
 
-    result = rt_mutex_take(ftp_open_mutex, rt_tick_from_millisecond(5));//获取互斥量，超时5ms
-	if(result != RT_EOK)
+    if(ftp_open_flag ==1)
 	{
-		NAND_DEBUG("take ftp_open_mutex fail\r\n","Mount success");
 		return 0;
 	}
 
 	sprintf(filepath, "N0:\\%s", pathname);
-	//........................存储数据...........................		
-	if((fp = fopen(filepath, "a+")) == NULL)     //追加的方式打开文件，写的内容放在文件结尾，文件不存在则建立文件
+	
+	//........................存储数据...........................	
+	fp = fopen(filepath, "a+");//追加的方式打开文件，写的内容放在文件结尾，文件不存在 件则建立文
+	if(fp == NULL)    
 	{
-		rt_kprintf("fopen %s failed!\n",  pathname);
-		fclose(fp);
-		rt_mutex_release(ftp_open_mutex);
+		rt_kprintf("fopen %s failed!\n",  pathname);		
 		return RT_ERROR;
 	}
 
 	fwrite(ptr, len, bsize, fp); //写入数据 1表示1字节，
 	fclose(fp);
-	rt_mutex_release(ftp_open_mutex);
+	return RT_EOK;
+}
+/******************************************************************************************
+** 函数名称：
+** 函数描述：在文件的后面追加数据
+** 输入参数：*pathname文件路径名称，增加数据内容指针，len增加数据的长度，bsize增加数据类型的大小为多少字节
+** 返回值	：无
+*******************************************************************************************/
+rt_err_t basic_add_u8data(char *pathname, uint8_t *ptr, uint32_t len, uint8_t bsize)
+{
+	FILE *fp;    //文件指针，fopen标准库文件
+	char filepath[60] = {0};
+  
+
+	//memset(filepath, 0x0, 60);
+
+    if(ftp_open_flag ==1)
+	{
+		return 0;
+	}
+
+	sprintf(filepath, "N0:\\%s", pathname);
+	//........................存储数据...........................	
+    fp = fopen(filepath, "a+");	
+	if(fp  == NULL)     //追加的方式打开文件，写的内容放在文件结尾，文件不存在则建立文件
+	{
+		rt_kprintf("fopen %s failed!\n",  pathname);
+		return RT_ERROR;
+	}
+
+	fwrite(ptr, len, bsize, fp); //写入数据 1表示1字节，
+	fclose(fp);
 	return RT_EOK;
 }
 
@@ -267,13 +258,10 @@ rt_err_t basic_get_filesize(const char *pathname, FINFO *info)
 	
     info->fileID = 0;                /* 每次使用ffind函数前，info.fileID必须初始化为0 */
 
-    result = rt_mutex_take(ftp_open_mutex, rt_tick_from_millisecond(5));//获取互斥量，超时5ms
-	if(result != RT_EOK)
+    if(ftp_open_flag ==1)
 	{
-		NAND_DEBUG("take ftp_open_mutex fail\r\n", "Mount success");
 		return 0;
 	}
-
 	sprintf(filepath, "N0:\\%s", pathname);	
 	//rt_kprintf("%s\n", filepath );
 	result = ffind(filepath, info);	
@@ -301,13 +289,11 @@ rt_err_t basic_get_filesize(const char *pathname, FINFO *info)
                info->time.hr, info->time.min);
 	}
 	
-	if (info->fileID == 0)  
+	if(info->fileID == 0)  
 	{
 		rt_kprintf ("%s no found in Nandflash!\r\n", filepath);
-		rt_mutex_release(ftp_open_mutex);
 		return RT_ERROR;
 	}
-	rt_mutex_release(ftp_open_mutex);
 	return RT_EOK;
 }
 /******************************************************************************************
@@ -317,17 +303,17 @@ rt_err_t basic_get_filesize(const char *pathname, FINFO *info)
 ** 返回值	：无
 *******************************************************************************************/
 
-static void Mount_Disk(rt_uint8_t disk_name)
-{
-    defaultDisk = disk_name;
-    if(disk_name == tf_Card){
-        funinit("N0:");
-        finit("M0:");
-    }else{
-        funinit("M0:");
-        finit("N0:");
-    }
-}
+//static void Mount_Disk(rt_uint8_t disk_name)
+//{
+//    defaultDisk = disk_name;
+//    if(disk_name == tf_Card){
+//        funinit("N0:");
+//        finit("M0:");
+//    }else{
+//        funinit("M0:");
+//        finit("N0:");
+//    }
+//}
 
 rt_uint8_t Get_MountDisk(void)
 {

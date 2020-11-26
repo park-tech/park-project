@@ -68,7 +68,7 @@ static void fmod_send_485_com(void)
 *********************************************************************************************************///
 static void fmod_send_485_update(void)
 {   
-	unsigned char i = 0;
+	//unsigned char i = 0;
 	static uint8_t u8_485_send_life = 0 ;
 
     un_se485_data.st_data.u8_head = 0XAE;

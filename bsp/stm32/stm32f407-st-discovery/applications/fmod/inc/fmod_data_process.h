@@ -17,7 +17,6 @@
 #include "fmod_store_product_info.h"
 #include "fmod_work_status.h"
 #include "fmod_dtube_display.h"
-#include "fmod_com_mvb.h"
 #include "fmod_com_rs485.h"
 #include "fmod_PassiveEquilibrium.h"
 

@@ -127,7 +127,7 @@ RT_WEAK void rt_hw_board_init()
     HAL_Init();
 
     /* enable interrupt */
-    __set_PRIMASK(0);
+    __set_PRIMASK(1);
     /* System clock initialization */
     SystemClock_Config();
     /* disbale interrupt */

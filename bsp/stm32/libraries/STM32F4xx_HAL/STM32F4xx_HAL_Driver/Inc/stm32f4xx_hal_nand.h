@@ -307,7 +307,8 @@ HAL_NAND_StateTypeDef HAL_NAND_GetState(NAND_HandleTypeDef *hnand);
 /* NAND memory status */
 #define NAND_VALID_ADDRESS         0x00000100U
 #define NAND_INVALID_ADDRESS       0x00000200U
-#define NAND_TIMEOUT_ERROR         0x00000400U
+//#define NAND_TIMEOUT_ERROR       0x00000400U
+#define NAND_TIMEOUT_ERROR         0x00000080U
 #define NAND_BUSY                  0x00000000U
 #define NAND_ERROR                 0x00000001U
 #define NAND_READY                 0x00000040U
