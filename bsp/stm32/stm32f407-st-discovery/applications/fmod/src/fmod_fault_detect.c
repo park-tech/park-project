@@ -304,7 +304,60 @@ static void  fmod_fault_bat_over_chI (void)
 		overchI_start_timer_flag=0;
 	}   
 }
+//static void  fmod_fault_bat_over_chI (void)
+//{
+//	static uint16_t  u16_err_count = 0;
+//	static uint16_t chI_fault_count = 0;   // 故障计数
+//	static uint16_t chI_ok_time = 0;    //正常工作时间计时
 
+//	//..........................判断故障..............................
+//	if(st_bat_data.fl_bat_chI >=  st_product_preset.u8_ch_overI ) 
+//	{ 
+//		if(u16_err_count <= 15)  //延时1.5秒
+//		{
+//			u16_err_count++; 
+//		}
+//		else
+//		{
+//			if(!un_bat_err1.st_bit.bat_over_chI_err )//产生新的故障，故障次数加1
+//			{
+//				chI_fault_count++;  
+//				un_bat_err1.st_bit.bat_over_chI_err =1; 
+//			}  
+//			u16_err_count = 300;
+//			chI_ok_time = 0;    //清除正常工作时间计数 
+//		}  
+//	}
+//	//.................故障恢复..................
+//	if((st_bat_data.fl_bat_chI < 0.9f * st_product_preset.u8_ch_overI) && un_bat_lock.st_bit.bat_over_chI_lock ==0)
+//	{ 
+//		if(u16_err_count > 0 )
+//		{
+//			u16_err_count--;  
+//		}
+//		else
+//		{  
+//			un_bat_err1.st_bit.bat_over_chI_err =0;
+//		}  
+//	}
+
+//	//.......正常工作5分钟故障消除，5分钟内3次故障锁死....................
+//	if(!un_bat_err1.st_bit.bat_over_chI_err)
+//	{ 
+//		if(chI_ok_time < 3000) //
+//		{
+//			chI_ok_time++;
+//		}
+//		else
+//		{
+//			chI_fault_count = 0;
+//		}  
+//	}
+//	if(chI_fault_count >= 3 )
+//	{
+//		un_bat_lock.st_bit.bat_over_chI_lock  = 1;
+//	}      
+//}
 /******************************************************************************************
 ** 函数名称：电池放电过流       
 ** 函数描述：

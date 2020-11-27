@@ -506,8 +506,8 @@ extern void fmod_variable_init(void);
 extern void fmod_parameter_update(void);
 extern void fmod_adjust_value_judge(void);
 
-void endian_swaps(void* data);
-void endian_swapl(void* data);
+extern void endian_swaps(void* data);
+extern void endian_swapl(void* data);
 
 #endif 
 

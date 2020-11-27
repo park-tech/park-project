@@ -327,48 +327,88 @@ static void re_eth_PC_data_product_preset(void)
     //.......................充电过流和放电过流值的设定.........................................................
     if(1 == un_reeth_PC_data.st_data.st_product_preset.un_preset.st_bit.set_ch_overI_valid)
 	{ 
-		st_product_preset.u8_ch_overI = un_reeth_PC_data.st_data.st_product_preset.u8_ch_overI;
+		if(st_product_preset.u8_ch_overI != un_reeth_PC_data.st_data.st_product_preset.u8_ch_overI)
+        {
+			st_product_preset.u8_ch_overI = un_reeth_PC_data.st_data.st_product_preset.u8_ch_overI;
+			 product_preset_flag = 1;
+		}
 	}
 
     if(1 == un_reeth_PC_data.st_data.st_product_preset.un_preset.st_bit.set_disch_overI_valid)
-	{ 		
-        st_product_preset.u8_disch_overI = un_reeth_PC_data.st_data.st_product_preset.u8_disch_overI;
+	{ 	
+		if(st_product_preset.u8_disch_overI != un_reeth_PC_data.st_data.st_product_preset.u8_disch_overI)
+		{
+			st_product_preset.u8_disch_overI = un_reeth_PC_data.st_data.st_product_preset.u8_disch_overI;
+			product_preset_flag = 1;
+		}
+       
 	} 
 	
 	//.......................充电电流校正设定设定.........................................................
     if(1 == un_reeth_PC_data.st_data.st_product_preset.un_preset.st_bit.set_Charge_I_adjust_valid)
 	{ 
-		st_product_preset.u8_Charge_I_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u8_Charge_I_adjust_Value;
+		if(st_product_preset.u8_Charge_I_adjust_Value != un_reeth_PC_data.st_data.st_product_preset.u8_Charge_I_adjust_Value)
+		{
+			st_product_preset.u8_Charge_I_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u8_Charge_I_adjust_Value;
+			product_preset_flag = 1;
+		}
 	}
 	//.......................放电电流1校正设定设定.........................................................
     if(1 == un_reeth_PC_data.st_data.st_product_preset.un_preset.st_bit.set_disCharge_I1_adjust_valid)
 	{ 
-		st_product_preset.u8_disCharge_I1_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u8_disCharge_I1_adjust_Value;
+		if(st_product_preset.u8_disCharge_I1_adjust_Value != un_reeth_PC_data.st_data.st_product_preset.u8_disCharge_I1_adjust_Value)
+		{
+			st_product_preset.u8_disCharge_I1_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u8_disCharge_I1_adjust_Value;
+			product_preset_flag = 1;
+		}
+		
 	}
 	//.......................放电电流2校正设定设定.........................................................
     if(1 == un_reeth_PC_data.st_data.st_product_preset.un_preset.st_bit.set_disCharge_I2_adjust_valid)
 	{ 
-		st_product_preset.u8_disCharge_I1_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u8_disCharge_I1_adjust_Value;
+		if(st_product_preset.u8_disCharge_I1_adjust_Value != un_reeth_PC_data.st_data.st_product_preset.u8_disCharge_I1_adjust_Value)
+		{
+			st_product_preset.u8_disCharge_I1_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u8_disCharge_I1_adjust_Value;
+			product_preset_flag = 1;
+		}
+			
 	}
 	//.......................外部充电机电压1校正设定设定.........................................................
     if(1 == un_reeth_PC_data.st_data.st_product_preset.un_preset.st_bit.set_Outcharger_V1_adjust_valid)
 	{ 
-		st_product_preset.u8_Outcharger_V1_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u8_Outcharger_V1_adjust_Value;
+		if(st_product_preset.u8_Outcharger_V1_adjust_Value != un_reeth_PC_data.st_data.st_product_preset.u8_Outcharger_V1_adjust_Value)
+		{
+			st_product_preset.u8_Outcharger_V1_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u8_Outcharger_V1_adjust_Value;
+			product_preset_flag = 1;
+		}
 	}
 	//.......................外部充电机电压2校正设定设定.........................................................
     if(1 == un_reeth_PC_data.st_data.st_product_preset.un_preset.st_bit.set_Outcharger_V2_adjust_valid)
 	{ 
-		st_product_preset.u8_Outcharger_V2_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u8_Outcharger_V2_adjust_Value;
+		if(st_product_preset.u8_Outcharger_V2_adjust_Value != un_reeth_PC_data.st_data.st_product_preset.u8_Outcharger_V2_adjust_Value)
+		{
+			st_product_preset.u8_Outcharger_V2_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u8_Outcharger_V2_adjust_Value;
+			product_preset_flag = 1;
+		}
 	}
 	//.......................奇数单体电池电压校正设定设定.........................................................
     if(1 == un_reeth_PC_data.st_data.st_product_preset.un_preset.st_bit.set_batcore_Volt1_adjust_valid)
 	{ 
-		st_product_preset.u16_batcore_Volt1_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u16_batcore_Volt1_adjust_Value;
+		if(st_product_preset.u16_batcore_Volt1_adjust_Value != un_reeth_PC_data.st_data.st_product_preset.u16_batcore_Volt1_adjust_Value)
+		{
+			st_product_preset.u16_batcore_Volt1_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u16_batcore_Volt1_adjust_Value;
+			product_preset_flag = 1;
+		}
+			
 	}
 	//.......................偶数单体电池电压校正设定设定.........................................................
     if(1 == un_reeth_PC_data.st_data.st_product_preset.un_preset.st_bit.set_batcore_Volt2_adjust_valid)
 	{ 
-		st_product_preset.u16_batcore_Volt2_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u16_batcore_Volt2_adjust_Value;
+		if(st_product_preset.u16_batcore_Volt2_adjust_Value != un_reeth_PC_data.st_data.st_product_preset.u16_batcore_Volt2_adjust_Value)
+		{
+			st_product_preset.u16_batcore_Volt2_adjust_Value = un_reeth_PC_data.st_data.st_product_preset.u16_batcore_Volt2_adjust_Value;
+			product_preset_flag = 1;
+		}
 	}
     
 }
